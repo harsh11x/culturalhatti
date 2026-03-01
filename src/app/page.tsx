@@ -30,13 +30,13 @@ export default function HomePage() {
   return (
     <>
       {/* Hero Section - Luxury Royal Heritage */}
-      <section className="relative w-full min-h-[100vh] overflow-hidden">
+      <section className="relative w-full min-h-[85vh] md:min-h-[90vh] overflow-hidden">
         {/* Main Heritage Background Image */}
         <div className="absolute inset-0 z-0">
           <img 
             src="/home.jpg" 
             alt="Traditional Indian heritage architecture"
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-cover object-[center_40%] md:object-center"
           />
           {/* Elegant gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80"></div>
@@ -44,7 +44,7 @@ export default function HomePage() {
         </div>
 
         {/* Content Overlay */}
-        <div className="relative z-10 h-full min-h-[100vh] flex flex-col justify-end p-6 sm:p-10 md:p-16 lg:p-20">
+        <div className="relative z-10 h-full min-h-[85vh] md:min-h-[90vh] flex flex-col justify-end p-6 sm:p-10 md:p-16 lg:p-20">
           {/* Top Badge - Elegant */}
           <div className="absolute top-8 sm:top-12 left-6 sm:left-10 md:left-16">
             <span className="inline-block px-5 py-2.5 bg-primary/90 backdrop-blur-sm text-background-dark text-xs font-semibold tracking-[0.3em] border border-primary uppercase">
