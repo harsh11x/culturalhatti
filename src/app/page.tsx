@@ -213,11 +213,11 @@ export default function HomePage() {
             </div>
             
             {/* Main Headline with Dramatic Effect */}
-            <h2 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[1.1] mb-6 text-white drop-shadow-2xl">
-              <span className="inline-block animate-[fadeIn_1s_ease-in]">Crafted by</span>{' '}
-              <span className="inline-block text-white italic drop-shadow-[0_0_30px_rgba(255,255,255,0.5)] animate-[fadeIn_1s_ease-in_0.2s]">Hands</span>,<br />
-              <span className="inline-block animate-[fadeIn_1s_ease-in_0.4s]">Woven with</span>{' '}
-              <span className="inline-block text-white italic drop-shadow-[0_0_30px_rgba(255,255,255,0.5)] animate-[fadeIn_1s_ease-in_0.6s]">Soul</span>
+            <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-[1.1] mb-6 text-white drop-shadow-2xl" style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', serif", fontWeight: 600 }}>
+              <span className="inline-block animate-[fadeIn_1s_ease-in] tracking-wide">Crafted by</span>{' '}
+              <span className="inline-block text-white italic drop-shadow-[0_0_30px_rgba(255,255,255,0.5)] animate-[fadeIn_1s_ease-in_0.2s] font-bold tracking-wider" style={{ fontWeight: 700 }}>Hands</span>,<br />
+              <span className="inline-block animate-[fadeIn_1s_ease-in_0.4s] tracking-wide">Woven with</span>{' '}
+              <span className="inline-block text-white italic drop-shadow-[0_0_30px_rgba(255,255,255,0.5)] animate-[fadeIn_1s_ease-in_0.6s] font-bold tracking-wider" style={{ fontWeight: 700 }}>Soul</span>
             </h2>
             
             {/* Decorative Divider */}
