@@ -3,14 +3,14 @@ import { useState, useEffect } from 'react';
 import { useUIStore, useAuthStore } from '@/store';
 import api from '@/lib/api';
 import { X, Phone } from 'lucide-react';
-import { auth } from '@/lib/firebase';
+import { auth, isFirebaseEnabled } from '@/lib/firebase';
 import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 export default function AuthModal() {
     const { isAuthModalOpen, closeAuthModal } = useUIStore();
     const setUser = useAuthStore((s) => s.setUser);
 
-    const [authMethod, setAuthMethod] = useState<'email' | 'phone'>('phone');
+    const [authMethod, setAuthMethod] = useState<'email' | 'phone'>(isFirebaseEnabled ? 'phone' : 'email');
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -23,7 +23,7 @@ export default function AuthModal() {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (isAuthModalOpen && authMethod === 'phone' && !showOtpInput) {
+        if (isAuthModalOpen && authMethod === 'phone' && !showOtpInput && isFirebaseEnabled && auth) {
             const recaptchaContainer = document.getElementById('recaptcha-container');
             if (recaptchaContainer && !window.recaptchaVerifier) {
                 try {
@@ -50,6 +50,9 @@ export default function AuthModal() {
 
         try {
             if (!showOtpInput) {
+                if (!isFirebaseEnabled || !auth) {
+                    throw new Error('Phone authentication is not configured. Please contact support.');
+                }
                 const formattedPhone = phone.startsWith('+') ? phone : `+91${phone}`;
                 const appVerifier = window.recaptchaVerifier;
                 if (!appVerifier) {
@@ -113,6 +116,9 @@ export default function AuthModal() {
         setError('');
         setLoading(true);
         try {
+            if (!isFirebaseEnabled || !auth) {
+                throw new Error('Google sign-in is not configured. Please contact support.');
+            }
             const provider = new GoogleAuthProvider();
             const result = await signInWithPopup(auth, provider);
             const firebaseUser = result.user;
@@ -166,24 +172,26 @@ export default function AuthModal() {
                         {isLogin ? 'Sign in to access your account' : 'Register to begin your journey'}
                     </p>
 
-                    {/* Auth Method Toggle */}
-                    <div className="flex gap-2 mb-6">
-                        <button
-                            type="button"
-                            onClick={() => { setAuthMethod('phone'); resetForm(); }}
-                            className={`flex-1 py-2 px-4 border-2 border-black font-bold uppercase text-xs tracking-widest transition-all ${authMethod === 'phone' ? 'bg-black text-white' : 'bg-white text-black hover:bg-gray-100'}`}
-                        >
-                            <Phone className="w-4 h-4 inline mr-2" />
-                            Phone
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => { setAuthMethod('email'); resetForm(); }}
-                            className={`flex-1 py-2 px-4 border-2 border-black font-bold uppercase text-xs tracking-widest transition-all ${authMethod === 'email' ? 'bg-black text-white' : 'bg-white text-black hover:bg-gray-100'}`}
-                        >
-                            Email
-                        </button>
-                    </div>
+                    {/* Auth Method Toggle - Only show if Firebase is enabled */}
+                    {isFirebaseEnabled && (
+                        <div className="flex gap-2 mb-6">
+                            <button
+                                type="button"
+                                onClick={() => { setAuthMethod('phone'); resetForm(); }}
+                                className={`flex-1 py-2 px-4 border-2 border-black font-bold uppercase text-xs tracking-widest transition-all ${authMethod === 'phone' ? 'bg-black text-white' : 'bg-white text-black hover:bg-gray-100'}`}
+                            >
+                                <Phone className="w-4 h-4 inline mr-2" />
+                                Phone
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => { setAuthMethod('email'); resetForm(); }}
+                                className={`flex-1 py-2 px-4 border-2 border-black font-bold uppercase text-xs tracking-widest transition-all ${authMethod === 'email' ? 'bg-black text-white' : 'bg-white text-black hover:bg-gray-100'}`}
+                            >
+                                Email
+                            </button>
+                        </div>
+                    )}
 
                     {error && (
                         <div className="mb-6 bg-red-100 border-2 border-primary text-primary px-4 py-3 text-sm font-bold">
@@ -191,7 +199,7 @@ export default function AuthModal() {
                         </div>
                     )}
 
-                    {authMethod === 'phone' ? (
+                    {authMethod === 'phone' && isFirebaseEnabled ? (
                         <form onSubmit={handlePhoneSubmit} className="space-y-4">
                             {!isLogin && !showOtpInput && (
                                 <div>
@@ -322,16 +330,20 @@ export default function AuthModal() {
                         </form>
                     )}
 
-                    <div className="mt-6 flex items-center gap-4">
-                        <div className="h-0.5 bg-gray-200 flex-1"></div>
-                        <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">OR</span>
-                        <div className="h-0.5 bg-gray-200 flex-1"></div>
-                    </div>
+                    {isFirebaseEnabled && (
+                        <>
+                            <div className="mt-6 flex items-center gap-4">
+                                <div className="h-0.5 bg-gray-200 flex-1"></div>
+                                <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">OR</span>
+                                <div className="h-0.5 bg-gray-200 flex-1"></div>
+                            </div>
 
-                    <button onClick={handleGoogleSignIn} disabled={loading} className="w-full bg-white border-2 border-black py-3 font-bold uppercase tracking-widest hover:bg-gray-50 flex items-center justify-center gap-3 mt-6 transition-colors disabled:opacity-50">
-                        <img src="https://www.google.com/favicon.ico" alt="Google" className="w-4 h-4" />
-                        Continue with Google
-                    </button>
+                            <button onClick={handleGoogleSignIn} disabled={loading} className="w-full bg-white border-2 border-black py-3 font-bold uppercase tracking-widest hover:bg-gray-50 flex items-center justify-center gap-3 mt-6 transition-colors disabled:opacity-50">
+                                <img src="https://www.google.com/favicon.ico" alt="Google" className="w-4 h-4" />
+                                Continue with Google
+                            </button>
+                        </>
+                    )}
 
                     <div className="mt-8 text-center">
                         <p className="text-xs font-bold text-gray-500 uppercase tracking-widest inline-flex gap-2">
