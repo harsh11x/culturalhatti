@@ -30,7 +30,7 @@ export default function HomePage() {
   return (
     <>
       {/* Hero Section - Luxury Royal Heritage */}
-      <section className="relative w-full min-h-[85vh] md:min-h-[90vh] overflow-hidden">
+      <section className="relative w-full min-h-[90vh] md:min-h-[95vh] overflow-hidden">
         {/* Main Heritage Background Image */}
         <div className="absolute inset-0 z-0">
           <img 
