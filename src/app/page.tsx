@@ -123,7 +123,16 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6 sm:px-10 md:px-16">
           <div className="text-center mb-12 md:mb-16">
             <p className="font-body text-xs uppercase tracking-[0.3em] text-secondary mb-3 font-medium">संग्रह • Collections</p>
-            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-background-dark">Explore Our Heritage</h2>
+            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-background-dark mb-8">Explore Our Heritage</h2>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Link href="/collections" className="inline-flex items-center gap-3 px-8 py-3 bg-primary text-background-dark font-body font-semibold uppercase tracking-[0.2em] text-sm hover:bg-accent transition-all group luxury-shadow">
+                <span>View All Products</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link href="/collections" className="inline-flex items-center gap-3 px-8 py-3 bg-transparent text-background-dark font-body font-semibold uppercase tracking-[0.2em] text-sm border-2 border-background-dark hover:bg-background-dark hover:text-white transition-all">
+                <span>View All Treasures</span>
+              </Link>
+            </div>
           </div>
 
           {loading ? (
@@ -160,103 +169,54 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Cultural Statement Section - Luxury Heritage */}
-      <section className="relative w-full py-20 md:py-32 overflow-hidden bg-background-dark">
-        <div className="absolute inset-0 z-0 opacity-10">
+      {/* Cultural Statement Section - Enhanced Heritage */}
+      <section className="relative w-full py-20 md:py-32 overflow-hidden" style={{
+        backgroundImage: 'linear-gradient(135deg, #8B6F47 0%, #C9A86A 50%, #D4AF37 100%)'
+      }}>
+        <div className="absolute inset-0 z-0 opacity-20">
           <div className="heritage-pattern w-full h-full"></div>
         </div>
+        
+        {/* Decorative elements */}
+        <div className="absolute top-10 left-10 w-32 h-32 border-2 border-white/20 rotate-45"></div>
+        <div className="absolute bottom-10 right-10 w-40 h-40 border-2 border-white/20 rotate-12"></div>
 
         <div className="relative z-10 max-w-6xl mx-auto px-6 sm:px-10 md:px-16">
           <div className="text-center">
-            <span className="inline-block px-5 py-2.5 bg-primary/20 text-primary text-xs font-body font-semibold tracking-[0.3em] border border-primary/30 uppercase mb-8">
+            <span className="inline-block px-6 py-3 bg-white/10 backdrop-blur-sm text-white text-xs font-body font-semibold tracking-[0.3em] border border-white/30 uppercase mb-8">
               विरासत • Heritage
             </span>
             
-            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-8 text-white">
-              Crafted by <span className="text-primary italic">Hands</span>,<br />
-              Woven with <span className="text-primary italic">Soul</span>
+            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-8 text-white drop-shadow-lg">
+              Crafted by <span className="italic">Hands</span>,<br />
+              Woven with <span className="italic">Soul</span>
             </h2>
             
-            <p className="font-body text-base sm:text-lg md:text-xl text-white/80 leading-relaxed max-w-3xl mx-auto mb-16 font-light">
+            <p className="font-body text-lg sm:text-xl md:text-2xl text-white/95 leading-relaxed max-w-3xl mx-auto mb-16 font-light drop-shadow">
               Every thread carries centuries of tradition. Every pattern echoes ancient wisdom. We celebrate India's master artisans and their timeless craft.
             </p>
 
-            <div className="flex flex-wrap justify-center gap-12 sm:gap-16 md:gap-20 mt-16 pt-12 border-t border-white/10">
-              <div className="text-center">
-                <p className="font-display text-5xl sm:text-6xl md:text-7xl font-bold text-primary mb-3">28</p>
-                <p className="font-body text-xs uppercase tracking-[0.2em] text-white/60 font-light">Indian States</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12 mt-16 pt-12 border-t border-white/30 max-w-4xl mx-auto">
+              <div className="text-center bg-white/10 backdrop-blur-sm p-8 luxury-shadow">
+                <p className="font-display text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-3 drop-shadow-lg">29</p>
+                <p className="font-body text-sm uppercase tracking-[0.2em] text-white/90 font-medium">Indian States</p>
+                <p className="font-body text-xs text-white/70 mt-2">Pan-India Reach</p>
               </div>
-              <div className="text-center">
-                <p className="font-display text-5xl sm:text-6xl md:text-7xl font-bold text-primary mb-3">100%</p>
-                <p className="font-body text-xs uppercase tracking-[0.2em] text-white/60 font-light">Authentic</p>
+              <div className="text-center bg-white/10 backdrop-blur-sm p-8 luxury-shadow">
+                <p className="font-display text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-3 drop-shadow-lg">100%</p>
+                <p className="font-body text-sm uppercase tracking-[0.2em] text-white/90 font-medium">Authentic</p>
+                <p className="font-body text-xs text-white/70 mt-2">Verified Craftsmanship</p>
               </div>
-              <div className="text-center">
-                <p className="font-display text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-3">∞</p>
-                <p className="font-body text-xs uppercase tracking-[0.2em] text-white/60 font-light">Timeless</p>
+              <div className="text-center bg-white/10 backdrop-blur-sm p-8 luxury-shadow">
+                <p className="font-display text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-3 drop-shadow-lg">5000+</p>
+                <p className="font-body text-sm uppercase tracking-[0.2em] text-white/90 font-medium">Years</p>
+                <p className="font-body text-xs text-white/70 mt-2">Heritage & Tradition</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Featured Products Grid - Luxury */}
-      <section className="w-full py-16 md:py-24 bg-background-light">
-        <div className="max-w-7xl mx-auto px-6 sm:px-10 md:px-16">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6">
-            <div>
-              <p className="font-body text-xs uppercase tracking-[0.3em] text-secondary mb-3 font-medium">संग्रह • Collection</p>
-              <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-background-dark">Curated<br />Masterpieces</h2>
-            </div>
-            <Link href="/collections" className="hidden md:inline-block font-body text-sm font-semibold uppercase tracking-[0.2em] text-secondary hover:text-primary transition-colors border-b border-secondary hover:border-primary pb-1">
-              View All Treasures
-            </Link>
-          </div>
-
-          {loading ? (
-            <div className="py-16 text-center font-body tracking-widest uppercase text-sm">Loading Products...</div>
-          ) : featured.length === 0 ? (
-            <div className="py-16 text-center font-body tracking-widest uppercase text-sm">No products featured.</div>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
-              {featured.map((p) => (
-                <Link key={p.id} href={`/products/${p.slug}`} className="group block bg-white luxury-shadow hover:luxury-shadow-hover transition-all overflow-hidden">
-                  <div className="aspect-[3/4] overflow-hidden relative bg-gray-50">
-                    {p.images?.[0] ? (
-                      <img src={`http://localhost:3001${p.images[0]}`} alt={p.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" />
-                    ) : (
-                      <div className="w-full h-full bg-slate-100 flex items-center justify-center">
-                        <ImageIcon className="w-8 h-8 text-gray-400" />
-                      </div>
-                    )}
-                    {p.compare_price && (
-                      <div className="absolute top-3 right-3 bg-terracotta text-white text-[9px] sm:text-xs font-body font-semibold px-3 py-1.5 uppercase tracking-wider">
-                        Sale
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-4 sm:p-5">
-                    <p className="font-body font-medium uppercase tracking-[0.2em] text-[9px] sm:text-xs text-secondary/70 mb-2">{p.category?.name || 'Uncategorized'}</p>
-                    <h3 className="font-body font-semibold text-sm sm:text-base leading-tight line-clamp-2 mb-3 group-hover:text-primary transition-colors">{p.name}</h3>
-                    <div className="flex items-center gap-2 pt-1">
-                      <span className="font-display text-lg sm:text-xl md:text-2xl font-bold text-background-dark">₹{Number(p.price).toFixed(0)}</span>
-                      {p.compare_price && (
-                        <span className="text-gray-400 line-through text-xs sm:text-sm font-body">₹{Number(p.compare_price).toFixed(0)}</span>
-                      )}
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
-
-          <div className="mt-10 md:mt-14 text-center">
-            <Link href="/collections" className="inline-flex items-center gap-3 px-10 py-4 bg-primary text-background-dark font-body font-semibold uppercase tracking-[0.2em] text-sm hover:bg-accent transition-all group luxury-shadow">
-              <span>View All Products</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
-        </div>
-      </section>
 
     </>
   );
