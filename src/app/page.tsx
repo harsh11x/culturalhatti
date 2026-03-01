@@ -33,7 +33,7 @@ export default function HomePage() {
       <section className="flex-grow flex flex-col relative w-full border-b-3 border-black">
         {/* Background Pattern Layer with Indian texture */}
         <div className="absolute inset-0 z-0 stepwell-pattern pointer-events-none opacity-30"></div>
-        <div className="relative z-10 w-full flex flex-col md:flex-row">
+        <div className="relative z-10 w-full flex flex-col md:flex-row min-h-[600px] lg:min-h-[700px]">
           {/* Left Content: Typography Heavy with Indian texture background */}
           <div className="w-full md:w-1/2 p-8 md:p-12 lg:p-16 flex flex-col justify-between border-b-3 md:border-b-0 md:border-r-3 border-black relative overflow-hidden" style={{
             backgroundImage: 'url("https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1200&q=80")',
