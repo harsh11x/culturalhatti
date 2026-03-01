@@ -52,6 +52,9 @@ export default function AuthModal() {
             if (!showOtpInput) {
                 const formattedPhone = phone.startsWith('+') ? phone : `+91${phone}`;
                 const appVerifier = window.recaptchaVerifier;
+                if (!appVerifier) {
+                    throw new Error('reCAPTCHA not initialized. Please refresh and try again.');
+                }
                 const result = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
                 setConfirmationResult(result);
                 setShowOtpInput(true);
