@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
 @import "tailwindcss";
@@ -6,40 +6,43 @@
 @plugin "@tailwindcss/container-queries";
 
 @theme {
-  --color-primary: #e32116;
-  --color-background-light: #FDFBF7;
-  --color-background-dark: #1a1a1a;
-  --color-border-dark: #000000;
-  --color-accent: #FF9933;
+  --color-primary: #C9A86A;
+  --color-secondary: #8B6F47;
+  --color-background-light: #FAF8F5;
+  --color-background-dark: #2C2416;
+  --color-border-dark: #2C2416;
+  --color-accent: #D4AF37;
+  --color-terracotta: #C65D3B;
 
-  --font-display: "Space Grotesk", sans-serif;
-  --font-body: "Space Grotesk", sans-serif;
+  --font-display: "Playfair Display", serif;
+  --font-body: "Montserrat", sans-serif;
 
-  --border-width-3: 3px;
+  --border-width-1: 1px;
+  --border-width-2: 2px;
 }
 
-/* Custom utility classes from Stitch screens */
+/* Luxury Heritage Utilities */
 
-@utility stepwell-pattern {
-  background-color: #FDFBF7;
-  background-image: linear-gradient(#e32116 1.6px, transparent 1.6px), linear-gradient(to right, #e32116 1.6px, #FDFBF7 1.6px);
-  background-size: 32px 32px;
-  opacity: 0.05;
+@utility heritage-pattern {
+  background-color: #FAF8F5;
+  background-image: linear-gradient(#C9A86A 0.5px, transparent 0.5px), linear-gradient(to right, #C9A86A 0.5px, #FAF8F5 0.5px);
+  background-size: 40px 40px;
+  opacity: 0.15;
 }
 
-@utility brutalist-border {
-  border: 3px solid black;
+@utility luxury-shadow {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
-@utility brutalist-shadow {
-  box-shadow: 6px 6px 0px 0px #000000;
-}
-
-@utility brutalist-shadow-hover {
+@utility luxury-shadow-hover {
   &:hover {
-    box-shadow: 4px 4px 0px 0px #000000;
-    transform: translate(2px, 2px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
   }
+}
+
+@utility gold-border {
+  border: 1px solid #C9A86A;
 }
 
 @layer base {
@@ -53,9 +56,5 @@
   body {
     background: var(--color-background-light);
     color: var(--color-border-dark);
-  }
-
-  * {
-    border-radius: 0 !important;
   }
 }

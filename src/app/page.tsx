@@ -29,77 +29,78 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Hero Section - Full Width Heritage Architecture */}
-      <section className="relative w-full min-h-[70vh] md:min-h-[85vh] border-b-3 border-black overflow-hidden">
+      {/* Hero Section - Luxury Royal Heritage */}
+      <section className="relative w-full min-h-[75vh] md:min-h-[90vh] overflow-hidden">
         {/* Main Heritage Background Image */}
         <div className="absolute inset-0 z-0">
           <img 
-            src="https://images.unsplash.com/photo-1609783261796-f972a39b57d5?w=2000&q=90" 
-            alt="Traditional Indian architecture with cultural heritage"
+            src="/home.jpg" 
+            alt="Traditional Indian heritage architecture"
             className="w-full h-full object-cover"
           />
-          {/* Warm overlay for authentic feel */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/70"></div>
+          {/* Elegant gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent"></div>
         </div>
 
         {/* Content Overlay */}
-        <div className="relative z-10 h-full min-h-[70vh] md:min-h-[85vh] flex flex-col justify-end p-6 sm:p-8 md:p-12 lg:p-16">
-          {/* Top Badge */}
-          <div className="absolute top-8 left-6 sm:left-8 md:left-12">
-            <span className="inline-block px-4 py-2 bg-primary text-white text-xs font-bold tracking-widest border-2 border-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <div className="relative z-10 h-full min-h-[75vh] md:min-h-[90vh] flex flex-col justify-end p-6 sm:p-10 md:p-16 lg:p-20">
+          {/* Top Badge - Elegant */}
+          <div className="absolute top-8 sm:top-12 left-6 sm:left-10 md:left-16">
+            <span className="inline-block px-5 py-2.5 bg-primary/90 backdrop-blur-sm text-background-dark text-xs font-semibold tracking-[0.3em] border border-primary uppercase">
               हस्तशिल्प • Handcrafted Heritage
             </span>
           </div>
 
-          {/* Main Headline - Bottom Left */}
-          <div className="max-w-4xl">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black uppercase leading-[0.9] tracking-tighter mb-6 text-white drop-shadow-2xl">
+          {/* Main Headline - Luxury Typography */}
+          <div className="max-w-5xl">
+            <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold leading-[0.95] mb-6 text-white">
               Where<br />
-              <span className="text-primary">Tradition</span><br />
+              <span className="text-primary italic">Tradition</span><br />
               Meets Art
             </h1>
-            <p className="text-base sm:text-lg md:text-xl font-bold text-white/90 max-w-2xl mb-8 leading-relaxed drop-shadow-lg">
+            <p className="font-body text-base sm:text-lg md:text-xl text-white/90 max-w-2xl mb-10 leading-relaxed font-light">
               Celebrating India's rich cultural tapestry through authentic handcrafted textiles, artisan jewelry, and timeless craftsmanship.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 mb-8">
-              <Link href="/collections" className="px-8 py-4 bg-white text-black text-sm font-bold tracking-widest uppercase border-2 border-black brutalist-shadow hover:bg-primary hover:text-white hover:border-primary transition-all inline-flex items-center justify-center gap-2 group">
-                <span className="text-xs font-bold uppercase tracking-widest">Explore Collection</span>
+            <div className="flex flex-col sm:flex-row gap-4 mb-12">
+              <Link href="/collections" className="px-10 py-4 bg-primary text-background-dark text-sm font-body font-semibold tracking-[0.2em] uppercase hover:bg-accent transition-all inline-flex items-center justify-center gap-3 group luxury-shadow">
+                <span>Explore Collection</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
-              <Link href="/collections" className="px-8 py-4 bg-black/80 backdrop-blur-sm text-white text-sm font-bold tracking-widest uppercase border-2 border-white hover:bg-primary hover:border-primary transition-all inline-flex items-center justify-center">
-                <span className="text-xs">Artisan Stories</span>
+              <Link href="/collections" className="px-10 py-4 bg-transparent backdrop-blur-sm text-white text-sm font-body font-semibold tracking-[0.2em] uppercase border border-white/50 hover:bg-white/10 hover:border-white transition-all inline-flex items-center justify-center">
+                <span>Our Artisans</span>
               </Link>
             </div>
 
-            {/* Cultural Stats */}
-            <div className="flex flex-wrap gap-6 sm:gap-8 mt-8">
+            {/* Cultural Stats - Elegant */}
+            <div className="flex flex-wrap gap-8 sm:gap-12 mt-12 pt-8 border-t border-white/20">
               <div className="text-white">
-                <p className="text-3xl sm:text-4xl font-black text-primary drop-shadow-lg">5000+</p>
-                <p className="text-xs uppercase tracking-widest text-white/80">Years Heritage</p>
+                <p className="font-display text-4xl sm:text-5xl font-bold text-primary mb-1">5000+</p>
+                <p className="font-body text-xs uppercase tracking-[0.2em] text-white/70 font-light">Years of Heritage</p>
               </div>
-              <div className="text-white border-l-2 border-white/30 pl-6 sm:pl-8">
-                <p className="text-3xl sm:text-4xl font-black text-primary drop-shadow-lg">100+</p>
-                <p className="text-xs uppercase tracking-widest text-white/80">Master Artisans</p>
+              <div className="text-white">
+                <p className="font-display text-4xl sm:text-5xl font-bold text-primary mb-1">100+</p>
+                <p className="font-body text-xs uppercase tracking-[0.2em] text-white/70 font-light">Master Artisans</p>
               </div>
-              <div className="text-white border-l-2 border-white/30 pl-6 sm:pl-8">
-                <p className="text-2xl sm:text-3xl font-black drop-shadow-lg">भारत</p>
-                <p className="text-xs uppercase tracking-widest text-white/80">Made in India</p>
+              <div className="text-white">
+                <p className="font-display text-3xl sm:text-4xl font-bold text-white mb-1">भारत</p>
+                <p className="font-body text-xs uppercase tracking-[0.2em] text-white/70 font-light">Made in India</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Marquee Banner */}
-      <div className="bg-primary text-white border-b-3 border-black overflow-hidden py-3 whitespace-nowrap relative">
+      {/* Marquee Banner - Luxury */}
+      <div className="bg-background-dark text-white overflow-hidden py-4 whitespace-nowrap relative">
         <div className="animate-marquee inline-block">
           {Array(4).fill(0).map((_, i) => (
             <span key={i}>
-              <span className="text-lg font-bold tracking-widest mx-4">मुफ़्त शिपिंग • FREE SHIPPING PAN INDIA •</span>
-              <span className="text-lg font-bold tracking-widest mx-4">हस्तनिर्मित • HANDCRAFTED BY ARTISANS •</span>
-              <span className="text-lg font-bold tracking-widest mx-4">प्रामाणिक • AUTHENTIC HERITAGE •</span>
-              <span className="text-lg font-bold tracking-widest mx-4">CULTURAL HATTI •</span>
+              <span className="font-body text-sm font-medium tracking-[0.3em] mx-6">मुफ़्त शिपिंग • FREE SHIPPING PAN INDIA •</span>
+              <span className="font-body text-sm font-medium tracking-[0.3em] mx-6">हस्तनिर्मित • HANDCRAFTED BY ARTISANS •</span>
+              <span className="font-body text-sm font-medium tracking-[0.3em] mx-6">प्रामाणिक • AUTHENTIC HERITAGE •</span>
+              <span className="font-body text-sm font-medium tracking-[0.3em] mx-6 text-primary">CULTURAL HATTI •</span>
             </span>
           ))}
         </div>
@@ -117,125 +118,129 @@ export default function HomePage() {
         `}} />
       </div>
 
-      {/* Featured Categories - Heritage Architecture Style */}
-      <section className="w-full relative border-b-3 border-black">
-        <div className="grid grid-cols-1 md:grid-cols-3 divide-y-3 md:divide-y-0 md:divide-x-3 divide-black">
-          {loading ? (
-            <div className="p-8 text-center col-span-3 font-bold uppercase tracking-widest bg-background-light">Loading Collections...</div>
-          ) : categories.length === 0 ? (
-            <div className="p-8 text-center col-span-3 font-bold uppercase tracking-widest bg-background-light">No Collections Found</div>
-          ) : (
-            categories.slice(0, 3).map((cat, index) => {
-              const fallbackImages = [
-                "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&q=90",
-                "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=800&q=90",
-                "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=800&q=90"
-              ];
-              const imgSrc = cat.image_url ? `http://localhost:3001${cat.image_url}` : fallbackImages[index % fallbackImages.length];
+      {/* Featured Categories - Luxury Grid */}
+      <section className="w-full bg-background-light py-12 md:py-20">
+        <div className="max-w-7xl mx-auto px-6 sm:px-10 md:px-16">
+          <div className="text-center mb-12 md:mb-16">
+            <p className="font-body text-xs uppercase tracking-[0.3em] text-secondary mb-3 font-medium">संग्रह • Collections</p>
+            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-background-dark">Explore Our Heritage</h2>
+          </div>
 
-              return (
-                <Link key={cat.id} href={`/category/${cat.slug}`} className="relative group h-[400px] sm:h-[450px] md:h-[500px] overflow-hidden cursor-pointer block">
-                  <img alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" src={imgSrc} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent group-hover:from-black/70 transition-all z-10"></div>
-                  
-                  <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 z-20">
-                    <div className="bg-white/90 backdrop-blur-md border-3 border-black px-6 py-4 inline-block transform group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform duration-300 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] group-hover:shadow-[6px_6px_0px_0px_rgba(255,153,51,1)]">
-                      <h3 className="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tight">{cat.name}</h3>
+          {loading ? (
+            <div className="p-12 text-center font-body uppercase tracking-widest text-sm">Loading Collections...</div>
+          ) : categories.length === 0 ? (
+            <div className="p-12 text-center font-body uppercase tracking-widest text-sm">No Collections Found</div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+              {categories.slice(0, 3).map((cat, index) => {
+                const fallbackImages = [
+                  "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&q=90",
+                  "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=800&q=90",
+                  "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=800&q=90"
+                ];
+                const imgSrc = cat.image_url ? `http://localhost:3001${cat.image_url}` : fallbackImages[index % fallbackImages.length];
+
+                return (
+                  <Link key={cat.id} href={`/category/${cat.slug}`} className="relative group h-[450px] sm:h-[500px] overflow-hidden cursor-pointer block luxury-shadow hover:luxury-shadow-hover transition-all duration-500">
+                    <img alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700 ease-out" src={imgSrc} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background-dark/90 via-background-dark/30 to-transparent group-hover:from-background-dark/80 transition-all z-10"></div>
+                    
+                    <div className="absolute inset-0 flex items-end p-6 sm:p-8 z-20">
+                      <div>
+                        <div className="w-12 h-0.5 bg-primary mb-4"></div>
+                        <h3 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 group-hover:text-primary transition-colors">{cat.name}</h3>
+                        <p className="font-body text-xs uppercase tracking-[0.2em] text-white/70">Explore Collection</p>
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              );
-            })
+                  </Link>
+                );
+              })}
+            </div>
           )}
         </div>
       </section>
 
-      {/* Cultural Statement Section - Warm Heritage */}
-      <section className="w-full text-white border-b-3 border-black py-16 md:py-24 relative overflow-hidden" style={{
-        backgroundImage: 'url("https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1600&q=90")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
-      }}>
-        {/* Warm earthy overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-orange-900/70 via-black/60 to-black/80 z-0"></div>
-        
-        <div className="max-w-5xl mx-auto text-center px-6 sm:px-8 relative z-10">
-          <p className="text-primary font-bold uppercase tracking-widest text-sm mb-4 inline-block px-4 py-2 bg-black/70 border-2 border-primary shadow-[4px_4px_0px_0px_rgba(255,153,51,1)]">विरासत • Heritage</p>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase leading-tight mb-6">
-            <span style={{ color: '#FF9933' }}>Crafted</span> by <span style={{ color: '#138808' }}>Hands</span>,<br />
-            <span style={{ color: '#FF9933' }}>Woven</span> with <span style={{ color: '#138808' }}>Soul</span>
-          </h2>
-          <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-12 font-medium">
-            Every thread carries centuries of tradition. Every pattern echoes ancient wisdom. 
-            We celebrate India's master artisans and their timeless craft.
-          </p>
-          <div className="flex flex-wrap justify-center gap-6 sm:gap-8 md:gap-12 mt-12">
-            <div className="text-center">
-              <p className="text-4xl sm:text-5xl font-black text-primary mb-2 drop-shadow-lg">28</p>
-              <p className="text-xs uppercase tracking-widest text-white/80">Indian States</p>
-            </div>
-            <div className="text-center border-l-2 border-white/30 pl-6 sm:pl-8 md:pl-12">
-              <p className="text-4xl sm:text-5xl font-black text-primary mb-2 drop-shadow-lg">100%</p>
-              <p className="text-xs uppercase tracking-widest text-white/80">Authentic</p>
-            </div>
-            <div className="text-center border-l-2 border-white/30 pl-6 sm:pl-8 md:pl-12">
-              <p className="text-4xl sm:text-5xl font-black text-primary mb-2 drop-shadow-lg">∞</p>
-              <p className="text-xs uppercase tracking-widest text-white/80">Timeless</p>
+      {/* Cultural Statement Section - Luxury Heritage */}
+      <section className="relative w-full py-20 md:py-32 overflow-hidden bg-background-dark">
+        <div className="absolute inset-0 z-0 opacity-10">
+          <div className="heritage-pattern w-full h-full"></div>
+        </div>
+
+        <div className="relative z-10 max-w-6xl mx-auto px-6 sm:px-10 md:px-16">
+          <div className="text-center">
+            <span className="inline-block px-5 py-2.5 bg-primary/20 text-primary text-xs font-body font-semibold tracking-[0.3em] border border-primary/30 uppercase mb-8">
+              विरासत • Heritage
+            </span>
+            
+            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-8 text-white">
+              Crafted by <span className="text-primary italic">Hands</span>,<br />
+              Woven with <span className="text-primary italic">Soul</span>
+            </h2>
+            
+            <p className="font-body text-base sm:text-lg md:text-xl text-white/80 leading-relaxed max-w-3xl mx-auto mb-16 font-light">
+              Every thread carries centuries of tradition. Every pattern echoes ancient wisdom. We celebrate India's master artisans and their timeless craft.
+            </p>
+
+            <div className="flex flex-wrap justify-center gap-12 sm:gap-16 md:gap-20 mt-16 pt-12 border-t border-white/10">
+              <div className="text-center">
+                <p className="font-display text-5xl sm:text-6xl md:text-7xl font-bold text-primary mb-3">28</p>
+                <p className="font-body text-xs uppercase tracking-[0.2em] text-white/60 font-light">Indian States</p>
+              </div>
+              <div className="text-center">
+                <p className="font-display text-5xl sm:text-6xl md:text-7xl font-bold text-primary mb-3">100%</p>
+                <p className="font-body text-xs uppercase tracking-[0.2em] text-white/60 font-light">Authentic</p>
+              </div>
+              <div className="text-center">
+                <p className="font-display text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-3">∞</p>
+                <p className="font-body text-xs uppercase tracking-[0.2em] text-white/60 font-light">Timeless</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Featured Products Grid - Warm Heritage Background */}
-      <section className="w-full p-6 sm:p-8 md:p-12 lg:p-16 relative" style={{
-        backgroundImage: 'url("https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=1600&q=90")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}>
-        {/* Warm overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-orange-50/95 via-background-light/90 to-orange-50/95 z-0"></div>
-        
-        <div className="relative z-10">
-          <div className="flex justify-between items-end mb-8 sm:mb-10 md:mb-12">
+      {/* Featured Products Grid - Luxury */}
+      <section className="w-full py-16 md:py-24 bg-background-light">
+        <div className="max-w-7xl mx-auto px-6 sm:px-10 md:px-16">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6">
             <div>
-              <p className="text-primary font-bold uppercase tracking-widest text-xs mb-3 inline-block px-4 py-2 bg-white border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">संग्रह • Collection</p>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black uppercase leading-tight text-black mt-3">Curated<br />Masterpieces</h2>
+              <p className="font-body text-xs uppercase tracking-[0.3em] text-secondary mb-3 font-medium">संग्रह • Collection</p>
+              <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-background-dark">Curated<br />Masterpieces</h2>
             </div>
-            <Link href="/collections" className="hidden md:inline-block border-b-3 border-black font-bold uppercase tracking-widest text-sm hover:text-primary hover:border-primary transition-colors pb-1">
+            <Link href="/collections" className="hidden md:inline-block font-body text-sm font-semibold uppercase tracking-[0.2em] text-secondary hover:text-primary transition-colors border-b border-secondary hover:border-primary pb-1">
               View All Treasures
             </Link>
           </div>
 
           {loading ? (
-            <div className="py-16 text-center font-bold tracking-widest uppercase text-sm">Loading Products...</div>
+            <div className="py-16 text-center font-body tracking-widest uppercase text-sm">Loading Products...</div>
           ) : featured.length === 0 ? (
-            <div className="py-16 text-center font-bold tracking-widest uppercase text-sm">No products featured.</div>
+            <div className="py-16 text-center font-body tracking-widest uppercase text-sm">No products featured.</div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
               {featured.map((p) => (
-                <Link key={p.id} href={`/products/${p.slug}`} className="group block border-2 sm:border-3 border-black p-3 sm:p-4 brutalist-shadow hover:brutalist-shadow-hover bg-white transition-all">
-                  <div className="aspect-[3/4] overflow-hidden border-2 border-black mb-3 relative bg-gray-100">
+                <Link key={p.id} href={`/products/${p.slug}`} className="group block bg-white luxury-shadow hover:luxury-shadow-hover transition-all overflow-hidden">
+                  <div className="aspect-[3/4] overflow-hidden relative bg-gray-50">
                     {p.images?.[0] ? (
-                      <img src={`http://localhost:3001${p.images[0]}`} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <img src={`http://localhost:3001${p.images[0]}`} alt={p.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" />
                     ) : (
                       <div className="w-full h-full bg-slate-100 flex items-center justify-center">
                         <ImageIcon className="w-8 h-8 text-gray-400" />
                       </div>
                     )}
                     {p.compare_price && (
-                      <div className="absolute top-1 right-1 bg-primary text-white text-[9px] sm:text-xs font-bold px-1.5 py-0.5 border border-black uppercase">
+                      <div className="absolute top-3 right-3 bg-terracotta text-white text-[9px] sm:text-xs font-body font-semibold px-3 py-1.5 uppercase tracking-wider">
                         Sale
                       </div>
                     )}
                   </div>
-                  <div className="space-y-1">
-                    <p className="font-bold uppercase tracking-widest text-[9px] sm:text-xs text-gray-500">{p.category?.name || 'Uncategorized'}</p>
-                    <h3 className="font-bold text-sm sm:text-base md:text-lg leading-tight line-clamp-1">{p.name}</h3>
+                  <div className="p-4 sm:p-5">
+                    <p className="font-body font-medium uppercase tracking-[0.2em] text-[9px] sm:text-xs text-secondary/70 mb-2">{p.category?.name || 'Uncategorized'}</p>
+                    <h3 className="font-body font-semibold text-sm sm:text-base leading-tight line-clamp-2 mb-3 group-hover:text-primary transition-colors">{p.name}</h3>
                     <div className="flex items-center gap-2 pt-1">
-                      <span className="font-black text-base sm:text-lg md:text-xl">₹{Number(p.price).toFixed(0)}</span>
+                      <span className="font-display text-lg sm:text-xl md:text-2xl font-bold text-background-dark">₹{Number(p.price).toFixed(0)}</span>
                       {p.compare_price && (
-                        <span className="text-gray-400 line-through text-xs sm:text-sm font-bold">₹{Number(p.compare_price).toFixed(0)}</span>
+                        <span className="text-gray-400 line-through text-xs sm:text-sm font-body">₹{Number(p.compare_price).toFixed(0)}</span>
                       )}
                     </div>
                   </div>
@@ -244,9 +249,10 @@ export default function HomePage() {
             </div>
           )}
 
-          <div className="mt-8 sm:mt-10 md:mt-12 text-center md:hidden">
-            <Link href="/collections" className="inline-block border-b-2 border-black font-bold uppercase tracking-widest text-xs sm:text-sm hover:text-primary hover:border-primary transition-colors pb-1">
-              View All Arrivals
+          <div className="mt-10 md:mt-14 text-center">
+            <Link href="/collections" className="inline-flex items-center gap-3 px-10 py-4 bg-primary text-background-dark font-body font-semibold uppercase tracking-[0.2em] text-sm hover:bg-accent transition-all group luxury-shadow">
+              <span>View All Products</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
         </div>
