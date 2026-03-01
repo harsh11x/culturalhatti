@@ -13,10 +13,10 @@ module.exports = {
         {
             name: 'culturalhatti-admin',
             script: 'npm',
-            args: 'run dev',
+            args: 'run start',
             cwd: './admin',
             env: {
-                NODE_ENV: 'development',
+                NODE_ENV: 'production',
                 PORT: 3002,
             },
         },
