@@ -17,8 +17,8 @@ export default function Navbar() {
                     <div className="w-8 h-8 md:w-10 md:h-10 bg-primary text-background-dark flex items-center justify-center">
                         <Diamond className="w-5 h-5 md:w-6 md:h-6" />
                     </div>
-                    <Link href="/" className="font-display text-xl md:text-2xl font-bold tracking-tight leading-none text-background-dark hover:text-primary transition-colors whitespace-nowrap hidden sm:block">
-                        CULTURAL HATTI
+                    <Link href="/" className="font-body text-xl md:text-2xl font-bold tracking-tight leading-none text-background-dark hover:text-primary transition-colors whitespace-nowrap hidden sm:block uppercase">
+                        Cultural Hatti
                     </Link>
                 </div>
                 {/* Desktop Links */}
