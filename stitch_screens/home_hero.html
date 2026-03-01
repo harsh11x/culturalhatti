@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The New Veda - Brutalist E-commerce</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#e32116", // Saffron red
+            "background-light": "#FDFBF7", // Ivory
+            "background-dark": "#1a1a1a", // Dark charcoal
+            "border-dark": "#000000",
+            "accent": "#FF9933", // Saffron orange for patterns
+          },
+          fontFamily: {
+            "display": ["Space Grotesk", "sans-serif"],
+            "body": ["Space Grotesk", "sans-serif"],
+          },
+          borderWidth: {
+            '3': '3px',
+          }
+        },
+      },
+    }
+    </script>
+<style>
+        /* Custom pattern for Rajasthani stepwell inspiration */
+        .stepwell-pattern {
+            background-color: #FDFBF7;
+            background-image:  linear-gradient(#e32116 1.6px, transparent 1.6px), linear-gradient(to right, #e32116 1.6px, #FDFBF7 1.6px);
+            background-size: 32px 32px;
+            opacity: 0.05;
+        }
+        
+        .brutalist-border {
+            border: 3px solid black;
+        }
+        
+        .brutalist-shadow {
+            box-shadow: 6px 6px 0px 0px #000000;
+        }
+
+        .brutalist-shadow-hover:hover {
+            box-shadow: 4px 4px 0px 0px #000000;
+            transform: translate(2px, 2px);
+        }
+
+        /* Removing rounded corners globally for this specific design requirement */
+        * {
+            border-radius: 0 !important;
+        }
+    </style>
+</head>
+<body class="bg-background-light text-black font-display overflow-x-hidden min-h-screen flex flex-col">
+<!-- Top Navigation Bar -->
+<nav class="w-full border-b-3 border-black bg-background-light sticky top-0 z-50">
+<div class="px-6 py-4 flex items-center justify-between max-w-[1440px] mx-auto w-full">
+<!-- Logo Area -->
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-black text-white flex items-center justify-center">
+<span class="material-symbols-outlined text-xl font-bold">diamond</span>
+</div>
+<h1 class="text-2xl font-black tracking-tighter uppercase leading-none">THE NEW VEDA</h1>
+</div>
+<!-- Desktop Links -->
+<div class="hidden md:flex items-center gap-12">
+<a class="text-sm font-bold tracking-widest hover:text-primary transition-colors uppercase border-b-2 border-transparent hover:border-primary pb-0.5" href="#">Collections</a>
+<a class="text-sm font-bold tracking-widest hover:text-primary transition-colors uppercase border-b-2 border-transparent hover:border-primary pb-0.5" href="#">Story</a>
+<a class="text-sm font-bold tracking-widest hover:text-primary transition-colors uppercase border-b-2 border-transparent hover:border-primary pb-0.5" href="#">Editorial</a>
+</div>
+<!-- Icons -->
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 border-2 border-black flex items-center justify-center hover:bg-black hover:text-white transition-all">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="w-10 h-10 border-2 border-black flex items-center justify-center hover:bg-black hover:text-white transition-all relative">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="absolute -top-2 -right-2 bg-primary text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center border border-black">2</span>
+</button>
+<button class="md:hidden w-10 h-10 border-2 border-black flex items-center justify-center hover:bg-black hover:text-white transition-all">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<main class="flex-grow flex flex-col relative w-full border-b-3 border-black">
+<!-- Background Pattern Layer -->
+<div class="absolute inset-0 z-0 stepwell-pattern pointer-events-none"></div>
+<div class="relative z-10 w-full max-w-[1440px] mx-auto h-full flex flex-col md:flex-row min-h-[calc(100vh-80px)]">
+<!-- Left Content: Typography Heavy -->
+<div class="w-full md:w-1/2 p-8 md:p-12 lg:p-16 flex flex-col justify-between border-b-3 md:border-b-0 md:border-r-3 border-black bg-background-light">
+<div class="mb-12">
+<span class="inline-block px-3 py-1 bg-primary text-white text-xs font-bold tracking-widest mb-6 border border-black uppercase">
+                        Saffron Series • SS24
+                    </span>
+<h2 class="text-6xl md:text-7xl lg:text-8xl font-black leading-[0.9] tracking-tighter uppercase mb-6 text-black">
+                        Redefining<br/>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-600 outline-text" style="-webkit-text-stroke: 2px black; text-stroke: 2px black;">Indian</span><br/>
+                        Luxury
+                    </h2>
+<p class="text-lg md:text-xl font-medium max-w-md leading-relaxed border-l-4 border-primary pl-6 mb-8">
+                        A brutalist exploration of heritage textiles meeting modern geometry. Step into the architecture of fashion.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-4 mt-8">
+<button class="px-8 py-4 bg-black text-white text-base font-bold tracking-widest uppercase border-2 border-black brutalist-shadow hover:brutalist-shadow-hover transition-all flex items-center justify-center gap-2 group">
+                            Explore Collection
+                            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+<button class="px-8 py-4 bg-transparent text-black text-base font-bold tracking-widest uppercase border-2 border-black hover:bg-primary/10 transition-colors">
+                            View Lookbook
+                        </button>
+</div>
+</div>
+<!-- Footer style info within Hero -->
+<div class="grid grid-cols-2 gap-8 border-t-2 border-black pt-8 mt-auto">
+<div>
+<h3 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Material</h3>
+<p class="font-bold text-lg">Chanderi Silk</p>
+</div>
+<div>
+<h3 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Origin</h3>
+<p class="font-bold text-lg">Jaipur, RJ</p>
+</div>
+</div>
+</div>
+<!-- Right Content: Image Heavy -->
+<div class="w-full md:w-1/2 relative bg-gray-200 overflow-hidden group">
+<!-- Abstract Geometric Overlay elements -->
+<div class="absolute top-0 right-0 w-32 h-32 border-l-3 border-b-3 border-black bg-primary z-20"></div>
+<div class="absolute bottom-12 left-12 w-full h-[1px] bg-white z-20 mix-blend-difference"></div>
+<div class="absolute bottom-12 left-12 h-32 w-[1px] bg-white z-20 mix-blend-difference"></div>
+<img alt="Indian fashion model in saffron saree against geometric architecture" class="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 transition-all duration-700 ease-in-out" data-alt="High fashion model in architectural saree pose" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbB01y3nu6FlIvGBTbqYBpF4ou_HIuMUqVyLquQtXMtFWj5ln2PTR03dSAjYCUXyjS5Hx4rjFaVEmoxP_2e2e6iDT4QWaU86ClRawcQYRCvqzBEKgE0dFdXKFU0NIYIjzd8GauKpEA8Hca-cnnC_Nzbze2OHQJPQqtBjlP28mcv7gB2KD7zAPfaTOiAZ34ZaiPExn3vlDmh8Ef4rgfnJh_PntVwqqksIvdVFty_dlDTIBqM8icPUhj2-XdARmHzt8LP4J2XRf-Y5_o"/>
+<div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent">
+<div class="flex justify-between items-end text-white">
+<div>
+<p class="text-sm font-bold tracking-widest mb-1 text-primary">FEATURED</p>
+<p class="text-2xl font-bold uppercase">The Stepwell Drape</p>
+</div>
+<div class="text-right">
+<p class="text-xl font-bold">₹ 24,999</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Marquee Banner -->
+<div class="bg-primary text-white border-b-3 border-black overflow-hidden py-3 whitespace-nowrap relative">
+<div class="animate-marquee inline-block">
+<span class="text-lg font-bold tracking-widest mx-4">FREE SHIPPING WORLDWIDE •</span>
+<span class="text-lg font-bold tracking-widest mx-4">HANDCRAFTED IN INDIA •</span>
+<span class="text-lg font-bold tracking-widest mx-4">SUSTAINABLE LUXURY •</span>
+<span class="text-lg font-bold tracking-widest mx-4">THE NEW VEDA •</span>
+<span class="text-lg font-bold tracking-widest mx-4">FREE SHIPPING WORLDWIDE •</span>
+<span class="text-lg font-bold tracking-widest mx-4">HANDCRAFTED IN INDIA •</span>
+<span class="text-lg font-bold tracking-widest mx-4">SUSTAINABLE LUXURY •</span>
+<span class="text-lg font-bold tracking-widest mx-4">THE NEW VEDA •</span>
+</div>
+</div>
+<!-- Featured Categories / Grid -->
+<section class="w-full max-w-[1440px] mx-auto border-x-3 border-black bg-background-light">
+<div class="grid grid-cols-1 md:grid-cols-3 divide-y-3 md:divide-y-0 md:divide-x-3 divide-black border-b-3 border-black">
+<!-- Category 1 -->
+<div class="relative group h-80 overflow-hidden cursor-pointer">
+<div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 z-10 transition-colors"></div>
+<img alt="Close up of intricate golden embroidery on silk" class="w-full h-full object-cover" data-alt="Detailed golden embroidery texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBe0Cy4AfeVW_83ctEZ4EhpmhVceuEMtAJul1H7etecDD9or0D_VMBK30kiNG4SWPNn4N7hpMsy6q41E71ev5brdupieCA2MxY5zP7bQ_X9if5IaNoFG6lBTYsPsCv_B7XdcPlGCS3NZNctx1tA6tM3YBIetvzX3QqdOPBiYjFwUfzca6UmHXS7fcwwJ4p22SJvRm3djKkiKN9fhdezdD6ADTFekUap5xAkVv6wTWSpnnxiofyCTmIAQZ_85669iXCugc-N19KimDuy"/>
+<div class="absolute inset-0 flex items-center justify-center z-20">
+<div class="bg-background-light border-2 border-black px-6 py-3 transform rotate-0 group-hover:-rotate-3 transition-transform duration-300 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+<h3 class="text-xl font-black uppercase tracking-widest">Bridal</h3>
+</div>
+</div>
+</div>
+<!-- Category 2 -->
+<div class="relative group h-80 overflow-hidden cursor-pointer">
+<div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 z-10 transition-colors"></div>
+<img alt="Men's sherwani in dark fabric" class="w-full h-full object-cover" data-alt="Modern Indian menswear silhouette" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBj3UWUK2mFa8p6DorHAsamHyb3axPV4WrAEltVEH_FElsu0FJYXx1jQFOxBYegCb60A-mvDyGJQppoFJ0mz-XKbjyuC4SZX0NJ4AqPyPFNXXF36Sx6A9G7SDrNv4kV01FfxGncGJ4Wrb-t6_S08y2pVbpRaQr8UZE4nPHJU4S67ezPe5ZqUEhQtitqTZdTrq-Dd6fyORrl4ksN1rrquUQDiZO7KmpNsjrXH491QizRED_h9ADBabw2VBJkJLZthFnhStXwN18PLA0q"/>
+<div class="absolute inset-0 flex items-center justify-center z-20">
+<div class="bg-background-light border-2 border-black px-6 py-3 transform rotate-0 group-hover:rotate-3 transition-transform duration-300 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+<h3 class="text-xl font-black uppercase tracking-widest">Menswear</h3>
+</div>
+</div>
+</div>
+<!-- Category 3 -->
+<div class="relative group h-80 overflow-hidden cursor-pointer">
+<div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 z-10 transition-colors"></div>
+<img alt="Modern jewelry gold necklace" class="w-full h-full object-cover" data-alt="Contemporary gold jewelry piece" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBS-r2tHKOIA2fnabA2ErTLMi5XrglFYiH-wNP9rovpcxltXHPswwwm_pKii8LIwl-kbkgVVkQtRqeF-NxGJVX_efWRDxJh-F27__GrMXllabS0BpHx27k6yYbru9TpS-cMEfmN1_OJdxlRAkaeDiDg3Z8QldADpW87b24itOAKCz2e7P-DyZRFDjAdq7uNF3hY2BGkopj5hf9YJ9yW9g5hkyZ6ohyefbVW6DSniwpiX064MG5vs8lyeytMoXYg-ETQGEzHWzjBYu-C"/>
+<div class="absolute inset-0 flex items-center justify-center z-20">
+<div class="bg-background-light border-2 border-black px-6 py-3 transform rotate-0 group-hover:-rotate-3 transition-transform duration-300 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+<h3 class="text-xl font-black uppercase tracking-widest">Jewelry</h3>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Newsletter / Brutalist Footer Stub -->
+<footer class="w-full max-w-[1440px] mx-auto border-x-3 border-b-3 border-black bg-black text-background-light p-8 md:p-16">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
+<div class="max-w-xl">
+<h2 class="text-4xl md:text-5xl font-black uppercase leading-tight mb-6">Join the Cult.<br/>Get 10% Off.</h2>
+<div class="flex w-full">
+<input class="bg-transparent border-2 border-background-light text-background-light px-6 py-4 w-full focus:ring-0 focus:border-primary placeholder-gray-500 font-bold uppercase" placeholder="EMAIL ADDRESS" type="email"/>
+<button class="bg-background-light text-black px-8 py-4 font-black uppercase border-2 border-background-light hover:bg-primary hover:text-white hover:border-primary transition-colors">
+                        Sign Up
+                    </button>
+</div>
+</div>
+<div class="text-right">
+<div class="flex gap-4 justify-end mb-4">
+<a class="w-10 h-10 border border-background-light flex items-center justify-center hover:bg-background-light hover:text-black transition-colors" href="#">IG</a>
+<a class="w-10 h-10 border border-background-light flex items-center justify-center hover:bg-background-light hover:text-black transition-colors" href="#">FB</a>
+<a class="w-10 h-10 border border-background-light flex items-center justify-center hover:bg-background-light hover:text-black transition-colors" href="#">PT</a>
+</div>
+<p class="text-xs uppercase tracking-widest text-gray-400">© 2024 The New Veda. All Rights Reserved.</p>
+</div>
+</div>
+</footer>
+<script>
+        // Simple marquee animation
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes marquee {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+            }
+            .animate-marquee {
+                display: inline-block;
+                animation: marquee 20s linear infinite;
+                white-space: nowrap;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body></html>

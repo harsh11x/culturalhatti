@@ -1,120 +1,174 @@
-# Cultural Hatti 🪔
-## Mobile-First Brutalist Indian Cultural E-Commerce
+# Cultural Hatti - E-Commerce Platform
 
-Production-ready e-commerce platform with Razorpay payment integration, full admin control, and automated emails.
+## 🎯 System Architecture
 
-## Quick Start
-
-### Prerequisites
-- Node.js 20+
-- PostgreSQL 16+
-- Razorpay Account (test keys)
-- Gmail App Password (for SMTP)
-
-### 1. Configure Environment
-
-```bash
-cp .env.example backend/.env
-```
-
-Edit `backend/.env` with your values:
-- `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` from your Razorpay dashboard
-- `SMTP_USER` and `SMTP_PASS` (Gmail App Password)
-- Strong `JWT_SECRET` and `ADMIN_JWT_SECRET`
-
-Edit `frontend/.env.local`:
-- Set `NEXT_PUBLIC_RAZORPAY_KEY_ID` to your Razorpay test key ID
-
-### 2. Install & Run (Development)
-
-```bash
-# Backend
-cd backend
-npm install
-npm run dev            # Starts on port 3001 (auto-syncs DB)
-
-# In another terminal – Seed the database
-npm run seed           # Creates admin + sample data
-
-# Frontend
-cd frontend
-npm run dev            # Starts on port 3000
-```
-
-### 3. Seed Data
-After running `npm run seed`:
-- **Admin Login**: `admin@culturalhatti.in` / `Admin@1234`
-- 5 categories and 5 sample products created
-
-### 4. Production (Frontend)
-
-```bash
-cd frontend
-npm run build
-npm start   # or deploy the .next/ output to your static host
-```
-
-The backend runs on AWS. Set `NEXT_PUBLIC_API_URL` in `frontend/.env.local` (or as a GitHub Secret) to your AWS backend URL.
+- **Frontend:** Next.js (Vercel) - Customer website
+- **Backend:** Express.js + PostgreSQL (AWS) - API server
+- **Admin:** Next.js - Product & order management
 
 ---
 
-## Architecture
+## 🚀 Production Deployment
 
-```
-culturalhatti/
-├── backend/              # Node.js + Express + Sequelize + PostgreSQL
-│   └── src/
-│       ├── config/       # DB, Razorpay, Mailer, Seed
-│       ├── models/       # 9 Sequelize models
-│       ├── middleware/   # JWT Auth, Admin Auth, Upload, Error Handler
-│       ├── routes/       # Auth, Products, Categories, Orders, Payments, Users
-│       └── services/     # payment.service.js, email.service.js
-├── frontend/             # Next.js 14 App Router + TypeScript
-│   └── src/
-│       ├── app/          # All pages (public + admin)
-│       ├── components/   # Navbar
-│       ├── lib/          # Axios API client
-│       ├── store/        # Zustand (cart + auth)
-│       └── styles/       # Brutalist design system CSS
+### Backend (AWS)
+
+```bash
+cd backend
+npm install --production
+node src/config/seed.js  # First time - creates admin account
+pm2 start ecosystem.config.js
+pm2 save
 ```
 
-## Payment Flow (Strict - No COD)
+**Admin Credentials Created:**
+- Email: admin@culturalhatti.in
+- Password: Admin@1234
 
-1. User fills checkout address → clicks "Pay via Razorpay"
-2. Backend creates Razorpay order → returns `razorpay_order_id`
-3. Razorpay modal opens on frontend
-4. User pays → frontend receives payment IDs
-5. Frontend calls `POST /api/payments/verify` with HMAC signature
-6. Backend verifies signature → deducts stock atomically → marks order `confirmed`
-7. Confirmation email sent to customer + admin
+### Admin Panel
 
-Order remains `pending_payment` until backend verifies signature. **Stock is NEVER deducted before payment.**
+Update `admin/.env.local`:
+```env
+NEXT_PUBLIC_API_URL=https://your-backend-api.com/api
+```
 
-## Admin Panel
+Deploy:
+```bash
+cd admin
+npm run build
+npm run start  # Port 3002
+```
 
-URL: `http://localhost:3000/admin/login`
+### Frontend (Vercel)
 
-Features:
-- 📊 Dashboard with revenue/orders analytics
-- 📦 Orders: filter, search, status updates, shipment tracking, refunds
-- 🏺 Products: add/edit/delete with image uploads
-- 👥 Users: view, block, reset passwords
+Update `frontend/.env.local`:
+```env
+NEXT_PUBLIC_API_URL=https://your-backend-api.com/api
+NEXT_PUBLIC_RAZORPAY_KEY_ID=rzp_live_xxxxx
+```
 
-## Email Triggers (Automated)
+Deploy:
+```bash
+vercel --prod
+```
 
-| Event | Recipients |
-|---|---|
-| New order confirmed | Customer + Admin |
-| Order shipped | Customer (with tracking ID) |
-| Order cancelled | Customer |
-| Refund initiated | Customer |
+---
 
-## Security
+## 📧 Email Notifications
 
-- JWT (user + separate admin tokens)  
-- bcrypt password hashing  
-- Razorpay HMAC signature verification  
-- Webhook HMAC validation  
-- Rate limiting (100 req/15min)  
-- Helmet security headers  
-- File type validation on uploads  
+Admin receives email for every order at: **harshdevsingh2004@gmail.com**
+
+### Brevo Setup:
+
+1. Login: https://app.brevo.com/
+2. Go to: Settings → SMTP & API → **SMTP** tab
+3. Get your SMTP credentials (Login + Master Password)
+4. Update `backend/.env`:
+
+```env
+SMTP_HOST=smtp-relay.brevo.com
+SMTP_PORT=587
+SMTP_USER=your-brevo-login-email
+SMTP_PASS=your-smtp-master-password
+ADMIN_EMAIL=harshdevsingh2004@gmail.com
+```
+
+**Note:** Use SMTP credentials from SMTP tab, NOT the API key.
+
+---
+
+## 🔧 Environment Variables
+
+### Backend `.env`
+
+```env
+NODE_ENV=production
+PORT=3001
+FRONTEND_URL=https://your-frontend.vercel.app
+
+# Database
+DB_HOST=your-rds-endpoint.amazonaws.com
+DB_NAME=culturalhatti
+DB_USER=admin
+DB_PASSWORD=strong-password
+
+# JWT
+JWT_SECRET=long-random-secret
+ADMIN_JWT_SECRET=different-admin-secret
+
+# Razorpay
+RAZORPAY_KEY_ID=rzp_live_xxxxx
+RAZORPAY_KEY_SECRET=your-secret
+RAZORPAY_WEBHOOK_SECRET=webhook-secret
+
+# Email
+SMTP_HOST=smtp-relay.brevo.com
+SMTP_PORT=587
+SMTP_USER=your-brevo-email
+SMTP_PASS=your-smtp-password
+ADMIN_EMAIL=harshdevsingh2004@gmail.com
+```
+
+---
+
+## 🎯 Admin Features
+
+### Product Management
+- Create/edit products with images
+- Manage stock and pricing
+- Set featured products
+
+### Order Management
+- View all orders with customer details
+- Customer info: name, email, phone, address
+- Update order status
+- Add tracking information
+- Process refunds
+
+### Email Notifications
+- Admin receives email for new orders
+- Customers receive confirmations
+- Customers receive shipping updates
+
+---
+
+## 📚 Key Files
+
+```
+backend/
+├── src/server.js           - Main server
+├── src/config/seed.js      - Create admin account
+├── .env                    - Configuration
+
+admin/
+├── src/                    - Admin panel source
+├── .env.local             - Admin configuration
+
+frontend/
+├── src/                    - Frontend source
+├── .env.local             - Frontend configuration
+
+ecosystem.config.js         - PM2 configuration
+PRODUCTION_SETUP.md        - Detailed production guide
+```
+
+---
+
+## 🔐 Security
+
+- Change default admin password after first login
+- Use strong JWT secrets in production
+- Enable HTTPS on all domains
+- Set up database backups
+- Use AWS Secrets Manager for sensitive data
+
+---
+
+## 📞 Support
+
+**Admin Panel:** Login at your-admin-domain.com/admin/login
+**Brevo Dashboard:** https://app.brevo.com/
+**Razorpay Dashboard:** https://dashboard.razorpay.com/
+
+---
+
+**Last Updated:** March 1, 2026

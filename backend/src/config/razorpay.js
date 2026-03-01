@@ -1,8 +1,9 @@
 const Razorpay = require('razorpay');
 
-const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
+// MOCK Razorpay for local testing without keys
+const razorpay = {
+    orders: { create: async () => ({ id: 'order_mock_' + Date.now() }) },
+    payments: { refund: async () => ({ id: 'refund_mock_' + Date.now() }) }
+};
 
 module.exports = razorpay;

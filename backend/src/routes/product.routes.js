@@ -23,6 +23,23 @@ router.get('/', async (req, res) => {
     res.json({ success: true, ...products, page: parseInt(page) });
 });
 
+// GET /api/products/admin/all - Admin: View all products (including inactive)
+router.get('/admin/all', adminAuth, async (req, res) => {
+    const { category, search, featured, page = 1, limit = 100 } = req.query;
+    const where = {};
+    if (category) where.category_id = category;
+    if (search) where.name = { [Op.iLike]: `%${search}%` };
+    if (featured === 'true') where.featured = true;
+    const products = await Product.findAndCountAll({
+        where,
+        include: [{ model: Category, as: 'category', attributes: ['id', 'name', 'slug'] }],
+        limit: parseInt(limit),
+        offset: (parseInt(page) - 1) * parseInt(limit),
+        order: [['created_at', 'DESC']],
+    });
+    res.json({ success: true, ...products, page: parseInt(page) });
+});
+
 // GET /api/products/:slug
 router.get('/:slug', async (req, res) => {
     const product = await Product.findOne({

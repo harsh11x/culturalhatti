@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cart &amp; Checkout - Bombay Brutal</title>
+<!-- Fonts and Icons -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700;900&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#e32116",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#211211",
+                        "off-white": "#f2e9e4",
+                        "charcoal": "#1a1616",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                    borderWidth: {
+                        '3': '3px',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for a raw, brutalist feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #211211; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e32116; 
+            border-radius: 0;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #cc1d13; 
+        }
+        
+        .brutalist-border {
+            border: 2px solid #382929;
+        }
+        .dark .brutalist-border {
+            border-color: #5c4040;
+        }
+        
+        .brutalist-shadow {
+            box-shadow: 4px 4px 0px 0px #e32116;
+        }
+        
+        /* Ensure font application */
+        body {
+            font-family: "Space Grotesk", sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-display overflow-x-hidden">
+<!-- Header Section -->
+<header class="w-full border-b-2 border-slate-900 dark:border-[#382929] bg-background-light dark:bg-[#181111] sticky top-0 z-50">
+<div class="px-6 md:px-10 py-4 flex items-center justify-between max-w-[1440px] mx-auto">
+<!-- Left: Logo -->
+<div class="flex items-center gap-4">
+<div class="size-8 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h1 class="text-2xl font-black tracking-tighter uppercase text-slate-900 dark:text-white">Bombay Brutal</h1>
+</div>
+<!-- Middle: Nav Links (Desktop) -->
+<nav class="hidden md:flex items-center gap-12">
+<a class="text-sm font-bold tracking-widest hover:text-primary transition-colors uppercase" href="#">Shop</a>
+<a class="text-sm font-bold tracking-widest hover:text-primary transition-colors uppercase" href="#">Editorial</a>
+<a class="text-sm font-bold tracking-widest hover:text-primary transition-colors uppercase" href="#">Archive</a>
+</nav>
+<!-- Right: Actions -->
+<div class="flex items-center gap-6">
+<!-- Search -->
+<div class="hidden lg:flex items-center border border-slate-900 dark:border-[#5c4040] bg-white dark:bg-[#2a1e1e] h-10 px-3 w-64 rounded-none">
+<span class="material-symbols-outlined text-slate-500 dark:text-[#b89f9d]" style="font-size: 20px;">search</span>
+<input class="w-full bg-transparent border-none focus:ring-0 text-xs font-bold tracking-wide placeholder:text-slate-400 dark:placeholder:text-[#6e5d5c] text-slate-900 dark:text-white uppercase h-full" placeholder="SEARCH" type="text"/>
+</div>
+<!-- User & Cart -->
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center size-10 bg-slate-900 dark:bg-[#382929] hover:bg-primary dark:hover:bg-primary transition-colors text-white rounded-none">
+<span class="material-symbols-outlined" style="font-size: 20px;">person</span>
+</button>
+<button class="relative flex items-center justify-center size-10 bg-primary text-white rounded-none brutalist-shadow">
+<span class="material-symbols-outlined" style="font-size: 20px;">shopping_bag</span>
+<span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center bg-white text-black text-[10px] font-bold rounded-full">3</span>
+</button>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-[1440px] mx-auto p-6 md:p-10 flex flex-col lg:flex-row gap-10">
+<!-- Left Column: Cart Items -->
+<div class="flex-1 flex flex-col gap-8">
+<div class="flex flex-col gap-2">
+<h2 class="text-5xl md:text-7xl font-black uppercase leading-[0.9] tracking-tighter text-slate-900 dark:text-white">Your<br/><span class="text-primary">Selection</span></h2>
+<div class="h-1 w-24 bg-primary mt-2"></div>
+<p class="text-slate-500 dark:text-[#b89f9d] text-sm uppercase tracking-widest mt-2">Review Items (3) • Ships from Mumbai</p>
+</div>
+<!-- Cart Items List -->
+<div class="flex flex-col border-t-2 border-slate-900 dark:border-[#382929]">
+<!-- Item 1 -->
+<div class="group flex flex-col sm:flex-row gap-6 py-8 border-b border-slate-900/10 dark:border-[#382929]">
+<div class="relative w-full sm:w-40 aspect-[3/4] overflow-hidden bg-slate-200 dark:bg-[#2a1e1e]">
+<img alt="Black silk saree with gold border draped on mannequin" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 grayscale group-hover:grayscale-0" data-alt="Black silk saree with gold border draped on mannequin" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBQP_Ka01xTG-_kErM7I6A3CPTift2AxtMPiA4CtMZzRECOTQ0fsJtfKUaiISrUSp4f9qCb8j1SoxItiOoJ4RMeBKcRj_Wy3RITrcRQhX34fW_I5zbkDDXoXkxeq_Mm4jfX0TJBCNZimHuWEv11tlyCrqqvgaV4v9l1pjyHs3JZB2Y_BjoEDA1aREgOuls_fNe3FGDZ1HFTTCQTu-0nPjwzpkDW3WDZP0pNZIr88xOIbyPgl2G2cY1etOfE4gM0_ofYVsyvPUZWaYn"/>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<h3 class="text-xl md:text-2xl font-bold uppercase text-slate-900 dark:text-white leading-tight max-w-[80%]">Kanchivaram Silk Saree - Noir</h3>
+<span class="text-lg font-medium text-slate-900 dark:text-white">₹ 45,000</span>
+</div>
+<p class="text-xs font-bold text-slate-500 dark:text-[#8a7573] uppercase tracking-wide">Ref: KNC-001-BLK</p>
+<div class="flex flex-wrap gap-4 mt-2">
+<div class="px-3 py-1 border border-slate-900/20 dark:border-[#5c4040] text-xs font-bold uppercase text-slate-600 dark:text-[#d4c5c4]">Size: Free Size</div>
+<div class="px-3 py-1 border border-slate-900/20 dark:border-[#5c4040] text-xs font-bold uppercase text-slate-600 dark:text-[#d4c5c4]">Color: Noir</div>
+</div>
+</div>
+<div class="flex justify-between items-end mt-6">
+<div class="flex items-center border border-slate-900 dark:border-[#5c4040]">
+<button class="w-8 h-8 flex items-center justify-center hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="w-10 text-center text-sm font-bold">1</span>
+<button class="w-8 h-8 flex items-center justify-center hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<button class="text-xs font-bold underline decoration-2 decoration-primary underline-offset-4 hover:text-primary uppercase tracking-widest">Remove Item</button>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="group flex flex-col sm:flex-row gap-6 py-8 border-b border-slate-900/10 dark:border-[#382929]">
+<div class="relative w-full sm:w-40 aspect-[3/4] overflow-hidden bg-slate-200 dark:bg-[#2a1e1e]">
+<img alt="Orange saffron kurta traditional wear" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 grayscale group-hover:grayscale-0" data-alt="Orange saffron kurta traditional wear" src="https://lh3.googleusercontent.com/aida-public/AB6AXuApUXIcGr2o82lQRHuxhlgKH_AChyiljsmHYLpZdTT5udL2tBlMgmE5-mvvcPVvEaDB0vd6jZXV0bSsVhrv1KpOMZfvclkk_IHR7OD59oI8-AJIV2Sat8iTr18G67AjYmSu4QbZ8MdIHG2oQpT02G5Vt4IJq1AC_qmNKFp-pkRn5n8Wxif6kgYhDDXwYIYijkKnn0ZIs81rYUZof0zPlqOCXhEcL5hWFqW2aDjbDBvGiV6-X-Ltj9kGOldMv3MVpFkWgtvR1VhdVN5h"/>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<h3 class="text-xl md:text-2xl font-bold uppercase text-slate-900 dark:text-white leading-tight max-w-[80%]">Raw Mango Kurta - Saffron</h3>
+<span class="text-lg font-medium text-slate-900 dark:text-white">₹ 12,500</span>
+</div>
+<p class="text-xs font-bold text-slate-500 dark:text-[#8a7573] uppercase tracking-wide">Ref: RMK-024-SAF</p>
+<div class="flex flex-wrap gap-4 mt-2">
+<div class="px-3 py-1 border border-slate-900/20 dark:border-[#5c4040] text-xs font-bold uppercase text-slate-600 dark:text-[#d4c5c4]">Size: L</div>
+<div class="px-3 py-1 border border-slate-900/20 dark:border-[#5c4040] text-xs font-bold uppercase text-slate-600 dark:text-[#d4c5c4]">Color: Saffron</div>
+</div>
+</div>
+<div class="flex justify-between items-end mt-6">
+<div class="flex items-center border border-slate-900 dark:border-[#5c4040]">
+<button class="w-8 h-8 flex items-center justify-center hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="w-10 text-center text-sm font-bold">1</span>
+<button class="w-8 h-8 flex items-center justify-center hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<button class="text-xs font-bold underline decoration-2 decoration-primary underline-offset-4 hover:text-primary uppercase tracking-widest">Remove Item</button>
+</div>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="group flex flex-col sm:flex-row gap-6 py-8 border-b border-slate-900 dark:border-[#382929]">
+<div class="relative w-full sm:w-40 aspect-[3/4] overflow-hidden bg-slate-200 dark:bg-[#2a1e1e]">
+<img alt="Gold brass jewelry choker necklace" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 grayscale group-hover:grayscale-0" data-alt="Gold brass jewelry choker necklace" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvp1p66hmQRNn57cRXuANYBXQWwBWhX8OoZX5RNlWoZFYM4yR9vEf06SNI7g7Xb-W3yR2-vhQ1l9XZ3FiOXPp_s3koa98NesavNZunnjF5jbOzDN_TaKf99hJ9ArGBrAoYjZKfjE2GOo7ngBzUxxQPBo0uJiZK_W9BdKcBIZqQSj77kqm7kphYdXntPKXVXh97YDVGI8IL-l6Jzx9aE6WN5hTEge19GcJjexuuvCTeaAyjHF_pqlQLs3Cd_8MLg6oyJKKZasFF3d3J"/>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<h3 class="text-xl md:text-2xl font-bold uppercase text-slate-900 dark:text-white leading-tight max-w-[80%]">Brass Statement Choker</h3>
+<span class="text-lg font-medium text-slate-900 dark:text-white">₹ 8,900</span>
+</div>
+<p class="text-xs font-bold text-slate-500 dark:text-[#8a7573] uppercase tracking-wide">Ref: BSC-009-GLD</p>
+<div class="flex flex-wrap gap-4 mt-2">
+<div class="px-3 py-1 border border-slate-900/20 dark:border-[#5c4040] text-xs font-bold uppercase text-slate-600 dark:text-[#d4c5c4]">Material: Brass</div>
+</div>
+</div>
+<div class="flex justify-between items-end mt-6">
+<div class="flex items-center border border-slate-900 dark:border-[#5c4040]">
+<button class="w-8 h-8 flex items-center justify-center hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="w-10 text-center text-sm font-bold">1</span>
+<button class="w-8 h-8 flex items-center justify-center hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<button class="text-xs font-bold underline decoration-2 decoration-primary underline-offset-4 hover:text-primary uppercase tracking-widest">Remove Item</button>
+</div>
+</div>
+</div>
+</div>
+<a class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors self-start mt-4" href="#">
+<span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span>
+                Continue Shopping
+            </a>
+</div>
+<!-- Right Column: Summary Sticky -->
+<div class="w-full lg:w-[420px] shrink-0">
+<div class="sticky top-28 flex flex-col">
+<!-- Order Summary Card -->
+<div class="bg-white dark:bg-[#181111] border-2 border-slate-900 dark:border-[#382929] p-6 md:p-8 flex flex-col gap-6 relative">
+<!-- Decorative Corner -->
+<div class="absolute top-0 right-0 w-8 h-8 bg-primary"></div>
+<h3 class="text-2xl font-black uppercase text-slate-900 dark:text-white tracking-tight">Order Summary</h3>
+<div class="flex flex-col gap-4 text-sm font-bold uppercase tracking-wide text-slate-600 dark:text-[#d4c5c4]">
+<div class="flex justify-between">
+<span>Subtotal</span>
+<span class="text-slate-900 dark:text-white">₹ 66,400</span>
+</div>
+<div class="flex justify-between">
+<span>Shipping</span>
+<span class="text-slate-900 dark:text-white">Calculated at next step</span>
+</div>
+<div class="flex justify-between">
+<span>Taxes (GST 12%)</span>
+<span class="text-slate-900 dark:text-white">₹ 7,968</span>
+</div>
+</div>
+<div class="h-px bg-slate-900 dark:bg-[#382929] w-full"></div>
+<div class="flex justify-between text-xl font-black uppercase text-slate-900 dark:text-white">
+<span>Total</span>
+<span>₹ 74,368</span>
+</div>
+<!-- Promo Code -->
+<div class="flex flex-col gap-2 mt-2">
+<label class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-[#8a7573]">Have a promo code?</label>
+<div class="flex h-12">
+<input class="flex-1 bg-transparent border-2 border-slate-900 dark:border-[#382929] px-4 font-bold uppercase placeholder:text-slate-400 dark:placeholder:text-[#5c4040] focus:ring-0 focus:border-primary dark:focus:border-primary transition-colors text-slate-900 dark:text-white rounded-none" placeholder="CODE" type="text"/>
+<button class="bg-slate-900 dark:bg-[#382929] text-white px-6 font-bold uppercase hover:bg-slate-800 transition-colors rounded-none">Apply</button>
+</div>
+</div>
+<!-- Payment Methods Icons (Visual flair) -->
+<div class="flex gap-2 opacity-50 grayscale mt-2">
+<div class="h-6 w-10 bg-slate-300 dark:bg-[#2a1e1e] rounded flex items-center justify-center text-[10px] font-bold">VISA</div>
+<div class="h-6 w-10 bg-slate-300 dark:bg-[#2a1e1e] rounded flex items-center justify-center text-[10px] font-bold">MC</div>
+<div class="h-6 w-10 bg-slate-300 dark:bg-[#2a1e1e] rounded flex items-center justify-center text-[10px] font-bold">UPI</div>
+</div>
+</div>
+<!-- Checkout Button -->
+<button class="w-full mt-4 bg-primary hover:bg-[#c2190f] text-white h-16 text-lg font-black uppercase tracking-widest flex items-center justify-between px-8 brutalist-shadow transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none rounded-none group">
+<span>Proceed to Checkout</span>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+<!-- Secure Checkout Notice -->
+<div class="flex items-center justify-center gap-2 mt-6 text-slate-500 dark:text-[#8a7573]">
+<span class="material-symbols-outlined" style="font-size: 16px;">lock</span>
+<p class="text-xs font-bold uppercase tracking-widest">Secure Checkout</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="mt-auto border-t-2 border-slate-900 dark:border-[#382929] bg-background-light dark:bg-[#181111] pt-16 pb-8">
+<div class="px-6 md:px-10 max-w-[1440px] mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+<!-- Col 1 -->
+<div class="flex flex-col gap-4">
+<h4 class="text-lg font-black uppercase tracking-tighter text-slate-900 dark:text-white">Bombay Brutal</h4>
+<p class="text-sm text-slate-600 dark:text-[#b89f9d] leading-relaxed">
+                        Reimagining Indian heritage through a brutalist lens. High fashion for the bold.
+                    </p>
+</div>
+<!-- Col 2 -->
+<div class="flex flex-col gap-4">
+<h4 class="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white">Support</h4>
+<div class="flex flex-col gap-2 text-sm text-slate-600 dark:text-[#b89f9d]">
+<a class="hover:text-primary" href="#">Contact Us</a>
+<a class="hover:text-primary" href="#">Shipping &amp; Returns</a>
+<a class="hover:text-primary" href="#">Size Guide</a>
+<a class="hover:text-primary" href="#">FAQ</a>
+</div>
+</div>
+<!-- Col 3 -->
+<div class="flex flex-col gap-4">
+<h4 class="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white">Legal</h4>
+<div class="flex flex-col gap-2 text-sm text-slate-600 dark:text-[#b89f9d]">
+<a class="hover:text-primary" href="#">Privacy Policy</a>
+<a class="hover:text-primary" href="#">Terms of Service</a>
+</div>
+</div>
+<!-- Col 4 -->
+<div class="flex flex-col gap-4">
+<h4 class="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white">Newsletter</h4>
+<div class="flex border-b border-slate-900 dark:border-[#5c4040]">
+<input class="bg-transparent border-none px-0 py-2 w-full text-sm placeholder:text-slate-400 dark:placeholder:text-[#5c4040] focus:ring-0" placeholder="EMAIL ADDRESS" type="email"/>
+<button class="uppercase text-xs font-bold text-primary">Join</button>
+</div>
+</div>
+</div>
+<div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-slate-900/10 dark:border-[#382929] gap-4">
+<p class="text-xs font-bold uppercase text-slate-400 dark:text-[#5c4040]">© 2024 Bombay Brutal. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="text-slate-400 dark:text-[#5c4040] hover:text-primary" href="#">INSTAGRAM</a>
+<a class="text-slate-400 dark:text-[#5c4040] hover:text-primary" href="#">FACEBOOK</a>
+<a class="text-slate-400 dark:text-[#5c4040] hover:text-primary" href="#">PINTEREST</a>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

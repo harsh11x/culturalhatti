@@ -143,24 +143,26 @@ const sendOrderRefunded = async (order) => {
 const sendAdminNewOrder = async (order) => {
     const items = order.items || [];
     const addr = formatAddress(order.shipping_address);
+    const phone = order.user?.phone || order.shipping_address?.phone || 'N/A';
     const html = `<!DOCTYPE html><html><head><style>${baseStyle}</style></head><body>
   <div class="wrapper">
     ${buildHeader('NEW ORDER RECEIVED — ADMIN ALERT')}
     <div class="body">
       <h2>New Order Received</h2>
       <div class="info-row"><span class="label">Order #</span><span class="value">${order.order_number}</span></div>
-      <div class="info-row"><span class="label">Customer</span><span class="value">${order.user?.name || 'N/A'}</span></div>
+      <div class="info-row"><span class="label">Customer Name</span><span class="value">${order.user?.name || 'N/A'}</span></div>
       <div class="info-row"><span class="label">Customer Email</span><span class="value">${order.user?.email || 'N/A'}</span></div>
+      <div class="info-row"><span class="label">Customer Phone</span><span class="value">${phone}</span></div>
       <div class="info-row"><span class="label">Razorpay Payment ID</span><span class="value">${order.payment_id || 'Pending'}</span></div>
       <div class="info-row"><span class="label">Total Amount</span><span class="value">₹${parseFloat(order.total_amount).toFixed(2)}</span></div>
-      <div class="info-row"><span class="label">Shipping To</span><span class="value">${addr}</span></div>
-      <h2>Items</h2>
+      <div class="info-row"><span class="label">Shipping Address</span><span class="value">${addr}</span></div>
+      <h2>Items Ordered</h2>
       ${buildItemsTable(items)}
       <div class="total-row"><span>Total</span><span>₹${parseFloat(order.total_amount).toFixed(2)}</span></div>
     </div>
     ${buildFooter()}
   </div></body></html>`;
-    await sendMail({ to: ADMIN_EMAIL, subject: `New Order Received – Order #${order.order_number}`, html });
+    await sendMail({ to: ADMIN_EMAIL, subject: `🛍️ New Order #${order.order_number} - ₹${parseFloat(order.total_amount).toFixed(2)}`, html });
 };
 
 module.exports = {

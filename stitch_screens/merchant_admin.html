@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Merchant Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#e32116",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#211211",
+                        "surface-dark": "#2a1a1a",
+                        "border-dark": "#4a2b2b",
+                        "ivory": "#fffff0",
+                        "royal-blue": "#2b4c7e", // Interpreting the request for royal blue as a secondary accent
+                    },
+                    fontFamily: {
+                        "sans": ["Space Grotesk", "sans-serif"],
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0px", // Brutalist - sharp corners
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "9999px", // Keep full for avatars/circles
+                        "none": "0px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Brutalist scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #211211; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e32116; 
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff4d4d; 
+        }
+        
+        /* Remove rounded corners override */
+        .rounded, .rounded-lg, .rounded-xl, .rounded-md, .rounded-sm {
+            border-radius: 0px !important;
+        }
+        .rounded-full {
+            border-radius: 9999px !important;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-ivory font-display antialiased min-h-screen flex flex-col overflow-x-hidden">
+<!-- Top Navigation -->
+<header class="w-full border-b-2 border-primary bg-background-dark sticky top-0 z-50">
+<div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+<!-- Logo & Brand -->
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined text-4xl">diamond</span>
+<h1 class="text-2xl font-bold tracking-tighter uppercase text-white">Merchant<span class="text-primary">.Studio</span></h1>
+</div>
+<!-- Desktop Nav -->
+<nav class="hidden md:flex items-center ml-8 gap-1">
+<a class="px-4 py-2 text-sm font-bold uppercase tracking-widest text-primary border border-primary bg-primary/10 hover:bg-primary hover:text-white transition-colors" href="#">Dashboard</a>
+<a class="px-4 py-2 text-sm font-bold uppercase tracking-widest text-ivory/70 hover:text-primary transition-colors" href="#">Orders</a>
+<a class="px-4 py-2 text-sm font-bold uppercase tracking-widest text-ivory/70 hover:text-primary transition-colors" href="#">Inventory</a>
+<a class="px-4 py-2 text-sm font-bold uppercase tracking-widest text-ivory/70 hover:text-primary transition-colors" href="#">Analytics</a>
+</nav>
+</div>
+<!-- Right Actions -->
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block w-64 group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-500 group-focus-within:text-primary">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-2 border border-border-dark bg-surface-dark text-ivory placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm font-mono" placeholder="SEARCH ORDER ID..." type="text"/>
+</div>
+<button class="relative p-2 text-gray-400 hover:text-primary transition-colors border border-transparent hover:border-border-dark">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 block h-2 w-2 rounded-full bg-primary ring-2 ring-background-dark"></span>
+</button>
+<button class="flex items-center gap-3 pl-4 border-l border-border-dark">
+<div class="h-9 w-9 bg-gray-700 bg-cover bg-center rounded-full ring-2 ring-primary/50" data-alt="User profile picture" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAG0fks7n-OCyVoGX-_GFrvF5QW2tH6VqzgQZuhkElAk8y50an8Kc9aruCg4OHpXfIk-W8bQnJeEJsFaTNU5lRUwN3Kf1D-riT_p5qVQXmFqoKpWMi4aceguzRVaZq5hFddxml9wgH7IT1hUXPmrf-YPLmlcGvVkW6geNnDas1tnGrk9rvajc1tfuGY_11slyq9CjBcFyAVgrJhEr8ytdZbQpQjOyGqJfWgJ84xta03QLdeY7DwIc8Abq7_mQVyR99czFxSiElvuvca');"></div>
+<div class="hidden lg:block text-left">
+<p class="text-xs font-bold uppercase text-white tracking-wider">Tarun T.</p>
+<p class="text-[10px] text-gray-400 font-mono">ADMIN</p>
+</div>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 w-full max-w-[1400px] mx-auto p-4 sm:px-6 lg:px-8 py-8 space-y-8">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-border-dark pb-6">
+<div>
+<h2 class="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white mb-2">Overview</h2>
+<p class="text-gray-400 font-mono text-sm">UPDATED: OCT 24, 2023 — 14:30 IST</p>
+</div>
+<div class="flex gap-3">
+<button class="px-5 py-3 border border-border-dark text-white hover:bg-surface-dark uppercase text-xs font-bold tracking-widest flex items-center gap-2">
+<span class="material-symbols-outlined text-base">download</span> Export Report
+                </button>
+<button class="px-5 py-3 bg-primary text-white hover:bg-red-700 uppercase text-xs font-bold tracking-widest flex items-center gap-2 shadow-[4px_4px_0px_0px_rgba(255,255,255,0.1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
+<span class="material-symbols-outlined text-base">add</span> New Product
+                </button>
+</div>
+</div>
+<!-- KPI Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 border border-border-dark bg-surface-dark">
+<!-- KPI 1 -->
+<div class="p-6 border-b md:border-b-0 lg:border-r border-border-dark relative group overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-primary">payments</span>
+</div>
+<p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Total Revenue</p>
+<div class="flex items-baseline gap-2">
+<h3 class="text-3xl font-bold text-white tracking-tight">₹12.4L</h3>
+<span class="text-xs font-mono text-green-500 bg-green-500/10 px-1 py-0.5">+12%</span>
+</div>
+<div class="w-full bg-gray-800 h-1 mt-4">
+<div class="bg-primary h-1" style="width: 75%"></div>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="p-6 border-b md:border-b-0 lg:border-r border-border-dark relative group overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-ivory">shopping_bag</span>
+</div>
+<p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Daily Orders</p>
+<div class="flex items-baseline gap-2">
+<h3 class="text-3xl font-bold text-white tracking-tight">42</h3>
+<span class="text-xs font-mono text-green-500 bg-green-500/10 px-1 py-0.5">+5%</span>
+</div>
+<div class="w-full bg-gray-800 h-1 mt-4">
+<div class="bg-white h-1" style="width: 45%"></div>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="p-6 border-b md:border-b-0 md:border-r lg:border-r border-border-dark relative group overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-royal-blue">trending_up</span>
+</div>
+<p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Avg. Order Value</p>
+<div class="flex items-baseline gap-2">
+<h3 class="text-3xl font-bold text-white tracking-tight">₹2,964</h3>
+<span class="text-xs font-mono text-green-500 bg-green-500/10 px-1 py-0.5">+1.2%</span>
+</div>
+<div class="w-full bg-gray-800 h-1 mt-4">
+<div class="bg-royal-blue h-1" style="width: 60%"></div>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="p-6 relative group overflow-hidden bg-primary text-white">
+<div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-30 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-black">percent</span>
+</div>
+<p class="text-xs font-bold uppercase tracking-widest text-black/60 mb-1">Conversion Rate</p>
+<div class="flex items-baseline gap-2">
+<h3 class="text-3xl font-bold text-white tracking-tight">3.2%</h3>
+<span class="text-xs font-mono text-white bg-black/20 px-1 py-0.5">-0.4%</span>
+</div>
+<p class="text-[10px] mt-4 font-mono text-black/60 uppercase">Target: 4.0% by Nov 1</p>
+</div>
+</div>
+<!-- Main Dashboard Split -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Left Column: Analytics & Graph -->
+<div class="lg:col-span-2 flex flex-col gap-8">
+<!-- Chart Section -->
+<div class="border border-border-dark bg-surface-dark p-6 md:p-8">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-xl font-bold uppercase tracking-tight text-white flex items-center gap-2">
+<span class="w-2 h-2 bg-primary inline-block"></span>
+                            Revenue Trends
+                        </h3>
+<div class="flex gap-2">
+<button class="text-xs font-mono px-3 py-1 bg-primary text-white">30D</button>
+<button class="text-xs font-mono px-3 py-1 bg-transparent text-gray-400 hover:text-white hover:bg-white/5 border border-transparent hover:border-gray-600">3M</button>
+<button class="text-xs font-mono px-3 py-1 bg-transparent text-gray-400 hover:text-white hover:bg-white/5 border border-transparent hover:border-gray-600">1Y</button>
+</div>
+</div>
+<!-- SVG Chart Representation -->
+<div class="relative h-64 w-full">
+<svg class="w-full h-full overflow-visible" viewbox="0 0 800 200">
+<!-- Grid lines -->
+<line stroke="#333" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="800" y1="0" y2="0"></line>
+<line stroke="#333" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="800" y1="50" y2="50"></line>
+<line stroke="#333" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="800" y1="100" y2="100"></line>
+<line stroke="#333" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="800" y1="150" y2="150"></line>
+<!-- Area fill -->
+<path d="M0,120 Q100,100 200,140 T400,80 T600,100 T800,40 V200 H0 Z" fill="url(#gradient)" opacity="0.4"></path>
+<!-- Line -->
+<path d="M0,120 Q100,100 200,140 T400,80 T600,100 T800,40" fill="none" stroke="#e32116" stroke-width="3" vector-effect="non-scaling-stroke"></path>
+<!-- Dots -->
+<circle cx="200" cy="140" fill="#181111" r="4" stroke="#e32116" stroke-width="2"></circle>
+<circle cx="400" cy="80" fill="#181111" r="4" stroke="#e32116" stroke-width="2"></circle>
+<circle cx="600" cy="100" fill="#181111" r="4" stroke="#e32116" stroke-width="2"></circle>
+<circle cx="800" cy="40" fill="#181111" r="4" stroke="#e32116" stroke-width="2"></circle>
+<defs>
+<lineargradient id="gradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:#e32116;stop-opacity:0.5"></stop>
+<stop offset="100%" style="stop-color:#e32116;stop-opacity:0"></stop>
+</lineargradient>
+</defs>
+</svg>
+<!-- X-Axis Labels -->
+<div class="flex justify-between mt-4 text-[10px] font-mono text-gray-500 uppercase">
+<span>Week 1</span>
+<span>Week 2</span>
+<span>Week 3</span>
+<span>Week 4</span>
+</div>
+</div>
+</div>
+<!-- Recent Orders Table -->
+<div class="border border-border-dark bg-surface-dark overflow-hidden">
+<div class="p-6 border-b border-border-dark flex justify-between items-center">
+<h3 class="text-xl font-bold uppercase tracking-tight text-white">Recent Orders</h3>
+<a class="text-xs font-bold text-primary hover:text-white uppercase tracking-wider flex items-center gap-1" href="#">
+                            View All <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-border-dark bg-background-dark/50 text-xs font-bold uppercase tracking-widest text-gray-400">
+<th class="p-4 font-normal">Order ID</th>
+<th class="p-4 font-normal">Customer</th>
+<th class="p-4 font-normal">Product</th>
+<th class="p-4 font-normal text-right">Amount</th>
+<th class="p-4 font-normal text-center">Status</th>
+</tr>
+</thead>
+<tbody class="text-sm divide-y divide-border-dark font-mono">
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="p-4 text-white">#ORD-7321</td>
+<td class="p-4 text-gray-300">
+<div class="flex items-center gap-3">
+<div class="w-6 h-6 bg-gray-700 bg-cover bg-center rounded-full" data-alt="Customer avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB-_H7BAWsI_zq0wZ5EO4HAuoFLVIrjyaKOPbUflQcIRGnasGU_EvFo3mYwNiJxX1SnDvBHmRsPLtTdlcr2D5DfWCGLs2_5W4eMhb52lISNl6uKV_negT5FFAou7F_JZKkzfOfYpZHurX4-V65IDcx9jIr4meYRts3Qui_ZhUsFiciUiqWZwAmA7Y6YpBl01Xoxids6z6oSaqHojfnaD-XgISxKuXr2N0pdGO7J1S92PQxkrLYPJ-bS8r5EAClxqnfcYt8-CbK2tJ36');"></div>
+<span>Priya S.</span>
+</div>
+</td>
+<td class="p-4 text-gray-400">Silk Saree (Red)</td>
+<td class="p-4 text-white font-bold text-right">₹12,400</td>
+<td class="p-4 text-center">
+<span class="inline-block px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-black bg-green-400">Paid</span>
+</td>
+</tr>
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="p-4 text-white">#ORD-7320</td>
+<td class="p-4 text-gray-300">
+<div class="flex items-center gap-3">
+<div class="w-6 h-6 bg-gray-700 bg-cover bg-center rounded-full" data-alt="Customer avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBhQqMdYh4pZk-digqmTESczdwOYySqnPj7EhAJGI6e95dOXNhurAzPhUowbi0Cw1jLx6-d_VPszZXzVpzDHahIDFuJ-5phg3W4IwnVvb2827bw_CNG8hfqspeEHvLvzirfPjOtNywJEdrTCSkInXF7PO2VVVfBxeE1jkw1ERCPLziCtwTkBuY7ZXW4D4y4j0gQiHeKvHgfzbWUWexydmE4GlvRbc9WxDaSPcjvsNKwk2oX49__CFGhkBPy8Vfzl4nnZZ_SaILZbJZ0');"></div>
+<span>Rahul K.</span>
+</div>
+</td>
+<td class="p-4 text-gray-400">Embroidered Sherwani</td>
+<td class="p-4 text-white font-bold text-right">₹45,000</td>
+<td class="p-4 text-center">
+<span class="inline-block px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-black bg-yellow-400">Processing</span>
+</td>
+</tr>
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="p-4 text-white">#ORD-7319</td>
+<td class="p-4 text-gray-300">
+<div class="flex items-center gap-3">
+<div class="w-6 h-6 bg-gray-700 bg-cover bg-center rounded-full" data-alt="Customer avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD744Iqsf79e-kem8k74bx8OU-9AUbaZ5dxzQa8iMVf-9j0FUkypn6LhapIyJVk_9RpeEw9VfXs9W5FXfyKd_4me8iX0Yq9yxAkupaO2kNjwVvLePjRjRsaMPNZIVPLo4uyEw4GXh6rUl6sDt1WpX90wBHWpdgVWm-5wk4kKlPWZv88xCc99MGes_aUbLnvczPsilrhmFiCb-D341b1UTtz4m-Xf27n5ki6x7NJU1-HY06fhJalGakrig1Gt1-WcUp4vtmGDGmrFS_h');"></div>
+<span>Anika M.</span>
+</div>
+</td>
+<td class="p-4 text-gray-400">Gold Kundan Set</td>
+<td class="p-4 text-white font-bold text-right">₹8,500</td>
+<td class="p-4 text-center">
+<span class="inline-block px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-black bg-white">Shipped</span>
+</td>
+</tr>
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="p-4 text-white">#ORD-7318</td>
+<td class="p-4 text-gray-300">
+<div class="flex items-center gap-3">
+<div class="w-6 h-6 bg-gray-700 bg-cover bg-center rounded-full" data-alt="Customer avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCNM4HyXmJ9b6uHh-AJHEaumYxE_2GspRDOZWf2vhF0Z_jGsp-iK8VCOHZrUZUjR40WtGi6VpNo0EA8m_5twvfYbCWr1HMGGZaz8SM2KOhZFhyTlNh9blrq5eNs3EESTnmGMQcoc_dgvfv4MR-8qf_1q2EG-_M7ifPWaDlZzfxdCyhDIJdVa-sYUyWLF9m0DIsxnAf2YvKkFoiQfN_YXS-BX0OYPxUdUsQ2k07kZoXvk_tolLhtEJAfGl80jMLTGL6uySrc-ZIG7zku');"></div>
+<span>Vikram R.</span>
+</div>
+</td>
+<td class="p-4 text-gray-400">Printed Kurta</td>
+<td class="p-4 text-white font-bold text-right">₹2,200</td>
+<td class="p-4 text-center">
+<span class="inline-block px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-white bg-red-600">Failed</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Right Column: Top Products & Activity -->
+<div class="flex flex-col gap-8">
+<!-- Best Sellers -->
+<div class="border border-border-dark bg-ivory text-background-dark p-6">
+<h3 class="text-xl font-bold uppercase tracking-tight mb-6 flex items-center justify-between">
+                        Top Categories
+                        <span class="material-symbols-outlined">stars</span>
+</h3>
+<div class="space-y-5">
+<div class="flex items-center gap-4 group cursor-pointer">
+<div class="w-12 h-16 bg-gray-200 bg-cover bg-center" data-alt="Saree product image" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDQ8WoYjVVcRR9RP0m6wcYJ3mTnBMaBt_uqsN-s_kNO4yWLxoHeJdwrGQ8rHihtGCBU9i8JU2ePK3r_DOX_oOaltLSaMhQAHpZLaKOUJXL1nJ-VBCwXvWvIjvS90oDklpHVClDX5FZOdwrFnNgFl6K8H8jMlHk3a-GgycfxzPG0xDpZei7HL2BtdpF1Er7BudODWgZkYOxF1MhrYw3ha4gToIrE3JMoevw4Cq2JmVzWiwlERgcSevpxj1ytuC_DXHHV4eXWtiFuBS0t');"></div>
+<div class="flex-1">
+<div class="flex justify-between items-baseline mb-1">
+<h4 class="font-bold uppercase text-sm">Sarees</h4>
+<span class="font-mono text-xs text-gray-600">450 Units</span>
+</div>
+<div class="w-full bg-gray-300 h-2">
+<div class="bg-primary h-2 w-[80%] transition-all group-hover:bg-black"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4 group cursor-pointer">
+<div class="w-12 h-16 bg-gray-200 bg-cover bg-center" data-alt="Lehenga product image" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCc-Y-jXP6xfstxKBLB0EwEELprCC8ZJ9lCL5Q-vlpRBCie0eEg-9Nq6jcsSqc_7_qKKk_eI7Qu1oYIi4ymHb81cxuyGFJVxi4VyVJ5Gl3KPf3zm2rQ29izOdi2KusuTZlvHe8JamM6PfCHrfa2OIRxH9VqgFFb-0yx2g81nmOhpZV62-Lpwx0XA7txp1dRyKcpG9Gl_J6Hg_wH9H88u8a4Od5J7pMxxoNdGClDldFBWOW6Qd0wI860XCMbDfgtLquUmhr3nYO_ZG3C');"></div>
+<div class="flex-1">
+<div class="flex justify-between items-baseline mb-1">
+<h4 class="font-bold uppercase text-sm">Lehengas</h4>
+<span class="font-mono text-xs text-gray-600">320 Units</span>
+</div>
+<div class="w-full bg-gray-300 h-2">
+<div class="bg-royal-blue h-2 w-[60%] transition-all group-hover:bg-black"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4 group cursor-pointer">
+<div class="w-12 h-16 bg-gray-200 bg-cover bg-center" data-alt="Jewelry product image" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCEcqykNrAX3XG3j4_T2spoggs72SChxzyUILdIMEDuR6OKnGT10DFVx__fqFVzW96bMWok9wgjVaZU4UE3s4iQ9S9MiRJ6rsMitzjzdfNy5ixjeGaiFCy_F7Sc6NPcNuI4e8RLqxA0kSc4U1BZI1UFtB2JqfS3PDjcr6_CxdJhVCn0xi6FZoXsVTBjTHzD4pwQAZoh1HH3HVCBWnRHvff9XjGMxquKnUvNmmZZ_nN5JzHTOFWIK8nC_BWo0UaG8czTnWy5XbpR2BXC');"></div>
+<div class="flex-1">
+<div class="flex justify-between items-baseline mb-1">
+<h4 class="font-bold uppercase text-sm">Jewelry</h4>
+<span class="font-mono text-xs text-gray-600">180 Units</span>
+</div>
+<div class="w-full bg-gray-300 h-2">
+<div class="bg-gray-800 h-2 w-[35%] transition-all group-hover:bg-black"></div>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-3 border-2 border-background-dark text-background-dark font-bold uppercase text-xs hover:bg-background-dark hover:text-white transition-colors">
+                        Manage Inventory
+                    </button>
+</div>
+<!-- Live Feed / Notifications -->
+<div class="border border-border-dark bg-surface-dark p-6 flex-1">
+<h3 class="text-xl font-bold uppercase tracking-tight text-white mb-6 flex items-center gap-2">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+</span>
+                        Live Feed
+                    </h3>
+<div class="relative pl-4 border-l border-gray-700 space-y-8">
+<div class="relative">
+<span class="absolute -left-[21px] top-1 h-2.5 w-2.5 bg-gray-500 border-2 border-surface-dark"></span>
+<p class="text-xs text-gray-400 font-mono mb-1">2 mins ago</p>
+<p class="text-sm text-gray-200">New order <span class="text-primary font-bold">#ORD-7322</span> received from Mumbai.</p>
+</div>
+<div class="relative">
+<span class="absolute -left-[21px] top-1 h-2.5 w-2.5 bg-gray-500 border-2 border-surface-dark"></span>
+<p class="text-xs text-gray-400 font-mono mb-1">15 mins ago</p>
+<p class="text-sm text-gray-200">Stock alert: <span class="text-white font-bold">Red Silk Saree</span> is low on inventory (3 left).</p>
+</div>
+<div class="relative">
+<span class="absolute -left-[21px] top-1 h-2.5 w-2.5 bg-gray-500 border-2 border-surface-dark"></span>
+<p class="text-xs text-gray-400 font-mono mb-1">1 hour ago</p>
+<p class="text-sm text-gray-200">Payment of <span class="text-white font-bold">₹45,000</span> failed for order #ORD-7318.</p>
+</div>
+<div class="relative">
+<span class="absolute -left-[21px] top-1 h-2.5 w-2.5 bg-gray-500 border-2 border-surface-dark"></span>
+<p class="text-xs text-gray-400 font-mono mb-1">3 hours ago</p>
+<p class="text-sm text-gray-200">System backup completed successfully.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Admin, Category, Product, syncDatabase } = require('./src/models');
+const { Admin, Category, Product, syncDatabase } = require('../models');
 
 const seed = async () => {
     await syncDatabase({ force: true });
@@ -16,7 +16,10 @@ const seed = async () => {
 
     // Create categories
     const cats = await Category.bulkCreate([
-        { name: 'Sarees & Textiles', slug: 'sarees-textiles', description: 'Handwoven sarees from master weavers', image_url: null },
+        { name: 'Sarees', slug: 'sarees', description: 'Handwoven sarees from master weavers', image_url: null },
+        { name: 'Suits', slug: 'suits', description: 'Traditional and modern suits', image_url: null },
+        { name: 'Bags', slug: 'bags', description: 'Handcrafted premium bags', image_url: null },
+        { name: 'Accessories', slug: 'accessories', description: 'Cultural accessories and add-ons', image_url: null },
         { name: 'Pottery & Ceramics', slug: 'pottery-ceramics', description: 'Traditional earthen art', image_url: null },
         { name: 'Jewellery', slug: 'jewellery', description: 'Tribal and temple jewellery', image_url: null },
         { name: 'Paintings', slug: 'paintings', description: 'Madhubani, Warli, Pattachitra', image_url: null },

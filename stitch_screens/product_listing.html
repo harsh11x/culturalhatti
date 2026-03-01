@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Product Listing Page</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#e32116",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#211211",
+                        "accent-saffron": "#FF9933",
+                        "accent-blue": "#000080", // Royal Blue
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "body": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0px", // Enforcing brutalist sharp edges
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "9999px",
+                    },
+                    borderWidth: {
+                        '3': '3px',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        /* Custom scrollbar for brutalist feel */
+        ::-webkit-scrollbar {
+            width: 12px;
+            background: #211211;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e32116; 
+            border: 2px solid #211211;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-display">
+<!-- Header / Navbar -->
+<header class="sticky top-0 z-50 w-full bg-background-light dark:bg-background-dark border-b-4 border-slate-900 dark:border-slate-100">
+<div class="px-6 py-4 flex items-center justify-between">
+<!-- Logo Section -->
+<div class="flex items-center gap-4">
+<div class="size-8 text-primary">
+<span class="material-symbols-outlined text-4xl">temple_hindu</span>
+</div>
+<h1 class="text-3xl font-bold tracking-tighter uppercase text-slate-900 dark:text-slate-100">Indigenous</h1>
+</div>
+<!-- Desktop Nav Links -->
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-lg font-bold uppercase hover:text-primary hover:underline decoration-4 underline-offset-4" href="#">Shop</a>
+<a class="text-lg font-bold uppercase hover:text-primary hover:underline decoration-4 underline-offset-4" href="#">Editorial</a>
+<a class="text-lg font-bold uppercase hover:text-primary hover:underline decoration-4 underline-offset-4" href="#">Archive</a>
+<a class="text-lg font-bold uppercase hover:text-primary hover:underline decoration-4 underline-offset-4" href="#">About</a>
+</nav>
+<!-- Actions -->
+<div class="flex items-center gap-4">
+<div class="hidden md:flex items-center border-2 border-slate-900 dark:border-slate-100 h-10 w-64 bg-white dark:bg-[#382929]">
+<div class="px-2 flex items-center justify-center border-r-2 border-slate-900 dark:border-slate-100 h-full">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-100">search</span>
+</div>
+<input class="w-full bg-transparent border-none focus:ring-0 text-sm font-bold uppercase placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-slate-100" placeholder="SEARCH ARCHIVE..." type="text"/>
+</div>
+<button class="flex items-center justify-center size-10 bg-accent-saffron border-2 border-slate-900 dark:border-slate-100 hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-slate-900">shopping_bag</span>
+</button>
+<div class="size-10 border-2 border-slate-900 dark:border-slate-100 bg-cover bg-center" data-alt="User profile avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDdkD4YbkUlXazOLCwZXKWOHtBTN3wLntc_P-1EIO0U1hCo86oCjPLUpiUdfXms_YYv-B9cwEsEerag_3bmChhaK_UaXiPFPnG3o7M63_dHGmfbhmaQzEM7hIhViveySneUuJl9rV9WUI_nasw8DvSICmNav8JGIvSqJjf9YFvvIBUMSaIz7K27wPXA6ITTMKsB9_s6vcIiAZncie1fYgpbpS_e_TOdSDAO1VT7MB-RvnP7BBuX0B1J0IefZE32XrnXI0KHJUT_8H4Y');"></div>
+</div>
+</div>
+</header>
+<!-- Main Content Grid -->
+<main class="flex-grow w-full max-w-[1920px] mx-auto grid grid-cols-1 lg:grid-cols-12 border-x-4 border-slate-900 dark:border-slate-100">
+<!-- Sidebar Filters (Desktop) -->
+<aside class="hidden lg:block col-span-2 border-r-4 border-slate-900 dark:border-slate-100 bg-background-light dark:bg-[#1a0f0e]">
+<div class="sticky top-24 p-6 flex flex-col gap-8">
+<div>
+<h3 class="text-xl font-bold uppercase mb-4 border-b-4 border-accent-saffron inline-block">Category</h3>
+<ul class="space-y-2">
+<li class="flex items-center gap-2 cursor-pointer group">
+<div class="size-4 border-2 border-slate-900 dark:border-slate-100 group-hover:bg-primary"></div>
+<span class="text-base font-bold uppercase">All Products</span>
+</li>
+<li class="flex items-center gap-2 cursor-pointer group">
+<div class="size-4 border-2 border-slate-900 dark:border-slate-100 bg-primary"></div>
+<span class="text-base font-bold uppercase">Sarees</span>
+</li>
+<li class="flex items-center gap-2 cursor-pointer group">
+<div class="size-4 border-2 border-slate-900 dark:border-slate-100 group-hover:bg-primary"></div>
+<span class="text-base font-bold uppercase">Jewelry</span>
+</li>
+<li class="flex items-center gap-2 cursor-pointer group">
+<div class="size-4 border-2 border-slate-900 dark:border-slate-100 group-hover:bg-primary"></div>
+<span class="text-base font-bold uppercase">Textiles</span>
+</li>
+</ul>
+</div>
+<div>
+<h3 class="text-xl font-bold uppercase mb-4 border-b-4 border-accent-blue inline-block">Material</h3>
+<ul class="space-y-2">
+<li class="flex items-center gap-2 cursor-pointer group">
+<div class="size-4 border-2 border-slate-900 dark:border-slate-100 group-hover:bg-accent-blue"></div>
+<span class="text-base font-bold uppercase">Silk</span>
+</li>
+<li class="flex items-center gap-2 cursor-pointer group">
+<div class="size-4 border-2 border-slate-900 dark:border-slate-100 group-hover:bg-accent-blue"></div>
+<span class="text-base font-bold uppercase">Gold</span>
+</li>
+<li class="flex items-center gap-2 cursor-pointer group">
+<div class="size-4 border-2 border-slate-900 dark:border-slate-100 group-hover:bg-accent-blue"></div>
+<span class="text-base font-bold uppercase">Cotton</span>
+</li>
+<li class="flex items-center gap-2 cursor-pointer group">
+<div class="size-4 border-2 border-slate-900 dark:border-slate-100 group-hover:bg-accent-blue"></div>
+<span class="text-base font-bold uppercase">Brass</span>
+</li>
+</ul>
+</div>
+</div>
+</aside>
+<!-- Product Grid -->
+<div class="col-span-1 lg:col-span-10">
+<!-- Breadcrumbs & Sort -->
+<div class="flex flex-wrap items-center justify-between p-6 border-b-4 border-slate-900 dark:border-slate-100 bg-accent-saffron text-slate-900">
+<div class="flex items-center gap-2 text-sm font-bold uppercase tracking-wide">
+<a class="hover:underline decoration-2" href="#">Home</a>
+<span>/</span>
+<a class="hover:underline decoration-2" href="#">Collections</a>
+<span>/</span>
+<span class="underline decoration-2">Temple Jewelry</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-sm font-bold uppercase">Sort By:</span>
+<button class="flex items-center gap-2 bg-white border-2 border-slate-900 px-3 py-1 text-sm font-bold uppercase hover:bg-slate-200">
+                        Newest
+                        <span class="material-symbols-outlined text-sm">arrow_drop_down</span>
+</button>
+</div>
+</div>
+<!-- Page Title Area -->
+<div class="p-8 border-b-4 border-slate-900 dark:border-slate-100 relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-accent-blue opacity-20 -mr-8 -mt-8 rotate-12 group-hover:rotate-45 transition-transform duration-700"></div>
+<h1 class="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-none relative z-10 text-slate-900 dark:text-slate-100">
+                    New<br/>Arrivals
+                </h1>
+<p class="mt-4 max-w-xl text-lg font-medium uppercase tracking-tight text-slate-700 dark:text-slate-300">
+                    Curated selection of hand-loomed textiles and traditional temple jewelry.
+                </p>
+</div>
+<!-- Products Rigid Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+<!-- Product Card 1 -->
+<div class="group border-b-4 md:border-r-4 border-slate-900 dark:border-slate-100 relative flex flex-col h-full bg-white dark:bg-[#251615]">
+<div class="absolute top-0 left-0 bg-primary text-white px-3 py-1 text-xs font-bold uppercase z-10 border-b-2 border-r-2 border-slate-900 dark:border-slate-100">New</div>
+<div class="relative w-full aspect-[3/4] overflow-hidden border-b-4 border-slate-900 dark:border-slate-100">
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0" data-alt="Traditional Indian Kanjivaram silk saree with gold border" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDBmWtUQgs9lcMflQONJ_SAHyVmpJyFa0s_4xqxTghWW5DhsJocMW6dL1m9GpThDZhHTDlBG9POcJwY0VZgnvv62Y3AjwcmeiArXsPaT_1c_tQ42tBwZyf4Xi44VKo5BbiE7pSonLcTiCU2ZUyW6Iv8RYXf6r6gzT-K8pdFiOizFdvZ8SrulLwzmnUC5rZl2gU7po40s3HzV97D_h5jE0CKXFdhNnWsszAltjDhTVlQrb26VAMsJN8FlxsN7FmpWNsgJWAQVPYhV9kE');"></div>
+</div>
+<div class="p-5 flex flex-col flex-1 justify-between">
+<div>
+<h3 class="text-2xl font-bold uppercase leading-tight mb-2 text-slate-900 dark:text-slate-100">Kanjivaram Silk Saree</h3>
+<p class="text-sm font-medium text-slate-600 dark:text-slate-400 uppercase mb-4">Hand-woven / Pure Silk</p>
+</div>
+<div class="flex items-center justify-between mt-auto pt-4 border-t-2 border-slate-900 dark:border-slate-100 border-dashed">
+<span class="text-xl font-black text-slate-900 dark:text-slate-100">₹ 24,000</span>
+<button class="bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-6 py-2 text-sm font-black uppercase tracking-wider hover:bg-accent-saffron hover:text-slate-900 transition-colors">
+                                Add
+                            </button>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="group border-b-4 md:border-r-4 xl:border-r-4 2xl:border-r-4 border-slate-900 dark:border-slate-100 relative flex flex-col h-full bg-white dark:bg-[#251615]">
+<div class="relative w-full aspect-[3/4] overflow-hidden border-b-4 border-slate-900 dark:border-slate-100">
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0" data-alt="Ornate gold temple necklace jewelry on model" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBnO9l_zFDF9s121Y_6YVYQv4LTi9aKZVdvDiP5HcSMHa6en93CqOjqb-Ud6XKnYF3y-vrxoXwh1-eUeewJdlb5eGOh0FaetiyAzUbNMVrJOUlBoeWYZCHwl6r6jVQ7IILlfV-S3fZOlix-DrqUmZ5po91xBWpP04iFra5fIDGYowuWe9QuSybwxxv8Vmmz7v20Y_Dy701EEiHX8LsuD9VeTX9vxoZrmWsfXAGKVyZIGEp-WonOD2E5hBWo_ZFLZSRDrM68jMdHIPUi');"></div>
+</div>
+<div class="p-5 flex flex-col flex-1 justify-between">
+<div>
+<h3 class="text-2xl font-bold uppercase leading-tight mb-2 text-slate-900 dark:text-slate-100">Gold Temple Necklace</h3>
+<p class="text-sm font-medium text-slate-600 dark:text-slate-400 uppercase mb-4">22k Gold / Antique Finish</p>
+</div>
+<div class="flex items-center justify-between mt-auto pt-4 border-t-2 border-slate-900 dark:border-slate-100 border-dashed">
+<span class="text-xl font-black text-slate-900 dark:text-slate-100">₹ 85,000</span>
+<button class="bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-6 py-2 text-sm font-black uppercase tracking-wider hover:bg-accent-saffron hover:text-slate-900 transition-colors">
+                                Add
+                            </button>
+</div>
+</div>
+</div>
+<!-- Product Card 3 (Featured/Full Width in Mobile, Grid in Desktop) -->
+<div class="group border-b-4 md:border-r-4 lg:border-r-0 xl:border-r-4 border-slate-900 dark:border-slate-100 relative flex flex-col h-full bg-accent-blue">
+<!-- Accent Card Variation -->
+<div class="relative w-full aspect-[3/4] overflow-hidden border-b-4 border-slate-900 dark:border-slate-100">
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0 mix-blend-luminosity opacity-90" data-alt="Blue hand-loomed cotton dupatta with intricate patterns" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDsUfLxC8r7SPoUnleWhmn64tY2QYWd9OSB-WVJSAhfIJDW07vJT5nsHkcFYtQItgxZv30r70wxietuhTfb2QKj4r6mdcfelpVkwhEt_QkyyXyCMQhy7ss4BEr5tWJyVwdAloHt5EiaIcxZwt8mXWgyWtlsLgG6GOzAwDd43ToxSqqF3VrHj9cl9smT5p6K3lZ3ZiR-GUye_coSzvRb9qhPJM54LKvHhUhjY23_PQRNvG-9b5XUJC2DRtP_4C1102dKo1_8NzL5hnjq');"></div>
+<div class="absolute inset-0 bg-accent-blue mix-blend-multiply opacity-40 pointer-events-none"></div>
+</div>
+<div class="p-5 flex flex-col flex-1 justify-between text-white">
+<div>
+<h3 class="text-2xl font-bold uppercase leading-tight mb-2">Indigo Cotton Dupatta</h3>
+<p class="text-sm font-medium text-blue-200 uppercase mb-4">Natural Dye / Block Print</p>
+</div>
+<div class="flex items-center justify-between mt-auto pt-4 border-t-2 border-white/30 border-dashed">
+<span class="text-xl font-black">₹ 4,500</span>
+<button class="bg-white text-accent-blue px-6 py-2 text-sm font-black uppercase tracking-wider hover:bg-accent-saffron hover:text-slate-900 transition-colors border-2 border-transparent hover:border-slate-900">
+                                Add
+                            </button>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="group border-b-4 md:border-r-4 lg:border-r-4 xl:border-r-0 2xl:border-r-4 border-slate-900 dark:border-slate-100 relative flex flex-col h-full bg-white dark:bg-[#251615]">
+<div class="relative w-full aspect-[3/4] overflow-hidden border-b-4 border-slate-900 dark:border-slate-100">
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0" data-alt="Brass pooja thali set with diya and flowers" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBg5VK1TQMu7DbolepOFV4Z3z_N9ouA2YhuJyZ-713Z_ErNOGW6v0tKombM3m6Y6oTMnewtScPDjV8xFdM1yNWf-DxIrlKniZDRsX9eyKO5AvKzm8YqUp8Z4qpb59cgy9XeB1WWOWIhNSlM2lS31-TKiSeNRvCfK8lfbtUqAI9hOjSSlmJ7WLvj4fj7ZC4VvKFbG_eQRbERJJ-_Qc8wXwQ602DNOVoz1HlcCKr_UShUrSKXmNE0xPjwnW92-CY6EIOe0jEmXyWehj7V');"></div>
+</div>
+<div class="p-5 flex flex-col flex-1 justify-between">
+<div>
+<h3 class="text-2xl font-bold uppercase leading-tight mb-2 text-slate-900 dark:text-slate-100">Brass Pooja Thali</h3>
+<p class="text-sm font-medium text-slate-600 dark:text-slate-400 uppercase mb-4">Etched Brass / Ceremonial</p>
+</div>
+<div class="flex items-center justify-between mt-auto pt-4 border-t-2 border-slate-900 dark:border-slate-100 border-dashed">
+<span class="text-xl font-black text-slate-900 dark:text-slate-100">₹ 3,200</span>
+<button class="bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-6 py-2 text-sm font-black uppercase tracking-wider hover:bg-accent-saffron hover:text-slate-900 transition-colors">
+                                Add
+                            </button>
+</div>
+</div>
+</div>
+<!-- Product Card 5 -->
+<div class="group border-b-4 md:border-r-4 xl:border-r-4 border-slate-900 dark:border-slate-100 relative flex flex-col h-full bg-white dark:bg-[#251615]">
+<div class="absolute top-0 right-0 bg-accent-saffron text-slate-900 px-3 py-1 text-xs font-bold uppercase z-10 border-b-2 border-l-2 border-slate-900 dark:border-slate-100">Best Seller</div>
+<div class="relative w-full aspect-[3/4] overflow-hidden border-b-4 border-slate-900 dark:border-slate-100">
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0" data-alt="Indian block print tunic worn by model" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBlHhvbbucIRHVaOe1TKWO1lVlMTtpZKW4_396RBzv5qxaa4BAF3TzufWQB5sUJrGWqfLYyJjlbTdK4of-VvZl81COqYqLIKUeZMpeQZk89Bd-tmSuqkZbH-pfw57SH63gnoYH9iDTy8utP7LzzQMnPOnO5d3CdD-vA2z6kybOePpz1b1vDBclFCz-En3GQgGG1Sxk9Yn-sZmlVVqFLYOFAHbiusufIfbrlYgcuddIHoc7zHI86WG3VQZTFRb_f27YpsnfceuuKdo3O');"></div>
+</div>
+<div class="p-5 flex flex-col flex-1 justify-between">
+<div>
+<h3 class="text-2xl font-bold uppercase leading-tight mb-2 text-slate-900 dark:text-slate-100">Block Print Tunic</h3>
+<p class="text-sm font-medium text-slate-600 dark:text-slate-400 uppercase mb-4">Cotton / Ajrakh Print</p>
+</div>
+<div class="flex items-center justify-between mt-auto pt-4 border-t-2 border-slate-900 dark:border-slate-100 border-dashed">
+<span class="text-xl font-black text-slate-900 dark:text-slate-100">₹ 6,800</span>
+<button class="bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-6 py-2 text-sm font-black uppercase tracking-wider hover:bg-accent-saffron hover:text-slate-900 transition-colors">
+                                Add
+                            </button>
+</div>
+</div>
+</div>
+<!-- Product Card 6 -->
+<div class="group border-b-4 md:border-r-4 lg:border-r-0 xl:border-r-4 2xl:border-r-4 border-slate-900 dark:border-slate-100 relative flex flex-col h-full bg-white dark:bg-[#251615]">
+<div class="relative w-full aspect-[3/4] overflow-hidden border-b-4 border-slate-900 dark:border-slate-100">
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0" data-alt="Traditional heavy silver anklets" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAQhynogRomw4S_hhEQ7Mgj6fZ3blXeS-0mBJLhtjYYHKrc55AUoyecxQRbGkvuAv1OUMGH-l-ZCoGAF3j7fYQUg9Ra4k1k7YABU9Lh8iLlrY9cTXEdXotgJ9YVa72cQE_Nn9bInnvSTpbL1sh4M4O0tirDzaNVmEs1DNUGIaCyD8UnQFp2NImGPIv5vhLfoMPljS4EpjWCz5jFOrACMFqfF4q2TWjdlj2fV64aNRXrdY_J1aTfoy-_1YRpMQSmntbU9X2W0phdbqCN');"></div>
+</div>
+<div class="p-5 flex flex-col flex-1 justify-between">
+<div>
+<h3 class="text-2xl font-bold uppercase leading-tight mb-2 text-slate-900 dark:text-slate-100">Silver Anklets</h3>
+<p class="text-sm font-medium text-slate-600 dark:text-slate-400 uppercase mb-4">Sterling Silver / Tribal Design</p>
+</div>
+<div class="flex items-center justify-between mt-auto pt-4 border-t-2 border-slate-900 dark:border-slate-100 border-dashed">
+<span class="text-xl font-black text-slate-900 dark:text-slate-100">₹ 12,000</span>
+<button class="bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-6 py-2 text-sm font-black uppercase tracking-wider hover:bg-accent-saffron hover:text-slate-900 transition-colors">
+                                Add
+                            </button>
+</div>
+</div>
+</div>
+<!-- Product Card 7 (Editorial Block) -->
+<div class="group col-span-1 md:col-span-2 border-b-4 xl:border-r-4 border-slate-900 dark:border-slate-100 relative flex flex-col h-full bg-slate-900 dark:bg-white text-white dark:text-slate-900">
+<div class="flex flex-col md:flex-row h-full">
+<div class="w-full md:w-1/2 h-64 md:h-auto bg-cover bg-center border-b-4 md:border-b-0 md:border-r-4 border-slate-100 dark:border-slate-900" data-alt="Artistic closeup of indian textile weaving process" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA1_BTc6TfmoGP90UYMdo7Ab_Enn7dxjmmcresBGlGjetV9tSxvrv65BwWRbUnub27_6H2TNAGfQIe6IXSCfYEDBxXlHYjJCAK6cWTxnFS-nq8mYRWoP7R2LKXubfHd6byYoc84pYEErk90C3Z1Whfooqbpr_nVwkEoK5SmRpGegfOYuoDZ61rAi32ek6u5zFBGsmjHVbhXRYww2uCbWG20J21bUQwO1GkMdHA9KiYzuicKXwY9pc75MckdATEUE4WeAEZM_FM23Jhb');"></div>
+<div class="p-8 flex flex-col justify-center items-start w-full md:w-1/2">
+<span class="text-accent-saffron font-bold uppercase tracking-widest mb-2">Editorial</span>
+<h3 class="text-4xl font-black uppercase leading-none mb-6">The Art of<br/>Weaving</h3>
+<p class="mb-8 text-lg font-medium opacity-80">Discover the heritage behind our newest hand-loomed collection from Varanasi.</p>
+<a class="inline-flex items-center gap-2 border-b-4 border-accent-saffron pb-1 text-xl font-bold uppercase hover:text-accent-saffron transition-colors" href="#">
+                                Read Story <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Product Card 8 -->
+<div class="group border-b-4 md:border-r-4 2xl:border-r-0 border-slate-900 dark:border-slate-100 relative flex flex-col h-full bg-white dark:bg-[#251615]">
+<div class="relative w-full aspect-[3/4] overflow-hidden border-b-4 border-slate-900 dark:border-slate-100">
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0" data-alt="Gold jhumka earrings traditional indian style" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCTOEk9KtTvXy20f8yH8nG_Es0zH-6yBs_hYign8zLLa9noCcUxBPY-NRUyHJtn19G9L6y8rw3eiQ4YX8zSGp4TTsZzLbj5uc7ZtoMPnk3vkd2Mz-UZZBy7ZbPZHZ5M_3yqYkw8WmHCGxVtSzd8fRdM4SrP_fJyio_kwvWMOaEkh0bjGASdr06g3CC2bDyfbrF7EBRkbRpIl0GMR095j728qcMFkjKQ2ii6DDCHiqyIJCkBHbhOR5edCzbmgvVkAU1I1FlERH1vmxmH');"></div>
+</div>
+<div class="p-5 flex flex-col flex-1 justify-between">
+<div>
+<h3 class="text-2xl font-bold uppercase leading-tight mb-2 text-slate-900 dark:text-slate-100">Gold Jhumkas</h3>
+<p class="text-sm font-medium text-slate-600 dark:text-slate-400 uppercase mb-4">Temple Collection</p>
+</div>
+<div class="flex items-center justify-between mt-auto pt-4 border-t-2 border-slate-900 dark:border-slate-100 border-dashed">
+<span class="text-xl font-black text-slate-900 dark:text-slate-100">₹ 45,000</span>
+<button class="bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-6 py-2 text-sm font-black uppercase tracking-wider hover:bg-accent-saffron hover:text-slate-900 transition-colors">
+                                Add
+                            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination / Load More -->
+<div class="border-b-4 border-slate-900 dark:border-slate-100 bg-background-light dark:bg-[#1a0f0e] p-8 flex justify-center">
+<button class="w-full md:w-auto bg-transparent border-4 border-slate-900 dark:border-slate-100 text-slate-900 dark:text-slate-100 text-xl font-black uppercase py-4 px-12 hover:bg-primary hover:text-white hover:border-primary transition-all shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:shadow-none translate-x-0 translate-y-0 hover:translate-x-1 hover:translate-y-1">
+                    Load More Products
+                </button>
+</div>
+<!-- Footer Area -->
+<footer class="bg-slate-900 text-white p-12">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="col-span-1 md:col-span-2">
+<h2 class="text-5xl font-black uppercase mb-6 tracking-tighter">Indigenous</h2>
+<p class="max-w-md text-slate-400 font-medium text-lg">Celebrating the raw beauty of Indian craftsmanship through a modern, brutalist lens.</p>
+</div>
+<div>
+<h4 class="text-xl font-bold uppercase mb-4 text-accent-saffron">Help</h4>
+<ul class="space-y-2 font-medium">
+<li><a class="hover:text-accent-saffron" href="#">Shipping</a></li>
+<li><a class="hover:text-accent-saffron" href="#">Returns</a></li>
+<li><a class="hover:text-accent-saffron" href="#">Sizing</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-xl font-bold uppercase mb-4 text-accent-saffron">Social</h4>
+<ul class="space-y-2 font-medium">
+<li><a class="hover:text-accent-saffron" href="#">Instagram</a></li>
+<li><a class="hover:text-accent-saffron" href="#">Twitter</a></li>
+<li><a class="hover:text-accent-saffron" href="#">Pinterest</a></li>
+</ul>
+</div>
+</div>
+<div class="mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center text-slate-500 text-sm font-bold uppercase">
+<p>© 2023 Indigenous Store</p>
+<p>Designed for the Bold</p>
+</div>
+</footer>
+</div>
+</main>
+</body></html>
