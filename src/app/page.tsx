@@ -29,93 +29,62 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Hero Section */}
-      <section className="flex-grow flex flex-col relative w-full border-b-3 border-black">
-        {/* Background Pattern Layer with Indian texture */}
-        <div className="absolute inset-0 z-0 stepwell-pattern pointer-events-none opacity-30"></div>
-        <div className="relative z-10 w-full flex flex-col md:flex-row min-h-[600px] lg:min-h-[700px]">
-          {/* Left Content: Typography Heavy with Indian texture background */}
-          <div className="w-full md:w-1/2 p-8 md:p-12 lg:p-16 flex flex-col justify-between border-b-3 md:border-b-0 md:border-r-3 border-black relative overflow-hidden" style={{
-            backgroundImage: 'url("https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1200&q=80")',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}>
-            {/* Overlay for readability */}
-            <div className="absolute inset-0 bg-background-light/75 z-0"></div>
-            
-            {/* Subtle Indian pattern overlay */}
-            <div className="absolute inset-0 z-0 opacity-5" style={{
-              backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,153,51,0.3) 10px, rgba(255,153,51,0.3) 20px)',
-            }}></div>
-            
-            <div className="mb-6 relative z-10">
-              <span className="inline-block px-3 py-1.5 bg-primary text-white text-[10px] sm:text-xs font-bold tracking-widest mb-4 border-2 border-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                हस्तशिल्प • Handcrafted Heritage
-              </span>
-              <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[0.9] tracking-tighter uppercase mb-4 text-black">
-                Where<br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-orange-600 to-red-600 outline-text" style={{ WebkitTextStroke: '1.5px black' }}>Tradition</span><br />
-                Meets Art
-              </h2>
-              <p className="text-base md:text-lg font-medium max-w-md leading-relaxed border-l-4 border-primary pl-4 mb-3 bg-white/60 py-2">
-                Celebrating India's rich cultural tapestry through authentic handcrafted textiles, artisan jewelry, and timeless craftsmanship.
-              </p>
-              <p className="text-xs md:text-sm font-medium max-w-md leading-relaxed text-gray-800 pl-4 mb-6">
-                Each piece tells a story of skilled artisans, ancient techniques, and the vibrant soul of Bharat.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 mt-6">
-                <Link href="/collections" className="px-6 py-3 bg-black text-white text-sm font-bold tracking-widest uppercase border-2 border-black brutalist-shadow hover:brutalist-shadow-hover transition-all flex items-center justify-center gap-2 group">
-                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest group-hover:mr-2 transition-all">Discover Collection</span>
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
-                <Link href="/collections" className="px-6 py-3 bg-white/70 text-black text-sm font-bold tracking-widest uppercase border-2 border-black hover:bg-primary hover:text-white transition-colors text-center inline-block backdrop-blur-sm">
-                  <span className="text-[10px] sm:text-xs">Artisan Stories</span>
-                </Link>
-              </div>
-            </div>
-            {/* Cultural Info Cards */}
-            <div className="grid grid-cols-3 gap-2 sm:gap-4 border-t-2 border-black pt-3 mt-auto relative z-10 bg-white/70 backdrop-blur-md -mx-8 md:-mx-12 lg:-mx-16 px-4 sm:px-8 md:px-12 lg:px-16 -mb-8 md:-mb-12 lg:-mb-16 pb-3">
-              <div className="text-center">
-                <h3 className="text-[9px] sm:text-xs font-bold uppercase tracking-widest text-gray-600 mb-1">Heritage</h3>
-                <p className="font-black text-lg sm:text-xl md:text-2xl text-primary">5000+</p>
-                <p className="text-[8px] sm:text-xs text-gray-700 uppercase">Years Old</p>
-              </div>
-              <div className="text-center border-x-2 border-black px-1 sm:px-2">
-                <h3 className="text-[9px] sm:text-xs font-bold uppercase tracking-widest text-gray-600 mb-1">Artisans</h3>
-                <p className="font-black text-lg sm:text-xl md:text-2xl text-primary">100+</p>
-                <p className="text-[8px] sm:text-xs text-gray-700 uppercase">Master Crafters</p>
-              </div>
-              <div className="text-center">
-                <h3 className="text-[9px] sm:text-xs font-bold uppercase tracking-widest text-gray-600 mb-1">Origin</h3>
-                <p className="font-black text-base sm:text-lg">भारत</p>
-                <p className="text-[8px] sm:text-xs text-gray-700 uppercase">Made in India</p>
-              </div>
-            </div>
+      {/* Hero Section - Full Width Heritage Architecture */}
+      <section className="relative w-full min-h-[70vh] md:min-h-[85vh] border-b-3 border-black overflow-hidden">
+        {/* Main Heritage Background Image */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1609783261796-f972a39b57d5?w=2000&q=90" 
+            alt="Traditional Indian architecture with cultural heritage"
+            className="w-full h-full object-cover"
+          />
+          {/* Warm overlay for authentic feel */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/70"></div>
+        </div>
+
+        {/* Content Overlay */}
+        <div className="relative z-10 h-full min-h-[70vh] md:min-h-[85vh] flex flex-col justify-end p-6 sm:p-8 md:p-12 lg:p-16">
+          {/* Top Badge */}
+          <div className="absolute top-8 left-6 sm:left-8 md:left-12">
+            <span className="inline-block px-4 py-2 bg-primary text-white text-xs font-bold tracking-widest border-2 border-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+              हस्तशिल्प • Handcrafted Heritage
+            </span>
           </div>
-          {/* Right Content: Image Heavy */}
-          <div className="w-full md:w-1/2 relative overflow-hidden group" style={{
-            backgroundImage: 'url("https://images.unsplash.com/photo-1609783261796-f972a39b57d5?w=1200&q=80")',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}>
-            {/* Overlay for depth */}
-            <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-transparent to-black/40 z-5"></div>
+
+          {/* Main Headline - Bottom Left */}
+          <div className="max-w-4xl">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black uppercase leading-[0.9] tracking-tighter mb-6 text-white drop-shadow-2xl">
+              Where<br />
+              <span className="text-primary">Tradition</span><br />
+              Meets Art
+            </h1>
+            <p className="text-base sm:text-lg md:text-xl font-bold text-white/90 max-w-2xl mb-8 leading-relaxed drop-shadow-lg">
+              Celebrating India's rich cultural tapestry through authentic handcrafted textiles, artisan jewelry, and timeless craftsmanship.
+            </p>
             
-            {/* Minimal brutalist frame - no colored boxes */}
-            <div className="absolute top-0 right-0 w-24 h-24 border-l-3 border-b-3 border-black z-20"></div>
-            
-            {/* Subtle Indian pattern overlay */}
-            <div className="absolute inset-0 z-10 opacity-10" style={{
-              backgroundImage: 'radial-gradient(circle, rgba(255,153,51,0.3) 1px, transparent 1px)',
-              backgroundSize: '20px 20px',
-            }}></div>
-            
-            <img alt="Indian fashion model in saffron saree against geometric architecture" className="w-full h-full object-cover object-top sepia-[0.15] contrast-110 group-hover:sepia-0 transition-all duration-700 ease-in-out" style={{ objectPosition: 'center 20%' }} src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbB01y3nu6FlIvGBTbqYBpF4ou_HIuMUqVyLquQtXMtFWj5ln2PTR03dSAjYCUXyjS5Hx4rjFaVEmoxP_2e2e6iDT4QWaU86ClRawcQYRCvqzBEKgE0dFdXKFU0NIYIjzd8GauKpEA8Hca-cnnC_Nzbze2OHQJPQqtBjlP28mcv7gB2KD7zAPfaTOiAZ34ZaiPExn3vlDmh8Ef4rgfnJh_PntVwqqksIvdVFty_dlDTIBqM8icPUhj2-XdARmHzt8LP4J2XRf-Y5_o" />
-            <div className="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/90 to-transparent z-20 border-t-2 border-primary/50">
+            <div className="flex flex-col sm:flex-row gap-4 mb-8">
+              <Link href="/collections" className="px-8 py-4 bg-white text-black text-sm font-bold tracking-widest uppercase border-2 border-black brutalist-shadow hover:bg-primary hover:text-white hover:border-primary transition-all inline-flex items-center justify-center gap-2 group">
+                <span className="text-xs font-bold uppercase tracking-widest">Explore Collection</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link href="/collections" className="px-8 py-4 bg-black/80 backdrop-blur-sm text-white text-sm font-bold tracking-widest uppercase border-2 border-white hover:bg-primary hover:border-primary transition-all inline-flex items-center justify-center">
+                <span className="text-xs">Artisan Stories</span>
+              </Link>
+            </div>
+
+            {/* Cultural Stats */}
+            <div className="flex flex-wrap gap-6 sm:gap-8 mt-8">
               <div className="text-white">
-                <p className="text-sm font-bold tracking-widest mb-1 text-primary">संग्रह • COLLECTION</p>
-                <p className="text-2xl font-bold uppercase">The Stepwell Drape</p>
-                <p className="text-xs text-gray-300 mt-1">Chanderi Silk • Jaipur</p>
+                <p className="text-3xl sm:text-4xl font-black text-primary drop-shadow-lg">5000+</p>
+                <p className="text-xs uppercase tracking-widest text-white/80">Years Heritage</p>
+              </div>
+              <div className="text-white border-l-2 border-white/30 pl-6 sm:pl-8">
+                <p className="text-3xl sm:text-4xl font-black text-primary drop-shadow-lg">100+</p>
+                <p className="text-xs uppercase tracking-widest text-white/80">Master Artisans</p>
+              </div>
+              <div className="text-white border-l-2 border-white/30 pl-6 sm:pl-8">
+                <p className="text-2xl sm:text-3xl font-black drop-shadow-lg">भारत</p>
+                <p className="text-xs uppercase tracking-widest text-white/80">Made in India</p>
               </div>
             </div>
           </div>
@@ -148,41 +117,32 @@ export default function HomePage() {
         `}} />
       </div>
 
-      {/* Featured Categories / Grid */}
-      <section className="w-full relative" style={{
-        backgroundImage: 'url("https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=1600&q=80")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
-      }}>
-        {/* Overlay for contrast */}
-        <div className="absolute inset-0 bg-background-light/50 backdrop-blur-sm z-0"></div>
-        
-        <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 divide-y-3 md:divide-y-0 md:divide-x-3 divide-black border-b-3 border-black">
+      {/* Featured Categories - Heritage Architecture Style */}
+      <section className="w-full relative border-b-3 border-black">
+        <div className="grid grid-cols-1 md:grid-cols-3 divide-y-3 md:divide-y-0 md:divide-x-3 divide-black">
           {loading ? (
-            <div className="p-8 text-center col-span-3 font-bold uppercase tracking-widest">Loading Collections...</div>
+            <div className="p-8 text-center col-span-3 font-bold uppercase tracking-widest bg-background-light">Loading Collections...</div>
           ) : categories.length === 0 ? (
-            <div className="p-8 text-center col-span-3 font-bold uppercase tracking-widest">No Collections Found</div>
+            <div className="p-8 text-center col-span-3 font-bold uppercase tracking-widest bg-background-light">No Collections Found</div>
           ) : (
             categories.slice(0, 3).map((cat, index) => {
               const fallbackImages = [
-                "https://lh3.googleusercontent.com/aida-public/AB6AXuBe0Cy4AfeVW_83ctEZ4EhpmhVceuEMtAJul1H7etecDD9or0D_VMBK30kiNG4SWPNn4N7hpMsy6q41E71ev5brdupieCA2MxY5zP7bQ_X9if5IaNoFG6lBTYsPsCv_B7XdcPlGCS3NZNctx1tA6tM3YBIetvzX3QqdOPBiYjFwUfzca6UmHXS7fcwwJ4p22SJvRm3djKkiKN9fhdezdD6ADTFekUap5xAkVv6wTWSpnnxiofyCTmIAQZ_85669iXCugc-N19KimDuy",
-                "https://lh3.googleusercontent.com/aida-public/AB6AXuBj3UWUK2mFa8p6DorHAsamHyb3axPV4WrAEltVEH_FElsu0FJYXx1jQFOxBYegCb60A-mvDyGJQppoFJ0mz-XKbjyuC4SZX0NJ4AqPyPFNXXF36Sx6A9G7SDrNv4kV01FfxGncGJ4Wrb-t6_S08y2pVbpRaQr8UZE4nPHJU4S67ezPe5ZqUEhQtitqTZdTrq-Dd6fyORrl4ksN1rrquUQDiZO7KmpNsjrXH491QizRED_h9ADBabw2VBJkJLZthFnhStXwN18PLA0q",
-                "https://lh3.googleusercontent.com/aida-public/AB6AXuBS-r2tHKOIA2fnabA2ErTLMi5XrglFYiH-wNP9rovpcxltXHPswwwm_pKii8LIwl-kbkgVVkQtRqeF-NxGJVX_efWRDxJh-F27__GrMXllabS0BpHx27k6yYbru3TpS-cMEfmN1_OJdxlRAkaeDiDg3Z8QldADpW87b24itOAKCz2e7P-DyZRFDjAdq7uNF3hY2BGkopj5hf9YJ9yW9g5hkyZ6ohyefbVW6DSniwpiX064MG5vs8lyeytMoXYg-ETQGEzHWzjBYu-C"
+                "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&q=90",
+                "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=800&q=90",
+                "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=800&q=90"
               ];
               const imgSrc = cat.image_url ? `http://localhost:3001${cat.image_url}` : fallbackImages[index % fallbackImages.length];
 
               return (
-                <Link key={cat.id} href={`/category/${cat.slug}`} className="relative group h-[350px] sm:h-[400px] md:h-[450px] lg:h-[500px] overflow-hidden cursor-pointer block">
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-primary/20 z-10 transition-colors"></div>
-                  <img alt={cat.name} className="w-full h-full object-cover sepia-[0.2] group-hover:sepia-0 transition-all duration-500" src={imgSrc} />
-                  <div className="absolute inset-0 flex items-center justify-center z-20 px-4">
-                    <div className="bg-white/80 backdrop-blur-md border-2 sm:border-3 border-black px-4 sm:px-6 md:px-8 py-3 sm:py-4 transform rotate-0 group-hover:-rotate-2 transition-transform duration-300 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] group-hover:shadow-[6px_6px_0px_0px_rgba(255,153,51,1)] sm:group-hover:shadow-[8px_8px_0px_0px_rgba(255,153,51,1)]">
-                      <h3 className="text-base sm:text-xl md:text-2xl font-black uppercase tracking-widest">{cat.name}</h3>
+                <Link key={cat.id} href={`/category/${cat.slug}`} className="relative group h-[400px] sm:h-[450px] md:h-[500px] overflow-hidden cursor-pointer block">
+                  <img alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" src={imgSrc} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent group-hover:from-black/70 transition-all z-10"></div>
+                  
+                  <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 z-20">
+                    <div className="bg-white/90 backdrop-blur-md border-3 border-black px-6 py-4 inline-block transform group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform duration-300 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] group-hover:shadow-[6px_6px_0px_0px_rgba(255,153,51,1)]">
+                      <h3 className="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tight">{cat.name}</h3>
                     </div>
                   </div>
-                  {/* Corner accent */}
-                  <div className="absolute bottom-0 right-0 w-12 h-12 sm:w-16 sm:h-16 border-l-2 border-t-2 border-primary opacity-0 group-hover:opacity-100 transition-opacity z-20"></div>
                 </Link>
               );
             })
@@ -190,65 +150,59 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Cultural Statement Section */}
-      <section className="w-full text-white border-b-3 border-black py-12 md:py-16 lg:py-20 relative overflow-hidden" style={{
-        backgroundImage: 'url("https://images.unsplash.com/photo-1532375810709-75b1da00537c?w=1600&q=80")',
+      {/* Cultural Statement Section - Warm Heritage */}
+      <section className="w-full text-white border-b-3 border-black py-16 md:py-24 relative overflow-hidden" style={{
+        backgroundImage: 'url("https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1600&q=90")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
       }}>
-        {/* Dark overlay for text contrast */}
-        <div className="absolute inset-0 bg-black/80 z-0"></div>
+        {/* Warm earthy overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-orange-900/70 via-black/60 to-black/80 z-0"></div>
         
-        {/* Subtle pattern overlay */}
-        <div className="absolute inset-0 z-5 opacity-5" style={{
-          backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255,153,51,0.2) 40px, rgba(255,153,51,0.2) 41px)',
-        }}></div>
-        
-        <div className="max-w-4xl mx-auto text-center px-6 sm:px-8 relative z-10">
-          <p className="text-primary font-bold uppercase tracking-widest text-xs sm:text-sm mb-3 inline-block px-3 py-1.5 bg-black/60 border-2 border-primary">विरासत • Heritage</p>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black uppercase leading-tight mb-4">
+        <div className="max-w-5xl mx-auto text-center px-6 sm:px-8 relative z-10">
+          <p className="text-primary font-bold uppercase tracking-widest text-sm mb-4 inline-block px-4 py-2 bg-black/70 border-2 border-primary shadow-[4px_4px_0px_0px_rgba(255,153,51,1)]">विरासत • Heritage</p>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase leading-tight mb-6">
             <span style={{ color: '#FF9933' }}>Crafted</span> by <span style={{ color: '#138808' }}>Hands</span>,<br />
             <span style={{ color: '#FF9933' }}>Woven</span> with <span style={{ color: '#138808' }}>Soul</span>
           </h2>
-          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 max-w-2xl mx-auto leading-relaxed mb-8">
+          <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-12 font-medium">
             Every thread carries centuries of tradition. Every pattern echoes ancient wisdom. 
             We celebrate India's master artisans and their timeless craft.
           </p>
-          <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 mt-8">
-            <div className="text-center border-2 border-primary p-4 sm:p-5 md:p-6 bg-black/60 backdrop-blur-sm min-w-[90px] sm:min-w-[110px]">
-              <p className="text-2xl sm:text-3xl font-black text-primary mb-1">28</p>
-              <p className="text-[9px] sm:text-xs uppercase tracking-widest text-gray-300">Indian States</p>
+          <div className="flex flex-wrap justify-center gap-6 sm:gap-8 md:gap-12 mt-12">
+            <div className="text-center">
+              <p className="text-4xl sm:text-5xl font-black text-primary mb-2 drop-shadow-lg">28</p>
+              <p className="text-xs uppercase tracking-widest text-white/80">Indian States</p>
             </div>
-            <div className="text-center border-2 border-primary p-4 sm:p-5 md:p-6 bg-black/60 backdrop-blur-sm min-w-[90px] sm:min-w-[110px]">
-              <p className="text-2xl sm:text-3xl font-black text-primary mb-1">100%</p>
-              <p className="text-[9px] sm:text-xs uppercase tracking-widest text-gray-300">Authentic</p>
+            <div className="text-center border-l-2 border-white/30 pl-6 sm:pl-8 md:pl-12">
+              <p className="text-4xl sm:text-5xl font-black text-primary mb-2 drop-shadow-lg">100%</p>
+              <p className="text-xs uppercase tracking-widest text-white/80">Authentic</p>
             </div>
-            <div className="text-center border-2 border-primary p-4 sm:p-5 md:p-6 bg-black/60 backdrop-blur-sm min-w-[90px] sm:min-w-[110px]">
-              <p className="text-2xl sm:text-3xl font-black text-primary mb-1">∞</p>
-              <p className="text-[9px] sm:text-xs uppercase tracking-widest text-gray-300">Timeless</p>
+            <div className="text-center border-l-2 border-white/30 pl-6 sm:pl-8 md:pl-12">
+              <p className="text-4xl sm:text-5xl font-black text-primary mb-2 drop-shadow-lg">∞</p>
+              <p className="text-xs uppercase tracking-widest text-white/80">Timeless</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Featured Products Grid */}
-      <section className="w-full p-6 sm:p-8 md:p-12 lg:p-16 border-t-3 border-black relative" style={{
-        backgroundImage: 'url("https://images.unsplash.com/photo-1604608672516-f1b9b1a4a3f3?w=1600&q=80")',
+      {/* Featured Products Grid - Warm Heritage Background */}
+      <section className="w-full p-6 sm:p-8 md:p-12 lg:p-16 relative" style={{
+        backgroundImage: 'url("https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=1600&q=90")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
       }}>
-        {/* Overlay for readability */}
-        <div className="absolute inset-0 bg-background-light/70 backdrop-blur-sm z-0"></div>
+        {/* Warm overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-orange-50/95 via-background-light/90 to-orange-50/95 z-0"></div>
         
         <div className="relative z-10">
           <div className="flex justify-between items-end mb-8 sm:mb-10 md:mb-12">
             <div>
-              <p className="text-primary font-bold uppercase tracking-widest text-[9px] sm:text-xs mb-2 inline-block px-2 sm:px-3 py-1 bg-white/80 backdrop-blur-sm border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">संग्रह • Collection</p>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase leading-tight text-black mt-3">Curated<br />Masterpieces</h2>
+              <p className="text-primary font-bold uppercase tracking-widest text-xs mb-3 inline-block px-4 py-2 bg-white border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">संग्रह • Collection</p>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black uppercase leading-tight text-black mt-3">Curated<br />Masterpieces</h2>
             </div>
-            <Link href="/collections" className="hidden md:inline-block border-b-2 border-black font-bold uppercase tracking-widest text-sm hover:text-primary hover:border-primary transition-colors pb-1">
+            <Link href="/collections" className="hidden md:inline-block border-b-3 border-black font-bold uppercase tracking-widest text-sm hover:text-primary hover:border-primary transition-colors pb-1">
               View All Treasures
             </Link>
           </div>
