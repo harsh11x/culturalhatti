@@ -169,76 +169,116 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Cultural Statement Section - Enhanced Heritage */}
-      <section className="relative w-full py-20 md:py-32 overflow-hidden bg-background-dark">
-        {/* Animated Background Pattern */}
-        <div className="absolute inset-0 z-0 opacity-5">
+      {/* Cultural Statement Section - Spectacular Heritage */}
+      <section className="relative w-full py-24 md:py-40 overflow-hidden">
+        {/* Stunning Background with Multiple Layers */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=2000&q=90" 
+            alt="Indian artisan craftsmanship"
+            className="w-full h-full object-cover"
+          />
+          {/* Multi-layer gradient overlay for depth */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#8B6F47]/95 via-[#C9A86A]/90 to-[#D4AF37]/95"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/40"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(212,175,55,0.3),transparent_50%)]"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(201,168,106,0.3),transparent_50%)]"></div>
+        </div>
+        
+        {/* Animated Pattern Overlay */}
+        <div className="absolute inset-0 z-0 opacity-10">
           <div className="heritage-pattern w-full h-full"></div>
         </div>
         
-        {/* Large Background Image with Overlay */}
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=1600&q=90" 
-            alt="Indian textile heritage"
-            className="w-full h-full object-cover opacity-20"
-          />
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/40 via-background-dark/90 to-secondary/60"></div>
-        </div>
+        {/* Floating Decorative Elements */}
+        <div className="absolute top-20 left-[5%] w-40 h-40 border-4 border-white/20 rotate-45 animate-[spin_20s_linear_infinite]"></div>
+        <div className="absolute top-40 right-[10%] w-32 h-32 border-4 border-primary/30 -rotate-12 animate-[spin_15s_linear_infinite_reverse]"></div>
+        <div className="absolute bottom-32 left-[15%] w-24 h-24 border-4 border-accent/25 rotate-45 animate-[spin_25s_linear_infinite]"></div>
+        <div className="absolute top-1/3 left-[8%] w-3 h-3 bg-white/40 rounded-full animate-pulse"></div>
+        <div className="absolute top-1/2 right-[12%] w-2 h-2 bg-primary/60 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+        <div className="absolute bottom-1/3 right-[20%] w-4 h-4 bg-accent/50 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
         
-        {/* Decorative Animated Elements */}
-        <div className="absolute top-20 left-10 w-32 h-32 border-2 border-primary/30 rotate-45 animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-40 h-40 border-2 border-primary/30 -rotate-12 animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-primary/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/3 right-1/4 w-32 h-32 bg-accent/10 rounded-full blur-3xl"></div>
+        {/* Glowing Orbs */}
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/20 rounded-full blur-[100px] animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
 
-        <div className="relative z-10 max-w-6xl mx-auto px-6 sm:px-10 md:px-16">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 md:px-16">
           <div className="text-center">
-            <div className="inline-flex items-center gap-3 px-6 py-3 bg-primary/20 backdrop-blur-md text-primary text-xs font-body font-semibold tracking-[0.3em] border-2 border-primary/40 uppercase mb-8 luxury-shadow">
-              <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-              विरासत • Heritage
-              <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+            {/* Premium Badge */}
+            <div className="inline-flex items-center gap-4 px-8 py-4 bg-white/15 backdrop-blur-xl text-white text-xs font-body font-bold tracking-[0.4em] border-2 border-white/40 uppercase mb-12 luxury-shadow relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
+              <span className="w-2.5 h-2.5 bg-white rounded-full animate-pulse shadow-[0_0_10px_rgba(255,255,255,0.8)]"></span>
+              <span className="relative z-10">विरासत • Heritage • ಪರಂಪರೆ</span>
+              <span className="w-2.5 h-2.5 bg-white rounded-full animate-pulse shadow-[0_0_10px_rgba(255,255,255,0.8)]"></span>
             </div>
             
-            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-8 text-white drop-shadow-2xl">
-              Crafted by <span className="text-primary italic">Hands</span>,<br />
-              Woven with <span className="text-primary italic">Soul</span>
+            {/* Main Headline with Dramatic Effect */}
+            <h2 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[1.1] mb-6 text-white drop-shadow-2xl">
+              <span className="inline-block animate-[fadeIn_1s_ease-in]">Crafted by</span>{' '}
+              <span className="inline-block text-white italic drop-shadow-[0_0_30px_rgba(255,255,255,0.5)] animate-[fadeIn_1s_ease-in_0.2s]">Hands</span>,<br />
+              <span className="inline-block animate-[fadeIn_1s_ease-in_0.4s]">Woven with</span>{' '}
+              <span className="inline-block text-white italic drop-shadow-[0_0_30px_rgba(255,255,255,0.5)] animate-[fadeIn_1s_ease-in_0.6s]">Soul</span>
             </h2>
             
-            <div className="w-24 h-1 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mb-8"></div>
+            {/* Decorative Divider */}
+            <div className="flex items-center justify-center gap-4 mb-10">
+              <div className="w-16 h-0.5 bg-gradient-to-r from-transparent to-white"></div>
+              <div className="w-3 h-3 bg-white rotate-45"></div>
+              <div className="w-24 h-1 bg-white"></div>
+              <div className="w-3 h-3 bg-white rotate-45"></div>
+              <div className="w-16 h-0.5 bg-gradient-to-l from-transparent to-white"></div>
+            </div>
             
-            <p className="font-body text-lg sm:text-xl md:text-2xl text-white/95 leading-relaxed max-w-3xl mx-auto mb-16 font-light drop-shadow-lg">
-              Every thread carries centuries of tradition. Every pattern echoes ancient wisdom. We celebrate India's master artisans and their timeless craft.
+            {/* Description */}
+            <p className="font-body text-xl sm:text-2xl md:text-3xl text-white leading-relaxed max-w-4xl mx-auto mb-20 font-light drop-shadow-2xl">
+              Every thread carries <span className="font-semibold italic">centuries of tradition</span>. Every pattern echoes <span className="font-semibold italic">ancient wisdom</span>. We celebrate India's master artisans and their <span className="font-semibold italic">timeless craft</span>.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 mt-16 max-w-5xl mx-auto">
-              <div className="relative group text-center bg-gradient-to-br from-primary/20 to-accent/10 backdrop-blur-md p-8 border-2 border-primary/30 hover:border-primary/60 transition-all duration-500 luxury-shadow hover:luxury-shadow-hover overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/0 to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="relative z-10">
-                  <p className="font-display text-5xl sm:text-6xl md:text-7xl font-bold text-primary mb-3 drop-shadow-lg group-hover:scale-110 transition-transform duration-500">29</p>
-                  <div className="w-12 h-0.5 bg-primary mx-auto mb-3"></div>
-                  <p className="font-body text-sm uppercase tracking-[0.2em] text-white font-semibold">Indian States</p>
-                  <p className="font-body text-xs text-white/70 mt-2">Pan-India Reach</p>
+            {/* Spectacular Stats Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              {/* Card 1 */}
+              <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-white/10 blur-xl group-hover:blur-2xl transition-all duration-500"></div>
+                <div className="relative bg-white/10 backdrop-blur-2xl p-10 border-2 border-white/30 hover:border-white/60 transition-all duration-500 overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/10 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 -translate-y-10 translate-x-10 rotate-45"></div>
+                  <div className="relative z-10">
+                    <p className="font-display text-7xl sm:text-8xl font-bold text-white mb-4 drop-shadow-2xl group-hover:scale-110 transition-transform duration-500">29</p>
+                    <div className="w-16 h-1 bg-white mx-auto mb-4 group-hover:w-24 transition-all duration-500"></div>
+                    <p className="font-body text-base uppercase tracking-[0.3em] text-white font-bold mb-2">Indian States</p>
+                    <p className="font-body text-sm text-white/80">Pan-India Reach</p>
+                  </div>
                 </div>
               </div>
               
-              <div className="relative group text-center bg-gradient-to-br from-accent/20 to-primary/10 backdrop-blur-md p-8 border-2 border-accent/30 hover:border-accent/60 transition-all duration-500 luxury-shadow hover:luxury-shadow-hover overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-accent/0 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="relative z-10">
-                  <p className="font-display text-5xl sm:text-6xl md:text-7xl font-bold text-accent mb-3 drop-shadow-lg group-hover:scale-110 transition-transform duration-500">100%</p>
-                  <div className="w-12 h-0.5 bg-accent mx-auto mb-3"></div>
-                  <p className="font-body text-sm uppercase tracking-[0.2em] text-white font-semibold">Authentic</p>
-                  <p className="font-body text-xs text-white/70 mt-2">Verified Craftsmanship</p>
+              {/* Card 2 - Featured */}
+              <div className="relative group sm:-mt-4">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-white/20 blur-2xl group-hover:blur-3xl transition-all duration-500"></div>
+                <div className="relative bg-white/20 backdrop-blur-2xl p-12 border-4 border-white/50 hover:border-white/80 transition-all duration-500 overflow-hidden luxury-shadow">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white to-transparent"></div>
+                  <div className="relative z-10">
+                    <p className="font-display text-8xl sm:text-9xl font-bold text-white mb-4 drop-shadow-2xl group-hover:scale-110 transition-transform duration-500">100<span className="text-6xl">%</span></p>
+                    <div className="w-20 h-1.5 bg-white mx-auto mb-4 group-hover:w-28 transition-all duration-500"></div>
+                    <p className="font-body text-lg uppercase tracking-[0.3em] text-white font-bold mb-2">Authentic</p>
+                    <p className="font-body text-sm text-white/90">Verified Craftsmanship</p>
+                  </div>
                 </div>
               </div>
               
-              <div className="relative group text-center bg-gradient-to-br from-primary/20 to-secondary/10 backdrop-blur-md p-8 border-2 border-primary/30 hover:border-primary/60 transition-all duration-500 luxury-shadow hover:luxury-shadow-hover overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/0 to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="relative z-10">
-                  <p className="font-display text-5xl sm:text-6xl md:text-7xl font-bold text-primary mb-3 drop-shadow-lg group-hover:scale-110 transition-transform duration-500">5000+</p>
-                  <div className="w-12 h-0.5 bg-primary mx-auto mb-3"></div>
-                  <p className="font-body text-sm uppercase tracking-[0.2em] text-white font-semibold">Years</p>
-                  <p className="font-body text-xs text-white/70 mt-2">Heritage & Tradition</p>
+              {/* Card 3 */}
+              <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-white/10 blur-xl group-hover:blur-2xl transition-all duration-500"></div>
+                <div className="relative bg-white/10 backdrop-blur-2xl p-10 border-2 border-white/30 hover:border-white/60 transition-all duration-500 overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/10 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute top-0 left-0 w-20 h-20 bg-white/10 -translate-y-10 -translate-x-10 rotate-45"></div>
+                  <div className="relative z-10">
+                    <p className="font-display text-7xl sm:text-8xl font-bold text-white mb-4 drop-shadow-2xl group-hover:scale-110 transition-transform duration-500">5000<span className="text-5xl">+</span></p>
+                    <div className="w-16 h-1 bg-white mx-auto mb-4 group-hover:w-24 transition-all duration-500"></div>
+                    <p className="font-body text-base uppercase tracking-[0.3em] text-white font-bold mb-2">Years</p>
+                    <p className="font-body text-sm text-white/80">Heritage & Tradition</p>
+                  </div>
                 </div>
               </div>
             </div>

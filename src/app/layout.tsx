@@ -64,7 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <a className="w-10 h-10 border border-white/20 flex items-center justify-center hover:bg-primary hover:border-primary transition-all font-body text-xs font-semibold" href="#">PT</a>
               </div>
               <div className="text-center md:text-right">
-                <p className="text-primary font-body font-medium uppercase tracking-[0.2em] text-xs mb-2">Free Shipping PAN India</p>
+                <p className="text-primary font-body font-medium uppercase tracking-[0.2em] text-xs mb-2">Free Shipping Above ₹999</p>
                 <p className="font-body text-xs text-white/50">© 2026 Cultural Hatti. All Rights Reserved.</p>
               </div>
             </div>
