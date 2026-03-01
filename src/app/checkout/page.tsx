@@ -20,10 +20,14 @@ export default function CheckoutPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const items = useCartStore((s) => s.items);
-    const total = useCartStore((s) => s.total());
+    const subtotal = useCartStore((s) => s.total());
     const clearCart = useCartStore((s) => s.clearCart);
     const user = useAuthStore((s) => s.user);
     const router = useRouter();
+    
+    const FREE_SHIPPING_THRESHOLD = 999;
+    const shippingCost = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 50;
+    const total = subtotal + shippingCost;
 
     const indianStates = useMemo(() => State.getStatesOfCountry('IN'), []);
     const availableCities = useMemo(() => {
@@ -192,6 +196,26 @@ export default function CheckoutPage() {
                                     <span className="text-slate-900 shrink-0">₹ {(i.price * i.quantity).toFixed(0)}</span>
                                 </div>
                             ))}
+                        </div>
+
+                        <div className="h-px bg-slate-900 w-full"></div>
+
+                        <div className="flex flex-col gap-3 text-sm font-bold uppercase tracking-wide">
+                            <div className="flex justify-between text-slate-600">
+                                <span>Subtotal</span>
+                                <span className="text-slate-900">₹ {subtotal.toFixed(0)}</span>
+                            </div>
+                            <div className="flex justify-between text-slate-600">
+                                <span>Shipping</span>
+                                <span className={shippingCost === 0 ? "text-green-600" : "text-slate-900"}>
+                                    {shippingCost === 0 ? 'FREE' : `₹ ${shippingCost}`}
+                                </span>
+                            </div>
+                            {subtotal < FREE_SHIPPING_THRESHOLD && (
+                                <div className="text-xs text-primary bg-primary/10 p-2 border border-primary">
+                                    Add ₹{(FREE_SHIPPING_THRESHOLD - subtotal).toFixed(0)} more for FREE shipping!
+                                </div>
+                            )}
                         </div>
 
                         <div className="h-px bg-slate-900 w-full"></div>
