@@ -30,62 +30,62 @@ export default function HomePage() {
   return (
     <>
       {/* Hero Section - Luxury Royal Heritage */}
-      <section className="relative w-full min-h-[85vh]  overflow-hidden">
+      <section className="relative w-full min-h-screen overflow-hidden">
         {/* Main Heritage Background Image */}
         <div className="absolute inset-0 z-0">
           <img 
             src="/home.jpg" 
             alt="Traditional Indian heritage architecture"
-            className="w-full h-full object-cover object-[center_40%] md:object-center"
+            className="w-full h-full object-cover object-center"
           />
-          {/* Elegant gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent"></div>
+          {/* Elegant gradient overlay - stronger on mobile */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/20 to-black/90"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-transparent"></div>
         </div>
 
         {/* Content Overlay */}
-        <div className="relative z-10 h-full min-h-[85vh] md:min-h-[90vh] flex flex-col justify-end p-6 sm:p-10 md:p-16 lg:p-20">
+        <div className="relative z-10 h-full min-h-screen flex flex-col justify-between py-6 sm:py-10 md:py-16 lg:py-20 px-6 sm:px-10 md:px-16 lg:px-20">
           {/* Top Badge - Elegant */}
-          <div className="absolute top-8 sm:top-12 left-6 sm:left-10 md:left-16">
-            <span className="inline-block px-5 py-2.5 bg-primary/90 backdrop-blur-sm text-background-dark text-xs font-semibold tracking-[0.3em] border border-primary uppercase">
+          <div className="pt-2 sm:pt-6">
+            <span className="inline-block px-4 py-2 sm:px-5 sm:py-2.5 bg-primary/90 backdrop-blur-sm text-background-dark text-[10px] sm:text-xs font-semibold tracking-[0.3em] border border-primary uppercase">
               हस्तशिल्प • Handcrafted Heritage
             </span>
           </div>
 
           {/* Main Headline - Luxury Typography */}
-          <div className="max-w-5xl">
-            <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold leading-[0.95] mb-6 text-white">
+          <div className="max-w-5xl pb-8 sm:pb-12">
+            <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-bold leading-[0.95] mb-4 sm:mb-6 text-white drop-shadow-2xl">
               Where<br />
               <span className="text-primary italic">Tradition</span><br />
               Meets Art
             </h1>
-            <p className="font-body text-base sm:text-lg md:text-xl text-white/90 max-w-2xl mb-10 leading-relaxed font-light">
+            <p className="font-body text-sm sm:text-base md:text-xl text-white/90 max-w-2xl mb-6 sm:mb-10 leading-relaxed font-light drop-shadow-lg">
               Celebrating India's rich cultural tapestry through authentic handcrafted textiles, artisan jewelry, and timeless craftsmanship.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 mb-12">
-              <Link href="/collections" className="px-10 py-4 bg-primary text-background-dark text-sm font-body font-semibold tracking-[0.2em] uppercase hover:bg-accent transition-all inline-flex items-center justify-center gap-3 group luxury-shadow">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8 sm:mb-12">
+              <Link href="/collections" className="px-8 sm:px-10 py-3 sm:py-4 bg-primary text-background-dark text-xs sm:text-sm font-body font-semibold tracking-[0.2em] uppercase hover:bg-accent transition-all inline-flex items-center justify-center gap-3 group luxury-shadow">
                 <span>Explore Collection</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
-              <Link href="/collections" className="px-10 py-4 bg-transparent backdrop-blur-sm text-white text-sm font-body font-semibold tracking-[0.2em] uppercase border border-white/50 hover:bg-white/10 hover:border-white transition-all inline-flex items-center justify-center">
+              <Link href="/collections" className="px-8 sm:px-10 py-3 sm:py-4 bg-transparent backdrop-blur-sm text-white text-xs sm:text-sm font-body font-semibold tracking-[0.2em] uppercase border border-white/50 hover:bg-white/10 hover:border-white transition-all inline-flex items-center justify-center">
                 <span>Our Artisans</span>
               </Link>
             </div>
 
             {/* Cultural Stats - Elegant */}
-            <div className="flex flex-wrap gap-8 sm:gap-12 mt-12 pt-8 border-t border-white/20">
+            <div className="flex flex-wrap gap-6 sm:gap-8 md:gap-12 pt-6 sm:pt-8 border-t border-white/20">
               <div className="text-white">
-                <p className="font-display text-4xl sm:text-5xl font-bold text-primary mb-1">5000+</p>
-                <p className="font-body text-xs uppercase tracking-[0.2em] text-white/70 font-light">Years of Heritage</p>
+                <p className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-1">5000+</p>
+                <p className="font-body text-[10px] sm:text-xs uppercase tracking-[0.2em] text-white/70 font-light">Years of Heritage</p>
               </div>
               <div className="text-white">
-                <p className="font-display text-4xl sm:text-5xl font-bold text-primary mb-1">100+</p>
-                <p className="font-body text-xs uppercase tracking-[0.2em] text-white/70 font-light">Master Artisans</p>
+                <p className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-1">100+</p>
+                <p className="font-body text-[10px] sm:text-xs uppercase tracking-[0.2em] text-white/70 font-light">Master Artisans</p>
               </div>
               <div className="text-white">
-                <p className="font-display text-3xl sm:text-4xl font-bold text-white mb-1">भारत</p>
-                <p className="font-body text-xs uppercase tracking-[0.2em] text-white/70 font-light">Made in India</p>
+                <p className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1">भारत</p>
+                <p className="font-body text-[10px] sm:text-xs uppercase tracking-[0.2em] text-white/70 font-light">Made in India</p>
               </div>
             </div>
           </div>
