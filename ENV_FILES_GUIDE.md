@@ -49,12 +49,12 @@ NODE_ENV=production
 PORT=3001
 FRONTEND_URL=https://culturalhatti.com
 
-# Database Configuration
-DB_HOST=localhost
+# Database Configuration (Supabase)
+DB_HOST=db.lwthzooyvykmtqpeqnqk.supabase.co
 DB_PORT=5432
-DB_NAME=culturalhatti
+DB_NAME=postgres
 DB_USER=postgres
-DB_PASSWORD=YOUR_POSTGRESQL_PASSWORD_HERE
+DB_PASSWORD=2311@2004@Singh
 
 # JWT Secrets (keep these secure)
 JWT_SECRET=culturall-hatti-secret-key-2026
@@ -85,9 +85,12 @@ RATE_LIMIT_MAX=100
 ```
 
 **⚠️ IMPORTANT - Replace These:**
-- `YOUR_POSTGRESQL_PASSWORD_HERE` - Your database password
 - `YOUR_BREVO_EMAIL_HERE` - Your Brevo login email
 - `YOUR_BREVO_SMTP_PASSWORD_HERE` - Your Brevo SMTP password (NOT API key)
+
+**✅ Database Already Configured:**
+- Using Supabase PostgreSQL
+- Connection string: `postgresql://postgres:2311@2004@Singh@db.lwthzooyvykmtqpeqnqk.supabase.co:5432/postgres`
 
 **How to get Brevo SMTP credentials:**
 1. Go to https://app.brevo.com/settings/keys/smtp
@@ -157,6 +160,12 @@ ssh ec2-user@3.7.122.146
 ```bash
 cd ~/culturalhatti
 ```
+
+### Step 2.5: No PostgreSQL Installation Needed! ✅
+**You're using Supabase, so you don't need to install PostgreSQL on AWS.**
+- Database is hosted on Supabase
+- Connection details are already in the `.env` file
+- Skip any PostgreSQL installation steps
 
 ### Step 3: Create Backend `.env`
 ```bash

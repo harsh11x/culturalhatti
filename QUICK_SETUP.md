@@ -33,8 +33,7 @@ sudo apt update && sudo apt upgrade -y
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt install -y nodejs
 
-# Install PostgreSQL
-sudo apt install -y postgresql postgresql-contrib
+# PostgreSQL NOT needed - using Supabase cloud database
 
 # Install PM2
 sudo npm install -g pm2
@@ -50,17 +49,14 @@ git clone https://github.com/harsh11x/culturalhatti.git
 cd culturalhatti
 ```
 
-### 4. Setup PostgreSQL Database
-```bash
-# Switch to postgres user
-sudo -u postgres psql
+### 4. Database Setup (Supabase) ✅
+**No setup needed!** You're using Supabase cloud database:
+- Host: `db.lwthzooyvykmtqpeqnqk.supabase.co`
+- Database: `postgres`
+- User: `postgres`
+- Password: `2311@2004@Singh`
 
-# In PostgreSQL shell:
-CREATE DATABASE culturalhatti;
-CREATE USER postgres WITH PASSWORD 'your-secure-password';
-GRANT ALL PRIVILEGES ON DATABASE culturalhatti TO postgres;
-\q
-```
+Database is already configured in the `.env` file below.
 
 ### 5. Configure Backend Environment
 ```bash
@@ -74,12 +70,12 @@ NODE_ENV=production
 PORT=3001
 FRONTEND_URL=https://culturalhatti.com
 
-# Database
-DB_HOST=localhost
+# Database (Supabase)
+DB_HOST=db.lwthzooyvykmtqpeqnqk.supabase.co
 DB_PORT=5432
-DB_NAME=culturalhatti
+DB_NAME=postgres
 DB_USER=postgres
-DB_PASSWORD=your-secure-password-here
+DB_PASSWORD=2311@2004@Singh
 
 # JWT
 JWT_SECRET=culturall-hatti-secret-key-2026
