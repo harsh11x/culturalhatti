@@ -1,8 +1,8 @@
-# Environment
-.env
-.env.local
-.env.production
-.env.*.local
+# Environment (temporarily allowing for initial setup)
+# .env
+# .env.local
+# .env.production
+# .env.*.local
 
 # Dependencies
 node_modules/
