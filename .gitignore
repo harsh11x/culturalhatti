@@ -32,6 +32,12 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+**/.env
+**/.env.local
+**/.env.production
+**/.env.development
+backend/.env
+admin/.env
 
 # vercel
 .vercel
@@ -40,8 +46,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Keep backend and admin folders
-backend/
-admin/
-frontend/
-stitch_screens/
+# uploads
+backend/uploads/
+admin/uploads/
