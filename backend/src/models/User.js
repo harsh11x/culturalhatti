@@ -26,6 +26,11 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    firebase_uid: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: true,
+    },
     is_blocked: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,

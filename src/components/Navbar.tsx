@@ -1,13 +1,13 @@
 'use client';
 import Link from 'next/link';
 import { useCartStore, useAuthStore, useUIStore } from '@/store';
-import { Search, ShoppingBag, User, Menu, Diamond } from 'lucide-react';
+import { Search, ShoppingBag, User, Menu, Diamond, X } from 'lucide-react';
 
 export default function Navbar() {
     const count = useCartStore((s) => s.count());
     const user = useAuthStore((s) => s.user);
     const logout = useAuthStore((s) => s.logout);
-    const { openCart, openAuthModal } = useUIStore();
+    const { openCart, openAuthModal, isMobileMenuOpen, openMobileMenu, closeMobileMenu } = useUIStore();
 
     return (
         <nav className="w-full border-b-3 border-black bg-background-light sticky top-0 z-50">
@@ -63,11 +63,45 @@ export default function Navbar() {
                             <User className="w-5 h-5" />
                         </button>
                     )}
-                    <button className="md:hidden w-10 h-10 border-2 border-black flex items-center justify-center hover:bg-black hover:text-white transition-all shrink-0">
+                    <button onClick={openMobileMenu} className="md:hidden w-10 h-10 border-2 border-black flex items-center justify-center hover:bg-black hover:text-white transition-all shrink-0">
                         <Menu className="w-5 h-5" />
                     </button>
                 </div>
             </div>
+
+            {/* Mobile Menu Overlay */}
+            {isMobileMenuOpen && (
+                <div className="fixed inset-0 z-[100] md:hidden">
+                    <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={closeMobileMenu}></div>
+                    <div className="absolute right-0 top-0 h-full w-[280px] bg-background-light border-l-3 border-black shadow-2xl">
+                        <div className="p-6">
+                            <div className="flex justify-between items-center mb-8">
+                                <h3 className="text-xl font-black uppercase tracking-tight">Menu</h3>
+                                <button onClick={closeMobileMenu} className="w-10 h-10 border-2 border-black flex items-center justify-center hover:bg-black hover:text-white transition-all">
+                                    <X className="w-5 h-5" />
+                                </button>
+                            </div>
+                            
+                            <div className="flex flex-col gap-4">
+                                <Link onClick={closeMobileMenu} className="text-base font-bold tracking-widest text-black hover:text-primary transition-colors uppercase border-b-2 border-black pb-2" href="/category/sarees">Sarees</Link>
+                                <Link onClick={closeMobileMenu} className="text-base font-bold tracking-widest text-black hover:text-primary transition-colors uppercase border-b-2 border-black pb-2" href="/category/women-suits">Suits</Link>
+                                <Link onClick={closeMobileMenu} className="text-base font-bold tracking-widest text-black hover:text-primary transition-colors uppercase border-b-2 border-black pb-2" href="/category/women-bags">Bags</Link>
+                                <Link onClick={closeMobileMenu} className="text-base font-bold tracking-widest text-black hover:text-primary transition-colors uppercase border-b-2 border-black pb-2" href="/category/accessories">Accessories</Link>
+                                
+                                {user && (
+                                    <>
+                                        <div className="h-px bg-gray-300 my-4"></div>
+                                        <Link onClick={closeMobileMenu} href="/profile" className="text-base font-bold tracking-widest text-black hover:text-primary transition-colors uppercase">Profile</Link>
+                                        <button onClick={() => { logout(); closeMobileMenu(); }} className="text-base font-bold tracking-widest text-gray-400 hover:text-black transition-colors uppercase text-left">
+                                            Logout
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </nav>
     );
 }

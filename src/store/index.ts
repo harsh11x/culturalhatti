@@ -95,6 +95,9 @@ interface UIStore {
     isAuthModalOpen: boolean;
     openAuthModal: () => void;
     closeAuthModal: () => void;
+    isMobileMenuOpen: boolean;
+    openMobileMenu: () => void;
+    closeMobileMenu: () => void;
 }
 
 export const useUIStore = create<UIStore>((set) => ({
@@ -104,4 +107,7 @@ export const useUIStore = create<UIStore>((set) => ({
     isAuthModalOpen: false,
     openAuthModal: () => set({ isAuthModalOpen: true }),
     closeAuthModal: () => set({ isAuthModalOpen: false }),
+    isMobileMenuOpen: false,
+    openMobileMenu: () => set({ isMobileMenuOpen: true }),
+    closeMobileMenu: () => set({ isMobileMenuOpen: false }),
 }));

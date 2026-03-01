@@ -65,4 +65,77 @@ router.post(
     }
 );
 
+// POST /api/auth/phone-auth - Phone number authentication via Firebase
+router.post('/phone-auth', async (req, res) => {
+    try {
+        const { firebase_uid, phone, name } = req.body;
+        if (!firebase_uid || !phone) {
+            return res.status(400).json({ success: false, message: 'Firebase UID and phone required' });
+        }
+
+        let user = await User.findOne({ where: { firebase_uid } });
+        
+        if (!user) {
+            user = await User.findOne({ where: { phone } });
+            if (user) {
+                await user.update({ firebase_uid });
+            } else {
+                user = await User.create({
+                    firebase_uid,
+                    phone,
+                    name: name || 'User',
+                    email: `${phone.replace(/\D/g, '')}@phone.culturalhatti.com`,
+                    password_hash: Math.random().toString(36).slice(-16),
+                });
+            }
+        }
+
+        if (user.is_blocked) {
+            return res.status(403).json({ success: false, message: 'Account is blocked' });
+        }
+
+        const token = jwt.sign({ id: user.id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+        res.json({ success: true, token, _id: user.id, name: user.name, email: user.email });
+    } catch (error) {
+        console.error('Phone auth error:', error);
+        res.status(500).json({ success: false, message: 'Phone authentication failed' });
+    }
+});
+
+// POST /api/auth/google-auth - Google authentication via Firebase
+router.post('/google-auth', async (req, res) => {
+    try {
+        const { firebase_uid, email, name } = req.body;
+        if (!firebase_uid || !email) {
+            return res.status(400).json({ success: false, message: 'Firebase UID and email required' });
+        }
+
+        let user = await User.findOne({ where: { firebase_uid } });
+        
+        if (!user) {
+            user = await User.findOne({ where: { email } });
+            if (user) {
+                await user.update({ firebase_uid });
+            } else {
+                user = await User.create({
+                    firebase_uid,
+                    email,
+                    name: name || 'User',
+                    password_hash: Math.random().toString(36).slice(-16),
+                });
+            }
+        }
+
+        if (user.is_blocked) {
+            return res.status(403).json({ success: false, message: 'Account is blocked' });
+        }
+
+        const token = jwt.sign({ id: user.id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+        res.json({ success: true, token, _id: user.id, name: user.name, email: user.email });
+    } catch (error) {
+        console.error('Google auth error:', error);
+        res.status(500).json({ success: false, message: 'Google authentication failed' });
+    }
+});
+
 module.exports = router;
