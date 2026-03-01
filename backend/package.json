@@ -2,12 +2,12 @@
   "name": "culturalhatti-backend",
   "version": "1.0.0",
   "description": "Cultural Hatti - Brutalist Indian Cultural E-Commerce Backend",
-  "main": "src/server.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js",
-    "migrate": "node src/config/migrate.js",
-    "seed": "node src/config/seed.js",
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "migrate": "node config/migrate.js",
+    "seed": "node config/seed.js",
     "test": "jest --runInBand"
   },
   "dependencies": {
