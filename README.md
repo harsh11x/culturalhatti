@@ -2,9 +2,22 @@
 
 ## 🎯 System Architecture
 
-- **Frontend:** Next.js (Vercel) - Customer website
-- **Backend:** Express.js + PostgreSQL (AWS) - API server
-- **Admin:** Next.js - Product & order management
+- **Frontend:** Next.js (Root directory) - Customer website → Vercel
+- **Backend:** Express.js + PostgreSQL (`/backend`) - API server → AWS
+- **Admin:** Next.js (`/admin`) - Product & order management
+
+## 📁 Project Structure
+
+```
+culturalhatti/
+├── src/              # Frontend source (Next.js app)
+├── public/           # Frontend static assets
+├── backend/          # Backend API server
+├── admin/            # Admin panel
+├── package.json      # Frontend dependencies
+├── next.config.js    # Frontend Next.js config
+└── .env.local        # Frontend environment variables
+```
 
 ---
 
@@ -40,16 +53,16 @@ npm run start  # Port 3002
 
 ### Frontend (Vercel)
 
-Update `frontend/.env.local`:
+The frontend is now in the root directory. Update `.env.local` in root:
 ```env
 NEXT_PUBLIC_API_URL=https://your-backend-api.com/api
 NEXT_PUBLIC_RAZORPAY_KEY_ID=rzp_live_xxxxx
 ```
 
-Deploy:
-```bash
-vercel --prod
-```
+Deploy to Vercel:
+- Connect your GitHub repo to Vercel
+- Root directory is automatically detected
+- Environment variables are set in Vercel dashboard
 
 ---
 
@@ -134,21 +147,23 @@ ADMIN_EMAIL=harshdevsingh2004@gmail.com
 ## 📚 Key Files
 
 ```
+Root (Frontend):
+├── src/                    - Frontend Next.js app
+├── public/                 - Static assets
+├── .env.local             - Frontend configuration
+├── package.json           - Frontend dependencies
+
 backend/
-├── src/server.js           - Main server
-├── src/config/seed.js      - Create admin account
-├── .env                    - Configuration
+├── src/server.js          - Main server
+├── src/config/seed.js     - Create admin account
+├── .env                   - Backend configuration
 
 admin/
-├── src/                    - Admin panel source
-├── .env.local             - Admin configuration
+├── src/                   - Admin panel source
+├── .env.local            - Admin configuration
 
-frontend/
-├── src/                    - Frontend source
-├── .env.local             - Frontend configuration
-
-ecosystem.config.js         - PM2 configuration
-PRODUCTION_SETUP.md        - Detailed production guide
+ecosystem.config.js        - PM2 configuration
+PRODUCTION_SETUP.md       - Detailed production guide
 ```
 
 ---
