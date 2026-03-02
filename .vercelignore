@@ -1,0 +1,8 @@
+admin/
+backend/
+node_modules/
+.git/
+*.log
+.env*
+ecosystem.config.js
+stitch_screens/
