@@ -11,7 +11,9 @@ export default function AdminLoginPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true); setError('');
+        setLoading(true);
+        setError('');
+        
         try {
             const res = await adminApi.post('/auth/admin/login', form);
             localStorage.setItem('ch_admin_token', res.data.token);
@@ -19,29 +21,55 @@ export default function AdminLoginPage() {
             router.push('/admin/dashboard');
         } catch (err: any) {
             setError(err?.response?.data?.message || 'Invalid admin credentials');
-        } finally { setLoading(false); }
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
-        <div style={{ minHeight: '100vh', background: 'var(--black)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
-            <div style={{ width: '100%', maxWidth: 400 }}>
-                <div style={{ textAlign: 'center', marginBottom: 40 }}>
-                    <h1 style={{ fontFamily: 'Bebas Neue', fontSize: 52, color: 'var(--saffron)', letterSpacing: 3 }}>ADMIN</h1>
-                    <p style={{ color: '#555', fontSize: 12, letterSpacing: 3, textTransform: 'uppercase' }}>Cultural Hatti Control Panel</p>
+        <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4">
+            <div className="w-full max-width-[400px]">
+                <div className="text-center mb-8">
+                    <h1 className="text-5xl font-bold text-primary mb-2 tracking-tight">ADMIN</h1>
+                    <p className="text-gray-400 text-sm uppercase tracking-widest">Cultural Hatti Control Panel</p>
                 </div>
-                <div style={{ border: '3px solid var(--saffron)', padding: 36, background: '#0d0d0d' }}>
-                    {error && <div className="alert alert-error" style={{ marginBottom: 20 }}>{error}</div>}
-                    <form onSubmit={handleSubmit}>
-                        <div className="form-group">
-                            <label className="form-label" style={{ color: '#aaa' }}>Admin Email</label>
-                            <input className="form-input" type="email" style={{ background: '#0d0d0d', color: 'var(--ivory)', borderColor: '#333' }} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
+                
+                <div className="border-2 border-primary/30 bg-[#111] p-8">
+                    {error && (
+                        <div className="mb-6 p-4 bg-red-500/10 border border-red-500 text-red-500 text-sm">
+                            {error}
                         </div>
-                        <div className="form-group">
-                            <label className="form-label" style={{ color: '#aaa' }}>Password</label>
-                            <input className="form-input" type="password" style={{ background: '#0d0d0d', color: 'var(--ivory)', borderColor: '#333' }} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required />
+                    )}
+                    
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-2">Admin Email</label>
+                            <input
+                                type="email"
+                                value={form.email}
+                                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                                className="w-full px-4 py-3 bg-[#0a0a0a] border border-gray-700 text-white focus:border-primary focus:outline-none"
+                                required
+                            />
                         </div>
-                        <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%', marginTop: 12 }} disabled={loading}>
-                            {loading ? 'Authenticating…' : 'Enter Admin Panel'}
+                        
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-2">Password</label>
+                            <input
+                                type="password"
+                                value={form.password}
+                                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                                className="w-full px-4 py-3 bg-[#0a0a0a] border border-gray-700 text-white focus:border-primary focus:outline-none"
+                                required
+                            />
+                        </div>
+                        
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full py-4 bg-primary text-white font-bold uppercase tracking-widest hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                        >
+                            {loading ? 'Authenticating...' : 'Enter Admin Panel'}
                         </button>
                     </form>
                 </div>

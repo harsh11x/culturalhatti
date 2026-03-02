@@ -2,7 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 
-const INACTIVITY_LIMIT = 5 * 60 * 1000; // 5 minutes
+const INACTIVITY_LIMIT = 30 * 60 * 1000; // 30 minutes
 
 export default function InactivityTracker({ children }: { children: React.ReactNode }) {
     const router = useRouter();
@@ -23,30 +23,17 @@ export default function InactivityTracker({ children }: { children: React.ReactN
     };
 
     useEffect(() => {
-        // Only track inactivity on admin pages (except login)
         const isAdminPage = pathname?.startsWith('/admin');
         const isLoginPage = pathname === '/admin/login';
 
         if (isAdminPage && !isLoginPage) {
             const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
-
             resetTimer();
-
-            events.forEach(event => {
-                window.addEventListener(event, resetTimer);
-            });
-
+            events.forEach(event => window.addEventListener(event, resetTimer));
             return () => {
                 if (timerRef.current) clearTimeout(timerRef.current);
-                events.forEach(event => {
-                    window.removeEventListener(event, resetTimer);
-                });
+                events.forEach(event => window.removeEventListener(event, resetTimer));
             };
-        } else {
-            if (timerRef.current) {
-                clearTimeout(timerRef.current);
-                timerRef.current = null;
-            }
         }
     }, [pathname]);
 
