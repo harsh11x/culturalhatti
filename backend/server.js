@@ -23,7 +23,13 @@ const PORT = process.env.PORT || 3001;
 // ─── Security & Body Parsing ────────────────────────────
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(cors({
-    origin: [process.env.FRONTEND_URL || 'http://localhost:3000', 'http://localhost:3002'],
+    origin: [
+        process.env.FRONTEND_URL || 'http://localhost:3000',
+        'http://localhost:3002',
+        'http://3.7.122.146:3002',
+        'http://localhost:3001',
+        'http://3.7.122.146:3001',
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
 }));

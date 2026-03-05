@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
-const { User, Admin } = require('../models');
+const { User } = require('../models');
 
 const handleValidation = (req, res) => {
     const errors = validationResult(req);
@@ -49,34 +49,30 @@ router.post(
     }
 );
 
-// POST /api/auth/admin/login
+// POST /api/auth/admin/login - Hardcoded credentials (no database)
 router.post(
     '/admin/login',
     [body('email').isEmail(), body('password').notEmpty()],
     async (req, res) => {
         if (!handleValidation(req, res)) return;
         const { email, password } = req.body;
-        console.log('🔐 Admin login attempt:', email);
-        
-        const admin = await Admin.findOne({ where: { email } });
-        console.log('👤 Admin found:', !!admin);
-        
-        if (!admin) {
-            console.log('❌ Admin not found in database');
+        const ADMIN_LOGIN_EMAIL = process.env.ADMIN_LOGIN_EMAIL || process.env.ADMIN_EMAIL || 'admin@culturalhatti.in';
+        const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Admin@1234';
+
+        if (email !== ADMIN_LOGIN_EMAIL || password !== ADMIN_PASSWORD) {
             return res.status(401).json({ success: false, message: 'Invalid admin credentials' });
         }
-        
-        const passwordMatch = await admin.comparePassword(password);
-        console.log('🔑 Password match:', passwordMatch);
-        
-        if (!passwordMatch) {
-            console.log('❌ Password does not match');
-            return res.status(401).json({ success: false, message: 'Invalid admin credentials' });
-        }
-        
-        const token = jwt.sign({ id: admin.id, role: admin.role }, process.env.ADMIN_JWT_SECRET, { expiresIn: '1d' });
-        console.log('✅ Admin login successful');
-        res.json({ success: true, token, admin: { id: admin.id, name: admin.name, email: admin.email, role: admin.role } });
+
+        const token = jwt.sign(
+            { id: 'admin', role: 'superadmin', type: 'hardcoded' },
+            process.env.ADMIN_JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+        res.json({
+            success: true,
+            token,
+            admin: { id: 'admin', name: 'Admin', email: ADMIN_LOGIN_EMAIL, role: 'superadmin' },
+        });
     }
 );
 

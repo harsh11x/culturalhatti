@@ -73,7 +73,13 @@ SMTP_PORT=587
 SMTP_USER=YOUR_BREVO_EMAIL_HERE
 SMTP_PASS=YOUR_BREVO_SMTP_PASSWORD_HERE
 EMAIL_FROM=Cultural Hatti <noreply@culturalhatti.in>
+# Order notifications go to this email
 ADMIN_EMAIL=harshdevsingh2004@gmail.com
+
+# Admin Panel Login (hardcoded - no database)
+# Login at http://3.7.122.146:3002 with these credentials
+ADMIN_LOGIN_EMAIL=admin@culturalhatti.in
+ADMIN_PASSWORD=Admin@1234
 
 # File Upload Settings
 UPLOAD_DIR=uploads

@@ -40,6 +40,16 @@ router.get('/admin/all', adminAuth, async (req, res) => {
     res.json({ success: true, ...products, page: parseInt(page) });
 });
 
+// GET /api/products/admin/:id - Admin: Get product by ID for editing
+router.get('/admin/:id', adminAuth, async (req, res) => {
+    const product = await Product.findOne({
+        where: { id: req.params.id },
+        include: [{ model: Category, as: 'category' }],
+    });
+    if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
+    res.json({ success: true, product });
+});
+
 // GET /api/products/:slug
 router.get('/:slug', async (req, res) => {
     const product = await Product.findOne({

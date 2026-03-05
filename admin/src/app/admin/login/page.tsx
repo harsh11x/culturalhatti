@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { adminApi } from '@/lib/api';
+import ServerStatus from '@/components/ServerStatus';
 
 export default function AdminLoginPage() {
     const [form, setForm] = useState({ email: '', password: '' });
@@ -27,8 +28,11 @@ export default function AdminLoginPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4">
-            <div className="w-full max-width-[400px]">
+        <div className="min-h-screen bg-[#0a0a0a] flex flex-col items-center justify-center p-4">
+            <div className="absolute top-4 right-4">
+                <ServerStatus />
+            </div>
+            <div className="w-full max-w-[400px]">
                 <div className="text-center mb-8">
                     <h1 className="text-5xl font-bold text-primary mb-2 tracking-tight">ADMIN</h1>
                     <p className="text-gray-400 text-sm uppercase tracking-widest">Cultural Hatti Control Panel</p>
