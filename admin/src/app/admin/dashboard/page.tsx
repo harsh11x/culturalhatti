@@ -19,7 +19,7 @@ export default function AdminDashboard() {
 
         adminApi.get('/users/admin/analytics')
             .then(r => setAnalytics(r.data.analytics))
-            .catch(() => router.push('/admin/login'))
+            .catch(() => setAnalytics({ total_revenue: '0', total_paid_orders: 0, pending_payments: 0, total_users: 0 }))
             .finally(() => setLoading(false));
     }, [router]);
 

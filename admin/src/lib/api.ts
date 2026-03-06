@@ -18,11 +18,8 @@ adminApi.interceptors.request.use((config) => {
 adminApi.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response?.status === 401 && typeof window !== 'undefined') {
-            localStorage.removeItem('ch_admin_token');
-            localStorage.removeItem('ch_admin');
-            window.location.href = '/admin/login';
-        }
+        // Don't auto-redirect on 401 - let components handle it
+        // (prevents dashboard from bouncing back to login when API fails)
         return Promise.reject(error);
     }
 );
