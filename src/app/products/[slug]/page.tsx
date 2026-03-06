@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import api from '@/lib/api';
+import { ProductMedia } from '@/components/ProductMedia';
 import { useCartStore } from '@/store';
-import { ImageIcon, Truck, ShieldCheck, RotateCcw } from 'lucide-react';
+import { Truck, ShieldCheck, RotateCcw } from 'lucide-react';
 
 interface Product {
     id: string; name: string; slug: string; price: number; compare_price?: number;
@@ -50,28 +51,23 @@ export default function ProductDetailPage() {
                     <div className="lg:col-span-7 relative bg-[#100a0a]">
                         <div className="lg:sticky lg:top-[80px] h-full lg:h-[calc(100vh-80px)] overflow-y-auto no-scrollbar">
                             <div className="grid grid-cols-1 gap-[1px] bg-[#4a3a39]">
-                                {/* Main Image */}
+                                {/* Main Image/Video */}
                                 <div className="aspect-[4/5] w-full relative bg-[#2a1e1d] group overflow-hidden">
-                                    {product.images?.[0] ? (
-                                        <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                                            style={{ backgroundImage: `url(${product.images[0].startsWith('http') ? product.images[0] : `${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}/${product.images[0]}`})` }}>
-                                        </div>
-                                    ) : (
-                                        <div className="w-full h-full flex flex-col items-center justify-center">
-                                            <ImageIcon className="w-16 h-16 text-slate-600" />
-                                            <span className="text-slate-500 font-bold uppercase tracking-widest mt-4">No Image</span>
-                                        </div>
-                                    )}
+                                    <ProductMedia
+                                        path={product.images?.[0] || ''}
+                                        className="absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-105"
+                                    />
                                 </div>
 
-                                {/* Additional Images Grid */}
+                                {/* Additional Media Grid */}
                                 {product.images?.length > 1 && (
                                     <div className={`grid ${product.images.length === 2 ? 'grid-cols-1' : 'grid-cols-2'} gap-[1px]`}>
                                         {product.images.slice(1).map((img, i) => (
                                             <div key={i} className="aspect-[3/4] w-full relative bg-[#2a1e1d] group overflow-hidden">
-                                                <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                                                    style={{ backgroundImage: `url(${img.startsWith('http') ? img : `${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}/${img}`})` }}>
-                                                </div>
+                                                <ProductMedia
+                                                    path={img}
+                                                    className="absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-105"
+                                                />
                                             </div>
                                         ))}
                                     </div>

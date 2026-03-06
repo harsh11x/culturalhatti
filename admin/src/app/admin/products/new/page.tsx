@@ -115,7 +115,7 @@ export default function NewProductPage() {
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-400 mb-2">Images</label>
-                        <input type="file" accept="image/*" multiple onChange={e => setImages(Array.from(e.target.files || []))} className="w-full px-4 py-3 bg-[#111] border border-gray-700 text-white" />
+                        <input type="file" accept="image/*,video/*,.heic,.heif,.mp4,.mov,.webm,.avi,.mkv,.m4v,.jpg,.jpeg,.png,.gif,.webp" multiple onChange={e => setImages(Array.from(e.target.files || []))} className="w-full px-4 py-3 bg-[#111] border border-gray-700 text-white" />
                     </div>
                     <div className="flex items-center gap-2">
                         <input type="checkbox" checked={form.featured} onChange={e => setForm({ ...form, featured: e.target.checked })} className="w-4 h-4" />

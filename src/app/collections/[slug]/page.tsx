@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import api from '@/lib/api';
+import api, { getAssetUrl } from '@/lib/api';
 
 interface Product {
     id: string; name: string; slug: string; price: number; compare_price?: number;
@@ -41,7 +41,7 @@ export default function CollectionSlugPage() {
                             <div className="card card-hover" style={{ padding: 0 }}>
                                 <div style={{ aspectRatio: '1', background: 'var(--light-grey)', overflow: 'hidden' }}>
                                     {p.images?.[0] ? (
-                                        <img src={`${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api').replace(/\/api\/?$/, '')}${p.images[0]}`} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                        <img src={getAssetUrl(p.images[0])} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                     ) : (
                                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', fontSize: 48 }}>🏺</div>
                                     )}

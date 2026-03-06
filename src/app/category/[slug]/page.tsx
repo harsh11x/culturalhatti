@@ -2,7 +2,7 @@
 import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { ImageIcon } from 'lucide-react';
-import api from '@/lib/api';
+import api, { getAssetUrl } from '@/lib/api';
 
 interface Product {
     id: string;
@@ -157,7 +157,7 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
                                     )}
                                     <div className="relative w-full aspect-[4/5] overflow-hidden border-b-3 border-black">
                                         {p.images?.[0] ? (
-                                            <div className="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0" style={{ backgroundImage: `url(${p.images[0].startsWith('http') ? p.images[0] : `${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api').replace(/\/api\/?$/, '')}${p.images[0]}`})` }}></div>
+                                            <div className="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0" style={{ backgroundImage: `url(${getAssetUrl(p.images[0])})` }}></div>
                                         ) : (
                                             <div className="w-full h-full bg-slate-100 flex items-center justify-center">
                                                 <ImageIcon className="w-10 h-10 text-gray-300" />

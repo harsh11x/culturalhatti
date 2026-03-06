@@ -1,12 +1,18 @@
 const express = require('express');
 const router = express.Router();
+const { Op } = require('sequelize');
 const slugify = require('slugify');
 const { Category } = require('../models');
 const adminAuth = require('../middleware/adminAuth');
 const upload = require('../middleware/upload');
 
+const ALLOWED_SLUGS = ['sarees', 'suits', 'bags', 'accessories'];
+
 router.get('/', async (req, res) => {
-    const categories = await Category.findAll({ where: { is_active: true }, order: [['name', 'ASC']] });
+    const categories = await Category.findAll({
+        where: { is_active: true, slug: { [Op.in]: ALLOWED_SLUGS } },
+        order: [['name', 'ASC']],
+    });
     res.json({ success: true, categories });
 });
 

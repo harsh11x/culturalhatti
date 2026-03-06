@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import api from '@/lib/api';
+import api, { getAssetUrl } from '@/lib/api';
 import { Search, ImageIcon } from 'lucide-react';
 
 interface Product {
@@ -125,7 +125,7 @@ export default function CollectionsPage() {
                                         {p.images?.[0] ? (
                                             <div
                                                 className="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0"
-                                                style={{ backgroundImage: 'url(' + ((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api').replace(/\/api\/?$/, '') + p.images[0]) + ')' }}
+                                                style={{ backgroundImage: `url(${getAssetUrl(p.images[0])})` }}
                                             />
                                         ) : (
                                             <div className="w-full h-full bg-slate-100 flex items-center justify-center">
