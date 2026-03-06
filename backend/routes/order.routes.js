@@ -95,13 +95,17 @@ router.post('/:id/cancel', authenticate, async (req, res) => {
 
 // GET /api/orders/admin/all
 router.get('/admin/all', adminAuth, async (req, res) => {
-    const { status, search, page = 1, limit = 20 } = req.query;
+    const { status, search, page = 1, limit = 20, since } = req.query;
     const where = {};
     if (status) where.status = status;
     if (search) where[Op.or] = [
         { order_number: { [Op.iLike]: `%${search}%` } },
         { payment_id: { [Op.iLike]: `%${search}%` } },
     ];
+    if (since === '24h') {
+        const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        where.created_at = { [Op.gte]: dayAgo };
+    }
     const orders = await Order.findAndCountAll({
         where,
         include: [

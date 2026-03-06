@@ -24,8 +24,8 @@ export default function Navbar() {
                 {/* Desktop Links */}
                 <div className="hidden md:flex items-center gap-8 lg:gap-12 flex-1 justify-center">
                     <Link className="font-body text-sm font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase" href="/category/sarees">Sarees</Link>
-                    <Link className="font-body text-sm font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase" href="/category/women-suits">Suits</Link>
-                    <Link className="font-body text-sm font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase" href="/category/women-bags">Bags</Link>
+                    <Link className="font-body text-sm font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase" href="/category/suits">Suits</Link>
+                    <Link className="font-body text-sm font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase" href="/category/bags">Bags</Link>
                     <Link className="font-body text-sm font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase" href="/category/accessories">Accessories</Link>
                 </div>
                 {/* Actions */}
@@ -84,8 +84,8 @@ export default function Navbar() {
                             
                             <div className="flex flex-col gap-6">
                                 <Link onClick={closeMobileMenu} className="font-body text-base font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 pb-3" href="/category/sarees">Sarees</Link>
-                                <Link onClick={closeMobileMenu} className="font-body text-base font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 pb-3" href="/category/women-suits">Suits</Link>
-                                <Link onClick={closeMobileMenu} className="font-body text-base font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 pb-3" href="/category/women-bags">Bags</Link>
+                                <Link onClick={closeMobileMenu} className="font-body text-base font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 pb-3" href="/category/suits">Suits</Link>
+                                <Link onClick={closeMobileMenu} className="font-body text-base font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 pb-3" href="/category/bags">Bags</Link>
                                 <Link onClick={closeMobileMenu} className="font-body text-base font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 pb-3" href="/category/accessories">Accessories</Link>
                                 
                                 {user && (

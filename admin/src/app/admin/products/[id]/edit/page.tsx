@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { adminApi } from '@/lib/api';
-import ServerStatus from '@/components/ServerStatus';
 
 export default function EditProductPage() {
     const params = useParams();
@@ -97,18 +96,9 @@ export default function EditProductPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#0a0a0a] text-white">
-            <header className="border-b border-gray-800 bg-[#0a0a0a] sticky top-0 z-50">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-                    <h1 className="text-2xl font-bold tracking-tight">ADMIN <span className="text-primary">PANEL</span></h1>
-                    <div className="flex items-center gap-4">
-                        <ServerStatus />
-                        <Link href="/admin/products" className="text-gray-400 hover:text-primary text-sm uppercase">← Products</Link>
-                    </div>
-                </div>
-            </header>
-
-            <main className="max-w-2xl mx-auto px-4 py-8">
+        <div className="min-h-screen text-white overflow-x-hidden">
+            <main className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
+                <Link href="/admin/products" className="inline-block text-gray-400 hover:text-primary text-sm uppercase mb-6">← Back to Products</Link>
                 <h2 className="text-3xl font-bold uppercase mb-6">Edit Product</h2>
                 {error && <div className="mb-6 p-4 bg-red-500/20 border border-red-500 text-red-400">{error}</div>}
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -150,11 +140,27 @@ export default function EditProductPage() {
                         <input type="checkbox" checked={form.featured} onChange={e => setForm({ ...form, featured: e.target.checked })} className="w-4 h-4" />
                         <label className="text-sm text-gray-400">Featured product</label>
                     </div>
-                    <div className="flex gap-4">
+                    <div className="flex flex-wrap gap-4">
                         <button type="submit" disabled={saving} className="px-6 py-3 bg-primary text-white font-bold uppercase tracking-widest hover:bg-primary/90 disabled:opacity-50">
                             {saving ? 'Saving...' : 'Update Product'}
                         </button>
                         <Link href="/admin/products" className="px-6 py-3 border border-gray-600 text-gray-400 hover:text-white uppercase tracking-widest">Cancel</Link>
+                        <button
+                            type="button"
+                            onClick={async () => {
+                                if (!confirm('Permanently delete this product?')) return;
+                                try {
+                                    const token = localStorage.getItem('ch_admin_token');
+                                    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+                                    const res = await fetch(`${apiUrl}/products/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+                                    if (res.ok) router.push('/admin/products');
+                                    else throw new Error('Delete failed');
+                                } catch { setError('Could not delete product'); }
+                            }}
+                            className="px-6 py-3 border border-red-500 text-red-500 hover:bg-red-500 hover:text-white uppercase tracking-widest"
+                        >
+                            Delete Product
+                        </button>
                     </div>
                 </form>
             </main>

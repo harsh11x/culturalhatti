@@ -25,6 +25,8 @@ app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(cors({
     origin: [
         process.env.FRONTEND_URL || 'http://localhost:3000',
+        'https://culturalhatti.com',
+        'https://www.culturalhatti.com',
         'http://localhost:3002',
         'http://3.7.122.146:3002',
         'http://localhost:3001',

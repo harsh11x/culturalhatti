@@ -37,8 +37,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <div className="flex flex-col gap-3">
                     <h4 className="text-primary font-body font-semibold uppercase tracking-[0.2em] text-xs mb-2">Shop</h4>
                     <a href="/category/sarees" className="font-body text-sm text-white/80 hover:text-primary transition-colors">Sarees</a>
-                    <a href="/category/women-suits" className="font-body text-sm text-white/80 hover:text-primary transition-colors">Suits</a>
-                    <a href="/category/women-bags" className="font-body text-sm text-white/80 hover:text-primary transition-colors">Bags</a>
+                    <a href="/category/suits" className="font-body text-sm text-white/80 hover:text-primary transition-colors">Suits</a>
+                    <a href="/category/bags" className="font-body text-sm text-white/80 hover:text-primary transition-colors">Bags</a>
                     <a href="/category/accessories" className="font-body text-sm text-white/80 hover:text-primary transition-colors">Accessories</a>
                   </div>
                   <div className="flex flex-col gap-3">
