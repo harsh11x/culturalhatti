@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ServerStatus from '@/components/ServerStatus';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+const ADMIN_EMAIL = 'admin@culturalhatti.in';
+const ADMIN_PASSWORD = 'Admin@1234';
 
 export default function AdminLoginPage() {
     const [form, setForm] = useState({ email: '', password: '' });
@@ -17,24 +18,18 @@ export default function AdminLoginPage() {
         setError('');
         
         try {
-            const res = await fetch(`${API_URL}/auth/admin/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(form),
-            });
-
-            const data = await res.json().catch(() => ({}));
-
-            if (!res.ok) {
-                setError(data?.message || 'Invalid admin credentials');
+            if (form.email !== ADMIN_EMAIL || form.password !== ADMIN_PASSWORD) {
+                setError('Invalid admin credentials');
                 return;
             }
 
-            localStorage.setItem('ch_admin_token', data.token);
-            localStorage.setItem('ch_admin', JSON.stringify(data.admin));
+            // Hardcoded login: just drop ROOT_ADMIN token so all admin APIs work
+            localStorage.setItem('ch_admin_token', 'ROOT_ADMIN');
+            localStorage.setItem(
+                'ch_admin',
+                JSON.stringify({ id: 'admin', name: 'Admin', email: ADMIN_EMAIL, role: 'superadmin' })
+            );
             router.push('/admin/dashboard');
-        } catch (err: any) {
-            setError('Unable to reach admin server. Please try again.');
         } finally {
             setLoading(false);
         }
