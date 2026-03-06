@@ -1,8 +1,9 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { adminApi } from '@/lib/api';
 import ServerStatus from '@/components/ServerStatus';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
 export default function AdminLoginPage() {
     const [form, setForm] = useState({ email: '', password: '' });
@@ -16,12 +17,24 @@ export default function AdminLoginPage() {
         setError('');
         
         try {
-            const res = await adminApi.post('/auth/admin/login', form);
-            localStorage.setItem('ch_admin_token', res.data.token);
-            localStorage.setItem('ch_admin', JSON.stringify(res.data.admin));
+            const res = await fetch(`${API_URL}/auth/admin/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(form),
+            });
+
+            const data = await res.json().catch(() => ({}));
+
+            if (!res.ok) {
+                setError(data?.message || 'Invalid admin credentials');
+                return;
+            }
+
+            localStorage.setItem('ch_admin_token', data.token);
+            localStorage.setItem('ch_admin', JSON.stringify(data.admin));
             router.push('/admin/dashboard');
         } catch (err: any) {
-            setError(err?.response?.data?.message || 'Invalid admin credentials');
+            setError('Unable to reach admin server. Please try again.');
         } finally {
             setLoading(false);
         }
