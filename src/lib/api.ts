@@ -1,7 +1,18 @@
 import axios from 'axios';
 
+// Production API URL - use when on culturalhatti.com (in case env wasn't set at build)
+const getApiBase = () => {
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    if (host === 'culturalhatti.com' || host === 'www.culturalhatti.com') {
+      return 'http://3.7.122.146:3001/api';
+    }
+  }
+  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+};
+
 const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api',
+    baseURL: getApiBase(),
     headers: { 'Content-Type': 'application/json' },
 });
 
@@ -26,7 +37,7 @@ api.interceptors.response.use(
 );
 
 export const adminApi = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api',
+    baseURL: getApiBase(),
     headers: { 'Content-Type': 'application/json' },
 });
 

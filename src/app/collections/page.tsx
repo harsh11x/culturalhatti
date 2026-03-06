@@ -25,16 +25,24 @@ export default function CollectionsPage() {
 
     const fetchProducts = async () => {
         setLoading(true);
-        const params: Record<string, string | number> = { page, limit: LIMIT };
-        if (selected) params.category = selected;
-        if (search) params.search = search;
-        const res = await api.get('/products', { params });
-        setProducts(res.data.rows || []);
-        setTotal(res.data.count || 0);
-        setLoading(false);
+        try {
+            const params: Record<string, string | number> = { page, limit: LIMIT };
+            if (selected) params.category = selected;
+            if (search) params.search = search;
+            const res = await api.get('/products', { params });
+            setProducts(res.data.rows || []);
+            setTotal(res.data.count || 0);
+        } catch {
+            setProducts([]);
+            setTotal(0);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    useEffect(() => { api.get('/categories').then(r => setCategories(r.data.categories || [])); }, []);
+    useEffect(() => {
+        api.get('/categories').then(r => setCategories(r.data.categories || [])).catch(() => setCategories([]));
+    }, []);
     useEffect(() => { fetchProducts(); }, [selected, page]);
 
     const handleSearch = (e: React.FormEvent) => { e.preventDefault(); fetchProducts(); };

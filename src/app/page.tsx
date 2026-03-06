@@ -19,11 +19,11 @@ export default function HomePage() {
 
   useEffect(() => {
     Promise.all([
-      api.get('/products?featured=true&limit=8'),
-      api.get('/categories'),
+      api.get('/products?featured=true&limit=8').catch(() => ({ data: { rows: [] } })),
+      api.get('/categories').catch(() => ({ data: { categories: [] } })),
     ]).then(([pRes, cRes]) => {
-      setFeatured(pRes.data.rows || []);
-      setCategories(cRes.data.categories || []);
+      setFeatured(pRes.data?.rows || []);
+      setCategories(cRes.data?.categories || []);
     }).finally(() => setLoading(false));
   }, []);
 
