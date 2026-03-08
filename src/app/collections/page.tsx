@@ -23,15 +23,17 @@ export default function CollectionsPage() {
 
     const LIMIT = 20;
 
-    const fetchProducts = async () => {
+    const fetchProducts = async (pageOverride?: number) => {
         setLoading(true);
         try {
-            const params: Record<string, string | number> = { page, limit: LIMIT };
+            const p = pageOverride ?? page;
+            const params: Record<string, string | number> = { page: p, limit: LIMIT };
             if (selected) params.category = selected;
             if (search) params.search = search;
             const res = await api.get('/products', { params });
             setProducts(res.data.rows || []);
             setTotal(res.data.count || 0);
+            if (pageOverride !== undefined) setPage(1);
         } catch {
             setProducts([]);
             setTotal(0);
@@ -45,7 +47,10 @@ export default function CollectionsPage() {
     }, []);
     useEffect(() => { fetchProducts(); }, [selected, page]);
 
-    const handleSearch = (e: React.FormEvent) => { e.preventDefault(); fetchProducts(); };
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        fetchProducts(1);
+    };
 
     return (
         <main className="flex-grow w-full grid grid-cols-1 lg:grid-cols-12 bg-background-light">

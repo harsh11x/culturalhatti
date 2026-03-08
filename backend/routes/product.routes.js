@@ -13,14 +13,16 @@ router.get('/', async (req, res) => {
     if (category) where['$category.slug$'] = category;
     if (search) where.name = { [Op.iLike]: `%${search}%` };
     if (featured === 'true') where.featured = true;
+    const includeOpts = { model: Category, as: 'category', attributes: ['id', 'name', 'slug'] };
+    if (category) includeOpts.required = true; // INNER JOIN when filtering by category
     const products = await Product.findAndCountAll({
         where,
-        include: [{ model: Category, as: 'category', attributes: ['id', 'name', 'slug'] }],
-        limit: parseInt(limit),
-        offset: (parseInt(page) - 1) * parseInt(limit),
+        include: [includeOpts],
+        limit: parseInt(String(limit)),
+        offset: (parseInt(String(page)) - 1) * parseInt(String(limit)),
         order: [['created_at', 'DESC']],
     });
-    res.json({ success: true, ...products, page: parseInt(page) });
+    res.json({ success: true, ...products, page: parseInt(String(page)) });
 });
 
 // GET /api/products/admin/all - Admin: View all products (including inactive)

@@ -6,7 +6,7 @@ import { ArrowRight, ImageIcon } from 'lucide-react';
 
 interface Product {
   id: string; name: string; slug: string; price: number; compare_price?: number;
-  images: string[]; category?: { name: string };
+  images: string[]; category?: { name: string }; stock?: number;
 }
 interface Category {
   id: string; name: string; slug: string; image_url?: string;
@@ -19,7 +19,11 @@ export default function HomePage() {
 
   useEffect(() => {
     Promise.all([
-      api.get('/products?featured=true&limit=8').catch(() => ({ data: { rows: [] } })),
+      // Fetch featured first; fallback to latest products if none featured
+      api.get('/products?featured=true&limit=8')
+        .then((r) => r.data?.rows?.length ? r : api.get('/products?limit=8'))
+        .then((r) => ({ data: { rows: r.data?.rows || [] } }))
+        .catch(() => ({ data: { rows: [] } })),
       api.get('/categories').catch(() => ({ data: { categories: [] } })),
     ]).then(([pRes, cRes]) => {
       setFeatured(pRes.data?.rows || []);
@@ -164,6 +168,58 @@ export default function HomePage() {
                   </Link>
                 );
               })}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Featured Products */}
+      <section className="w-full bg-background-light py-12 md:py-20 border-t border-black/10">
+        <div className="max-w-7xl mx-auto px-6 sm:px-10 md:px-16">
+          <div className="text-center mb-12 md:mb-16">
+            <p className="font-body text-xs uppercase tracking-[0.3em] text-secondary mb-3 font-medium">नया • New Arrivals</p>
+            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-background-dark mb-4">Handpicked Treasures</h2>
+            <p className="font-body text-lg text-gray-600 max-w-2xl mx-auto mb-8">Discover our most beloved handcrafted pieces, chosen for their exceptional quality and artistry.</p>
+            <Link href="/collections" className="inline-flex items-center gap-3 px-8 py-3 bg-primary text-background-dark font-body font-semibold uppercase tracking-[0.2em] text-sm hover:bg-accent transition-all group">
+              <span>View All Products</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+          {loading ? (
+            <div className="py-16 text-center font-body uppercase tracking-widest text-sm">Loading Products...</div>
+          ) : featured.length === 0 ? (
+            <div className="py-16 text-center font-body text-gray-500">
+              <p className="mb-4">No featured products yet.</p>
+              <Link href="/collections" className="text-primary font-semibold hover:underline">Browse all collections →</Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+              {featured.map((p) => (
+                <Link key={p.id} href={`/products/${p.slug}`} className="group block border-2 border-black p-4 luxury-shadow hover:luxury-shadow-hover bg-white transition-all duration-300">
+                  <div className="aspect-[3/4] overflow-hidden border-2 border-black mb-3 relative bg-gray-100">
+                    {p.images?.[0] ? (
+                      <img src={getAssetUrl(p.images[0])} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <ImageIcon className="w-12 h-12 text-gray-400" />
+                      </div>
+                    )}
+                    {p.compare_price && (
+                      <div className="absolute top-2 right-2 bg-primary text-white text-xs font-bold px-2 py-1 border border-black uppercase">
+                        Sale
+                      </div>
+                    )}
+                  </div>
+                  <div className="space-y-1">
+                    <p className="font-bold uppercase tracking-widest text-xs text-gray-500">{p.category?.name || 'Artifact'}</p>
+                    <h3 className="font-display text-lg font-bold line-clamp-2 group-hover:text-primary transition-colors">{p.name}</h3>
+                    <div className="flex items-center gap-2 pt-2">
+                      <span className="text-xl font-black">₹{Number(p.price).toFixed(0)}</span>
+                      {p.compare_price && <span className="text-sm font-bold text-gray-400 line-through">₹{Number(p.compare_price).toFixed(0)}</span>}
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
           )}
         </div>

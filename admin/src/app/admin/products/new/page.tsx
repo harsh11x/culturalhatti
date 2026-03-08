@@ -50,15 +50,15 @@ export default function NewProductPage() {
             if (form.sku) fd.append('sku', form.sku);
             images.forEach((file) => fd.append('images', file));
 
+            const baseURL = adminApi.defaults.baseURL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
             const token = localStorage.getItem('ch_admin_token');
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-            const res = await fetch(`${apiUrl}/products`, {
+            const res = await fetch(`${baseURL}/products`, {
                 method: 'POST',
-                headers: { Authorization: `Bearer ${token}` },
+                headers: token ? { Authorization: `Bearer ${token}` } : {},
                 body: fd,
             });
             const data = await res.json();
-            if (!res.ok) throw new Error(data.message || 'Failed to create product');
+            if (!res.ok) throw new Error(data.message || data.error || 'Failed to create product');
             router.push('/admin/products');
         } catch (err: any) {
             setError(err.message || 'Failed to create product');
@@ -119,8 +119,13 @@ export default function NewProductPage() {
                     </div>
                     <div className="flex items-center gap-2">
                         <input type="checkbox" checked={form.featured} onChange={e => setForm({ ...form, featured: e.target.checked })} className="w-4 h-4" />
-                        <label className="text-sm text-gray-400">Featured product</label>
+                        <label className="text-sm text-gray-400">Featured product (shows on home page)</label>
                     </div>
+                    {categories.length === 0 && (
+                        <div className="p-4 bg-amber-500/20 border border-amber-500/50 text-amber-400 text-sm">
+                            No categories found. Create categories first from the Categories page.
+                        </div>
+                    )}
                     <div className="flex gap-4">
                         <button type="submit" disabled={saving} className="px-6 py-3 bg-primary text-white font-bold uppercase tracking-widest hover:bg-primary/90 disabled:opacity-50">
                             {saving ? 'Saving...' : 'Create Product'}
