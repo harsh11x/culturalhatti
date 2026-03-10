@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const paymentService = require('../services/payment.service');
-const { Order, Payment } = require('../models');
+const emailService = require('../services/email.service');
+const { Order, Payment, User } = require('../models');
 const logger = require('../utils/logger');
 
 // POST /api/payments/verify - Called by frontend after Razorpay success
@@ -34,21 +35,28 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
 
     if (event.event === 'payment.captured') {
         const { order_id: razorpay_order_id, id: razorpay_payment_id } = entity;
-        const order = await Order.findOne({ where: { razorpay_order_id } });
-        if (order && order.status === 'pending_payment') {
-            // Verify if not already confirmed via signature
-            await Payment.update({ status: 'paid', verified_at: new Date(), razorpay_payment_id }, { where: { razorpay_order_id } });
-            await order.update({ status: 'confirmed', payment_id: razorpay_payment_id });
-            logger.info(`Order confirmed via webhook: ${order.order_number}`);
+        try {
+            const order = await paymentService.confirmPaymentFromWebhook({
+                razorpay_order_id,
+                razorpay_payment_id,
+            });
+            if (order) logger.info(`Order confirmed via webhook: ${order.order_number} (emails sent)`);
+        } catch (err) {
+            logger.error('Webhook payment.captured failed', { error: err.message });
         }
     }
 
     if (event.event === 'payment.failed') {
         const { order_id: razorpay_order_id } = entity;
-        const order = await Order.findOne({ where: { razorpay_order_id } });
+        const order = await Order.findOne({
+            where: { razorpay_order_id },
+            include: [{ model: User, as: 'user' }],
+        });
         if (order && order.status === 'pending_payment') {
             await Payment.update({ status: 'failed' }, { where: { razorpay_order_id } });
-            logger.info(`Payment failed for order: ${order?.order_number}`);
+            logger.info(`Payment failed for order: ${order.order_number}`);
+            const orderData = { ...order.toJSON(), user: order.user };
+            await emailService.sendAdminPaymentFailed(orderData).catch(() => {});
         }
     }
 

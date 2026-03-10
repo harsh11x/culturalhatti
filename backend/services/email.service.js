@@ -1,4 +1,4 @@
-const transporter = require('../config/mailer');
+const { sendMail: sendBrevoEmail } = require('../config/brevo');
 const logger = require('../utils/logger');
 
 const FROM = process.env.EMAIL_FROM || 'Cultural Hatti <noreply@culturalhatti.in>';
@@ -60,7 +60,7 @@ const buildItemsTable = (items = []) =>
 
 const sendMail = async ({ to, subject, html }) => {
     try {
-        await transporter.sendMail({ from: FROM, to, subject, html });
+        await sendBrevoEmail({ from: FROM, to, subject, html });
         logger.info(`Email sent to ${to}: ${subject}`);
     } catch (err) {
         logger.error(`Email failed to ${to}: ${err.message}`);
@@ -165,10 +165,79 @@ const sendAdminNewOrder = async (order) => {
     await sendMail({ to: ADMIN_EMAIL, subject: `🛍️ New Order #${order.order_number} - ₹${parseFloat(order.total_amount).toFixed(2)}`, html });
 };
 
+const sendAdminOrderShipped = async (order) => {
+    const html = `<!DOCTYPE html><html><head><style>${baseStyle}</style></head><body>
+  <div class="wrapper">
+    ${buildHeader('ORDER SHIPPED — ADMIN UPDATE')}
+    <div class="body">
+      <h2>Order Marked as Shipped</h2>
+      <div class="info-row"><span class="label">Order #</span><span class="value">${order.order_number}</span></div>
+      <div class="info-row"><span class="label">Customer</span><span class="value">${order.user?.name || 'N/A'} (${order.user?.email || 'N/A'})</span></div>
+      <div class="info-row"><span class="label">Courier</span><span class="value">${order.courier_name || 'N/A'}</span></div>
+      <div class="info-row"><span class="label">Tracking ID</span><span class="value">${order.tracking_id || 'N/A'}</span></div>
+      <p style="color:#666;font-size:13px;">Customer has been notified with tracking details.</p>
+    </div>
+    ${buildFooter()}
+  </div></body></html>`;
+    await sendMail({ to: ADMIN_EMAIL, subject: `🚚 Shipped: Order #${order.order_number} | ${order.tracking_id || 'Tracking added'}`, html });
+};
+
+const sendAdminOrderCancelled = async (order) => {
+    const html = `<!DOCTYPE html><html><head><style>${baseStyle}</style></head><body>
+  <div class="wrapper">
+    ${buildHeader('ORDER CANCELLED — ADMIN UPDATE')}
+    <div class="body">
+      <h2>Order Cancelled</h2>
+      <div class="info-row"><span class="label">Order #</span><span class="value">${order.order_number}</span></div>
+      <div class="info-row"><span class="label">Customer</span><span class="value">${order.user?.name || 'N/A'} (${order.user?.email || 'N/A'})</span></div>
+      <div class="info-row"><span class="label">Reason</span><span class="value">${order.cancelled_reason || 'N/A'}</span></div>
+      <div class="info-row"><span class="label">Amount</span><span class="value">₹${parseFloat(order.total_amount).toFixed(2)}</span></div>
+    </div>
+    ${buildFooter()}
+  </div></body></html>`;
+    await sendMail({ to: ADMIN_EMAIL, subject: `❌ Cancelled: Order #${order.order_number}`, html });
+};
+
+const sendAdminPaymentFailed = async (order) => {
+    const html = `<!DOCTYPE html><html><head><style>${baseStyle}</style></head><body>
+  <div class="wrapper">
+    ${buildHeader('PAYMENT FAILED — ADMIN ALERT')}
+    <div class="body">
+      <h2>Payment Failed</h2>
+      <div class="info-row"><span class="label">Order #</span><span class="value">${order.order_number}</span></div>
+      <div class="info-row"><span class="label">Customer</span><span class="value">${order.user?.name || 'N/A'} (${order.user?.email || 'N/A'})</span></div>
+      <div class="info-row"><span class="label">Amount</span><span class="value">₹${parseFloat(order.total_amount).toFixed(2)}</span></div>
+      <p style="color:#666;font-size:13px;">Customer may retry or contact support.</p>
+    </div>
+    ${buildFooter()}
+  </div></body></html>`;
+    await sendMail({ to: ADMIN_EMAIL, subject: `⚠️ Payment Failed: Order #${order.order_number}`, html });
+};
+
+const sendAdminOrderRefunded = async (order) => {
+    const html = `<!DOCTYPE html><html><head><style>${baseStyle}</style></head><body>
+  <div class="wrapper">
+    ${buildHeader('REFUND PROCESSED — ADMIN UPDATE')}
+    <div class="body">
+      <h2>Refund Initiated</h2>
+      <div class="info-row"><span class="label">Order #</span><span class="value">${order.order_number}</span></div>
+      <div class="info-row"><span class="label">Customer</span><span class="value">${order.user?.name || 'N/A'} (${order.user?.email || 'N/A'})</span></div>
+      <div class="info-row"><span class="label">Refund ID</span><span class="value">${order.refund_id || 'N/A'}</span></div>
+      <div class="info-row"><span class="label">Amount</span><span class="value">₹${parseFloat(order.total_amount).toFixed(2)}</span></div>
+    </div>
+    ${buildFooter()}
+  </div></body></html>`;
+    await sendMail({ to: ADMIN_EMAIL, subject: `💸 Refund: Order #${order.order_number} - ₹${parseFloat(order.total_amount).toFixed(2)}`, html });
+};
+
 module.exports = {
     sendOrderConfirmation,
     sendOrderShipped,
     sendOrderCancelled,
     sendOrderRefunded,
     sendAdminNewOrder,
+    sendAdminOrderShipped,
+    sendAdminOrderCancelled,
+    sendAdminOrderRefunded,
+    sendAdminPaymentFailed,
 };

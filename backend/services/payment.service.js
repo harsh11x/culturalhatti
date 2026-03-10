@@ -120,6 +120,62 @@ const confirmPayment = async ({ razorpay_order_id, razorpay_payment_id, razorpay
 };
 
 /**
+ * Confirm payment from webhook (no frontend signature - webhook already verified)
+ * Deducts stock, updates order, sends customer + admin emails
+ */
+const confirmPaymentFromWebhook = async ({ razorpay_order_id, razorpay_payment_id }) => {
+    const order = await Order.findOne({
+        where: { razorpay_order_id },
+        include: [
+            { association: 'items' },
+            { association: 'user' },
+        ],
+    });
+    if (!order || order.status !== 'pending_payment') return null;
+
+    const t = await sequelize.transaction();
+    try {
+        for (const item of order.items) {
+            const [updated] = await Product.update(
+                { stock: sequelize.literal(`stock - ${item.quantity}`) },
+                {
+                    where: {
+                        id: item.product_id,
+                        stock: { [require('sequelize').Op.gte]: item.quantity },
+                    },
+                    transaction: t,
+                }
+            );
+            if (!updated) throw new Error(`Insufficient stock for product ${item.product_name}`);
+        }
+        await Payment.update(
+            { razorpay_payment_id, status: 'paid', verified_at: new Date() },
+            { where: { razorpay_order_id }, transaction: t }
+        );
+        await Order.update(
+            { status: 'confirmed', payment_id: razorpay_payment_id },
+            { where: { id: order.id }, transaction: t }
+        );
+        await t.commit();
+
+        const updatedOrder = await Order.findByPk(order.id, {
+            include: [{ association: 'items' }, { association: 'user' }],
+        });
+        await emailService.sendOrderConfirmation(updatedOrder).catch((e) =>
+            logger.error('Webhook: email failed', { error: e.message })
+        );
+        await emailService.sendAdminNewOrder(updatedOrder).catch((e) =>
+            logger.error('Webhook: admin email failed', { error: e.message })
+        );
+        return updatedOrder;
+    } catch (err) {
+        await t.rollback();
+        logger.error('Webhook confirmPayment failed', { error: err.message });
+        throw err;
+    }
+};
+
+/**
  * Verify webhook from Razorpay
  */
 const verifyWebhookSignature = (rawBody, signature) => {
@@ -164,8 +220,12 @@ const initiateRefund = async (orderId, amount) => {
         { where: { id: orderId } }
     );
 
-    await emailService.sendOrderRefunded(order).catch((e) =>
+    const orderData = { ...order.toJSON(), user: order.user, refund_id: refund.id };
+    await emailService.sendOrderRefunded(orderData).catch((e) =>
         logger.error('Refund email failed', { error: e.message })
+    );
+    await emailService.sendAdminOrderRefunded(orderData).catch((e) =>
+        logger.error('Admin refund email failed', { error: e.message })
     );
 
     return refund;
@@ -175,6 +235,7 @@ module.exports = {
     createRazorpayOrder,
     verifySignature,
     confirmPayment,
+    confirmPaymentFromWebhook,
     verifyWebhookSignature,
     initiateRefund,
 };

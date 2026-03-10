@@ -66,12 +66,9 @@ RAZORPAY_KEY_ID=rzp_live_SM2JdyoM8GE1uw
 RAZORPAY_KEY_SECRET=sf0miRemTCjSSrdf2Eb5tJ67
 RAZORPAY_WEBHOOK_SECRET=
 
-# Email Configuration - Brevo (Sendinblue)
-# Get credentials from: https://app.brevo.com/settings/keys/smtp
-SMTP_HOST=smtp-relay.brevo.com
-SMTP_PORT=587
-SMTP_USER=YOUR_BREVO_EMAIL_HERE
-SMTP_PASS=YOUR_BREVO_SMTP_PASSWORD_HERE
+# Email Configuration - Brevo API (Transactional Emails)
+# Get API key from: https://app.brevo.com/settings/keys/api
+BREVO_API_KEY=xkeysib-your-api-key-here
 EMAIL_FROM=Cultural Hatti <noreply@culturalhatti.in>
 # Order notifications go to this email
 ADMIN_EMAIL=harshdevsingh2004@gmail.com
@@ -90,18 +87,25 @@ RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX=100
 ```
 
-**⚠️ IMPORTANT - Replace These:**
-- `YOUR_BREVO_EMAIL_HERE` - Your Brevo login email
-- `YOUR_BREVO_SMTP_PASSWORD_HERE` - Your Brevo SMTP password (NOT API key)
+**⚠️ IMPORTANT - Replace:**
+- `BREVO_API_KEY` - Your Brevo API key (from Settings → API Keys)
 
 **✅ Database Already Configured:**
 - Using Supabase PostgreSQL
 - Connection string: `postgresql://postgres:2311@2004@Singh@db.lwthzooyvykmtqpeqnqk.supabase.co:5432/postgres`
 
-**How to get Brevo SMTP credentials:**
-1. Go to https://app.brevo.com/settings/keys/smtp
-2. Click on "SMTP" tab (NOT "API Keys")
-3. Copy your login email and SMTP password
+**How to get Brevo API key:**
+1. Go to https://app.brevo.com/settings/keys/api
+2. Create or copy your API key (v3)
+3. Add it as `BREVO_API_KEY` in backend `.env`
+
+**📧 Email notifications (ADMIN_EMAIL):**
+You receive emails for every order update:
+- 🛍️ **New order** – When payment is confirmed
+- 🚚 **Order shipped** – When you add tracking
+- ❌ **Order cancelled** – When order is cancelled (by customer or admin)
+- 💸 **Refund processed** – When refund is initiated
+- ⚠️ **Payment failed** – When Razorpay payment fails
 
 ---
 

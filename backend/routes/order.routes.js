@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
-const { v4: uuidv4 } = require('uuid');
+const ExcelJS = require('exceljs');
 const authenticate = require('../middleware/auth');
 const adminAuth = require('../middleware/adminAuth');
 const { Order, OrderItem, Product, User, Shipment, Payment } = require('../models');
@@ -80,14 +80,19 @@ router.get('/:id', authenticate, async (req, res) => {
 
 // POST /api/orders/:id/cancel - User cancel (only before processing)
 router.post('/:id/cancel', authenticate, async (req, res) => {
-    const order = await Order.findOne({ where: { id: req.params.id, user_id: req.user.id } });
+    const order = await Order.findOne({
+        where: { id: req.params.id, user_id: req.user.id },
+        include: [{ model: User, as: 'user' }],
+    });
     if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
     const allowedStatuses = ['pending_payment', 'confirmed'];
     if (!allowedStatuses.includes(order.status)) {
         return res.status(400).json({ success: false, message: 'Order cannot be cancelled at this stage' });
     }
     await order.update({ status: 'cancelled', cancelled_reason: req.body.reason || 'Cancelled by customer' });
-    await emailService.sendOrderCancelled(order).catch((e) => logger.error('Cancel email failed', { error: e.message }));
+    const orderData = { ...order.toJSON(), user: order.user };
+    await emailService.sendOrderCancelled(orderData).catch((e) => logger.error('Cancel email failed', { error: e.message }));
+    await emailService.sendAdminOrderCancelled(orderData).catch((e) => logger.error('Admin cancel email failed', { error: e.message }));
     res.json({ success: true, message: 'Order cancelled' });
 });
 
@@ -118,6 +123,102 @@ router.get('/admin/all', adminAuth, async (req, res) => {
         order: [['created_at', 'DESC']],
     });
     res.json({ success: true, ...orders, page: parseInt(page) });
+});
+
+// GET /api/orders/admin/export - Export all orders as Excel (admin only, cancelled rows in red)
+router.get('/admin/export', adminAuth, async (req, res) => {
+    const where = {};
+    const { status, since } = req.query;
+    if (status) where.status = status;
+    if (since === '24h') {
+        const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        where.created_at = { [Op.gte]: dayAgo };
+    }
+
+    const orders = await Order.findAll({
+        where,
+        include: [
+            { model: User, as: 'user', attributes: ['id', 'name', 'email', 'phone'] },
+            { association: 'items' },
+            { association: 'shipment' },
+        ],
+        order: [['created_at', 'DESC']],
+    });
+
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet('Orders', { headerFooter: { firstHeader: 'Orders Export' } });
+
+    const header = [
+        'Order #', 'Status', 'Order Date', 'Customer Name', 'Customer Email', 'Customer Phone',
+        'Shipping Name', 'Shipping Phone', 'Address Line1', 'Address Line2', 'City', 'State', 'Pincode',
+        'Item Name', 'Qty', 'Item Price', 'Item Total', 'Order Total',
+    ];
+    sheet.addRow(header);
+    sheet.getRow(1).font = { bold: true };
+
+    const redFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFCDD2' } };
+    const monthlyTotals = {};
+
+    let rowNum = 2;
+    for (const order of orders) {
+        const addr = order.shipping_address || {};
+        const orderDate = order.created_at ? new Date(order.created_at) : null;
+        const monthKey = orderDate
+            ? `${orderDate.getFullYear()}-${String(orderDate.getMonth() + 1).padStart(2, '0')}`
+            : null;
+
+        if (order.status === 'delivered' && monthKey) {
+            const amt = parseFloat(order.total_amount || 0) || 0;
+            monthlyTotals[monthKey] = (monthlyTotals[monthKey] || 0) + amt;
+        }
+
+        const isCancelledOrRefunded = order.status === 'cancelled' || order.status === 'refunded';
+        const items = order.items && order.items.length ? order.items : [null];
+
+        for (const item of items) {
+            const itemTotal = item
+                ? (parseFloat(item.price_at_purchase || 0) * item.quantity).toFixed(2)
+                : '';
+            const row = sheet.addRow([
+                order.order_number,
+                order.status,
+                orderDate ? orderDate.toISOString() : '',
+                order.user?.name || '',
+                order.user?.email || '',
+                order.user?.phone || '',
+                addr.name || '',
+                addr.phone || '',
+                addr.line1 || '',
+                addr.line2 || '',
+                addr.city || '',
+                addr.state || '',
+                addr.pincode || '',
+                item ? item.product_name : '',
+                item ? item.quantity : '',
+                item ? item.price_at_purchase : '',
+                itemTotal,
+                order.total_amount,
+            ]);
+            if (isCancelledOrRefunded) {
+                row.eachCell((cell) => { cell.fill = redFill; });
+            }
+            rowNum++;
+        }
+    }
+
+    // Monthly summary sheet
+    const summarySheet = workbook.addWorksheet('Monthly Sales (Delivered)', { headerFooter: { firstHeader: 'Monthly Delivered Sales' } });
+    summarySheet.addRow(['Month', 'Total Sales']);
+    summarySheet.getRow(1).font = { bold: true };
+    Object.keys(monthlyTotals)
+        .sort()
+        .forEach((month) => summarySheet.addRow([month, parseFloat(monthlyTotals[month].toFixed(2))]));
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    const filename = `orders-export-${new Date().toISOString().slice(0, 10)}.xlsx`;
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.send(buffer);
 });
 
 // GET /api/orders/admin/:id
@@ -151,7 +252,9 @@ router.put('/admin/:id/status', adminAuth, async (req, res) => {
     await order.update(updates);
 
     if (status === 'cancelled') {
-        await emailService.sendOrderCancelled({ ...order.toJSON(), user: order.user }).catch(() => { });
+        const orderData = { ...order.toJSON(), user: order.user };
+        await emailService.sendOrderCancelled(orderData).catch(() => { });
+        await emailService.sendAdminOrderCancelled(orderData).catch(() => { });
     }
 
     res.json({ success: true, order });
@@ -179,7 +282,9 @@ router.put('/admin/:id/shipment', adminAuth, async (req, res) => {
 
     await order.update({ tracking_id, courier_name, status: 'shipped' });
 
-    await emailService.sendOrderShipped({ ...order.toJSON(), user: order.user }).catch(() => { });
+    const orderData = { ...order.toJSON(), user: order.user, tracking_id, courier_name };
+    await emailService.sendOrderShipped(orderData).catch(() => { });
+    await emailService.sendAdminOrderShipped(orderData).catch(() => { });
 
     res.json({ success: true, order, shipment });
 });

@@ -7,6 +7,7 @@ import { adminApi } from '@/lib/api';
 export default function OrdersPage() {
     const [orders, setOrders] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [exporting, setExporting] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -21,6 +22,27 @@ export default function OrdersPage() {
             .finally(() => setLoading(false));
     }, [router]);
 
+    const handleExport = async () => {
+        try {
+            setExporting(true);
+            const res = await adminApi.get('/orders/admin/export', { responseType: 'blob' });
+            const blob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `orders-export-${new Date().toISOString().slice(0, 10)}.xlsx`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (err) {
+            console.error('Failed to export orders CSV', err);
+            alert('Failed to export CSV. Please try again.');
+        } finally {
+            setExporting(false);
+        }
+    };
+
     if (loading) {
         return (
             <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
@@ -32,7 +54,16 @@ export default function OrdersPage() {
     return (
         <div className="min-h-screen text-white overflow-x-hidden">
             <main className="p-4 sm:p-6 lg:p-8 overflow-x-auto">
-                <h2 className="text-4xl font-bold uppercase tracking-tight mb-8">Orders</h2>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+                    <h2 className="text-4xl font-bold uppercase tracking-tight">Orders</h2>
+                    <button
+                        onClick={handleExport}
+                        disabled={exporting}
+                        className="px-5 py-2 border border-gray-600 text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black disabled:opacity-50"
+                    >
+                        {exporting ? 'Exporting…' : 'Export Excel'}
+                    </button>
+                </div>
                 <div className="border border-gray-800 overflow-x-auto">
                     <table className="w-full text-left">
                         <thead className="bg-[#111] border-b border-gray-800">
