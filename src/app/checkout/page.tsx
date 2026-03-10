@@ -1,14 +1,16 @@
 'use client';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useCartStore, useAuthStore } from '@/store';
 import api from '@/lib/api';
 import { State, City } from 'country-state-city';
-import { AlertCircle, AlertTriangle, CreditCard, Lock } from 'lucide-react';
+import { AlertCircle, AlertTriangle, CreditCard, Lock, MapPin } from 'lucide-react';
 
 declare global { interface Window { Razorpay: any; } }
 
 interface Address {
+    id?: string;
     name: string; phone: string; line1: string; line2: string;
     city: string; state: string; pincode: string;
 }
@@ -17,6 +19,7 @@ const INITIAL_ADDR: Address = { name: '', phone: '', line1: '', line2: '', city:
 
 export default function CheckoutPage() {
     const [address, setAddress] = useState<Address>(INITIAL_ADDR);
+    const [savedAddresses, setSavedAddresses] = useState<Address[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const items = useCartStore((s) => s.items);
@@ -28,6 +31,13 @@ export default function CheckoutPage() {
     const FREE_SHIPPING_THRESHOLD = 999;
     const shippingCost = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 50;
     const total = subtotal + shippingCost;
+
+    useEffect(() => {
+        if (!user) router.replace('/login?redirect=/checkout');
+        if (user) {
+            api.get('/users/addresses').then(r => setSavedAddresses(r.data.addresses || [])).catch(() => {});
+        }
+    }, [user, router]);
 
     const indianStates = useMemo(() => State.getStatesOfCountry('IN'), []);
     const availableCities = useMemo(() => {
@@ -46,7 +56,7 @@ export default function CheckoutPage() {
     };
 
     const handlePay = async () => {
-        if (!user) { router.push('/login?redirect=/checkout'); return; }
+        if (!user) { router.replace('/login?redirect=/checkout'); return; }
         if (items.length === 0) { setError('Cart is empty'); return; }
         if (!validate()) return;
 
@@ -138,6 +148,23 @@ export default function CheckoutPage() {
 
                 <div className="flex flex-col border-t-2 border-slate-900 pt-8 gap-6">
                     <h3 className="text-2xl font-black uppercase text-slate-900 tracking-tight">Shipping Address</h3>
+
+                    {savedAddresses.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                            {savedAddresses.map((a) => (
+                                <button
+                                    key={a.id}
+                                    type="button"
+                                    onClick={() => setAddress({ ...a })}
+                                    className="flex items-center gap-2 px-4 py-3 border-2 border-slate-900 text-left hover:border-primary hover:bg-primary/5 transition-colors"
+                                >
+                                    <MapPin className="w-4 h-4 shrink-0" />
+                                    <span className="text-sm font-bold">{a.name} · {a.line1}, {a.city}</span>
+                                </button>
+                            ))}
+                            <Link href="/profile?tab=addresses" className="text-sm text-primary font-bold underline">Manage addresses</Link>
+                        </div>
+                    )}
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <F label="Full Name *" field="name" />

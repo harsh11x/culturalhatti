@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
 const slugify = require('slugify');
-const { Product, Category } = require('../models');
+const authenticate = require('../middleware/auth');
+const { Product, Category, Review, User } = require('../models');
 const adminAuth = require('../middleware/adminAuth');
 const upload = require('../middleware/upload');
 
@@ -52,14 +53,59 @@ router.get('/admin/:id', adminAuth, async (req, res) => {
     res.json({ success: true, product });
 });
 
-// GET /api/products/:slug
+// GET /api/products/:slug/related - Must be before /:slug
+router.get('/:slug/related', async (req, res) => {
+    const current = await Product.findOne({
+        where: { slug: req.params.slug, is_active: true },
+        attributes: ['id', 'category_id'],
+    });
+    if (!current) return res.status(404).json({ success: false, message: 'Product not found' });
+    const related = await Product.findAll({
+        where: { category_id: current.category_id, id: { [Op.ne]: current.id }, is_active: true },
+        include: [{ model: Category, as: 'category', attributes: ['name', 'slug'] }],
+        limit: 8,
+        order: [['created_at', 'DESC']],
+    });
+    res.json({ success: true, products: related });
+});
+
+// GET /api/products/:slug - Includes reviews and average rating
 router.get('/:slug', async (req, res) => {
     const product = await Product.findOne({
         where: { slug: req.params.slug, is_active: true },
-        include: [{ model: Category, as: 'category' }],
+        include: [
+            { model: Category, as: 'category' },
+            {
+                model: Review,
+                as: 'reviews',
+                include: [{ model: User, attributes: ['id', 'name'], as: 'User' }],
+                required: false,
+            },
+        ],
     });
     if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
-    res.json({ success: true, product });
+    const p = product.toJSON();
+    const reviews = p.reviews || [];
+    const avgRating = reviews.length
+        ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
+        : null;
+    res.json({ success: true, product: { ...p, avg_rating: avgRating, reviews } });
+});
+
+// POST /api/products/:slug/review - Add or update review (authenticated)
+router.post('/:slug/review', authenticate, async (req, res) => {
+    const { rating, comment } = req.body;
+    if (!rating || rating < 1 || rating > 5) return res.status(400).json({ success: false, message: 'Rating 1-5 required' });
+    const product = await Product.findOne({ where: { slug: req.params.slug } });
+    if (!product || !product.is_active) return res.status(404).json({ success: false, message: 'Product not found' });
+    const [review] = await Review.findOrCreate({
+        where: { user_id: req.user.id, product_id: product.id },
+        defaults: { user_id: req.user.id, product_id: product.id, rating, comment: comment || null },
+    });
+    if (review.rating !== rating || review.comment !== (comment || null)) {
+        await review.update({ rating, comment: comment || null });
+    }
+    res.json({ success: true, review });
 });
 
 // POST /api/products - Admin only

@@ -8,6 +8,10 @@ const OrderItem = require('./OrderItem');
 const Payment = require('./Payment');
 const Shipment = require('./Shipment');
 const Coupon = require('./Coupon');
+const Wishlist = require('./Wishlist');
+const Review = require('./Review');
+const Address = require('./Address');
+const ReturnRequest = require('./ReturnRequest');
 
 // Associations
 Category.hasMany(Product, { foreignKey: 'category_id', as: 'products' });
@@ -27,6 +31,24 @@ Payment.belongsTo(Order, { foreignKey: 'order_id', as: 'order' });
 
 Order.hasOne(Shipment, { foreignKey: 'order_id', as: 'shipment' });
 Shipment.belongsTo(Order, { foreignKey: 'order_id', as: 'order' });
+
+User.hasMany(Wishlist, { foreignKey: 'user_id', as: 'wishlistItems' });
+Wishlist.belongsTo(User, { foreignKey: 'user_id' });
+Product.hasMany(Wishlist, { foreignKey: 'product_id' });
+Wishlist.belongsTo(Product, { foreignKey: 'product_id' });
+
+User.hasMany(Review, { foreignKey: 'user_id' });
+Review.belongsTo(User, { foreignKey: 'user_id' });
+Product.hasMany(Review, { foreignKey: 'product_id', as: 'reviews' });
+Review.belongsTo(Product, { foreignKey: 'product_id' });
+
+User.hasMany(Address, { foreignKey: 'user_id', as: 'addresses' });
+Address.belongsTo(User, { foreignKey: 'user_id' });
+
+User.hasMany(ReturnRequest, { foreignKey: 'user_id' });
+ReturnRequest.belongsTo(User, { foreignKey: 'user_id' });
+Order.hasMany(ReturnRequest, { foreignKey: 'order_id', as: 'return_requests' });
+ReturnRequest.belongsTo(Order, { foreignKey: 'order_id' });
 
 const syncDatabase = async (options = {}) => {
     try {
@@ -49,5 +71,9 @@ module.exports = {
     Payment,
     Shipment,
     Coupon,
+    Wishlist,
+    Review,
+    Address,
+    ReturnRequest,
     syncDatabase,
 };

@@ -1,10 +1,11 @@
 'use client';
 import Link from 'next/link';
-import { useCartStore, useAuthStore, useUIStore } from '@/store';
-import { Search, ShoppingBag, User, Menu, Diamond, X } from 'lucide-react';
+import { useCartStore, useAuthStore, useUIStore, useWishlistStore } from '@/store';
+import { Search, ShoppingBag, User, Menu, Diamond, X, Heart } from 'lucide-react';
 
 export default function Navbar() {
     const count = useCartStore((s) => s.count());
+    const wishlistCount = useWishlistStore((s) => s.productIds.length);
     const user = useAuthStore((s) => s.user);
     const logout = useAuthStore((s) => s.logout);
     const { openCart, openAuthModal, isMobileMenuOpen, openMobileMenu, closeMobileMenu } = useUIStore();
@@ -39,7 +40,7 @@ export default function Navbar() {
                                 </button>
                             </>
                         ) : (
-                            <button onClick={openAuthModal} className="font-body text-xs font-semibold uppercase tracking-[0.15em] bg-primary text-background-dark px-6 py-2.5 hover:bg-accent transition-colors">
+                            <button onClick={() => openAuthModal()} className="font-body text-xs font-semibold uppercase tracking-[0.15em] bg-primary text-background-dark px-6 py-2.5 hover:bg-accent transition-colors">
                                 Login / Signup
                             </button>
                         )}
@@ -48,6 +49,16 @@ export default function Navbar() {
                     <button className="w-10 h-10 flex items-center justify-center text-background-dark hover:text-primary transition-all shrink-0">
                         <Search className="w-5 h-5" />
                     </button>
+                    {user && (
+                        <Link href="/wishlist" className="w-10 h-10 flex items-center justify-center text-background-dark hover:text-primary transition-all relative shrink-0">
+                            <Heart className="w-5 h-5" />
+                            {wishlistCount > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-terracotta text-white text-[10px] font-body font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                                    {wishlistCount}
+                                </span>
+                            )}
+                        </Link>
+                    )}
                     <button onClick={openCart} className="w-10 h-10 flex items-center justify-center text-background-dark hover:text-primary transition-all relative shrink-0">
                         <ShoppingBag className="w-5 h-5" />
                         {count > 0 && (
@@ -59,7 +70,7 @@ export default function Navbar() {
 
                     {/* Mobile Only Icons */}
                     {!user && (
-                        <button onClick={openAuthModal} className="md:hidden w-10 h-10 flex items-center justify-center hover:text-primary transition-all shrink-0">
+                        <button onClick={() => openAuthModal()} className="md:hidden w-10 h-10 flex items-center justify-center hover:text-primary transition-all shrink-0">
                             <User className="w-5 h-5" />
                         </button>
                     )}
@@ -91,6 +102,9 @@ export default function Navbar() {
                                 {user && (
                                     <>
                                         <div className="h-px bg-background-dark/10 my-4"></div>
+                                        <Link onClick={closeMobileMenu} href="/wishlist" className="font-body text-base font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 pb-3">
+                                            Wishlist
+                                        </Link>
                                         <Link onClick={closeMobileMenu} href="/profile" className="font-body text-base font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase">Profile</Link>
                                         <button onClick={() => { logout(); closeMobileMenu(); }} className="font-body text-base font-medium tracking-[0.15em] text-gray-400 hover:text-background-dark transition-colors uppercase text-left">
                                             Logout

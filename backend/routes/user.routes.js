@@ -3,7 +3,7 @@ const router = express.Router();
 const { Op, fn, col, literal } = require('sequelize');
 const adminAuth = require('../middleware/adminAuth');
 const authenticate = require('../middleware/auth');
-const { User, Order, Payment } = require('../models');
+const { User, Order, Payment, Address } = require('../models');
 
 // GET /api/users/me
 router.get('/me', authenticate, async (req, res) => {
@@ -25,6 +25,54 @@ router.put('/me/password', authenticate, async (req, res) => {
     }
     await req.user.update({ password_hash: new_password });
     res.json({ success: true, message: 'Password updated' });
+});
+
+// ─── SAVED ADDRESSES ─────
+
+// GET /api/users/addresses
+router.get('/addresses', authenticate, async (req, res) => {
+    const addresses = await Address.findAll({ where: { user_id: req.user.id }, order: [['is_default', 'DESC'], ['created_at', 'ASC']] });
+    res.json({ success: true, addresses });
+});
+
+// POST /api/users/addresses
+router.post('/addresses', authenticate, async (req, res) => {
+    const { label, name, phone, line1, line2, city, state, pincode, is_default } = req.body;
+    if (!name || !phone || !line1 || !city || !state || !pincode) {
+        return res.status(400).json({ success: false, message: 'Name, phone, line1, city, state, pincode required' });
+    }
+    if (is_default) {
+        await Address.update({ is_default: false }, { where: { user_id: req.user.id } });
+    }
+    const address = await Address.create({
+        user_id: req.user.id,
+        label: label || null,
+        name, phone, line1, line2: line2 || null, city, state, pincode,
+        is_default: is_default === true,
+    });
+    res.status(201).json({ success: true, address });
+});
+
+// PUT /api/users/addresses/:id
+router.put('/addresses/:id', authenticate, async (req, res) => {
+    const addr = await Address.findOne({ where: { id: req.params.id, user_id: req.user.id } });
+    if (!addr) return res.status(404).json({ success: false, message: 'Address not found' });
+    const { label, name, phone, line1, line2, city, state, pincode, is_default } = req.body;
+    const updates = { label, name, phone, line1, line2, city, state, pincode };
+    if (is_default !== undefined) {
+        if (is_default) await Address.update({ is_default: false }, { where: { user_id: req.user.id } });
+        updates.is_default = is_default;
+    }
+    await addr.update(updates);
+    res.json({ success: true, address: addr });
+});
+
+// DELETE /api/users/addresses/:id
+router.delete('/addresses/:id', authenticate, async (req, res) => {
+    const addr = await Address.findOne({ where: { id: req.params.id, user_id: req.user.id } });
+    if (!addr) return res.status(404).json({ success: false, message: 'Address not found' });
+    await addr.destroy();
+    res.json({ success: true });
 });
 
 // ─── ADMIN USER MANAGEMENT ─────

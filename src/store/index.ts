@@ -93,20 +93,40 @@ interface UIStore {
     openCart: () => void;
     closeCart: () => void;
     isAuthModalOpen: boolean;
-    openAuthModal: () => void;
+    openAuthModal: (redirect?: string) => void;
     closeAuthModal: () => void;
+    authRedirect: string | null;
+    setAuthRedirect: (url: string | null) => void;
     isMobileMenuOpen: boolean;
     openMobileMenu: () => void;
     closeMobileMenu: () => void;
 }
+
+interface WishlistStore {
+    productIds: string[];
+    setProductIds: (ids: string[]) => void;
+    addId: (id: string) => void;
+    removeId: (id: string) => void;
+    hasProduct: (id: string) => boolean;
+}
+
+export const useWishlistStore = create<WishlistStore>((set, get) => ({
+    productIds: [],
+    setProductIds: (ids) => set({ productIds: ids }),
+    addId: (id) => set((s) => ({ productIds: s.productIds.includes(id) ? s.productIds : [...s.productIds, id] })),
+    removeId: (id) => set((s) => ({ productIds: s.productIds.filter((x) => x !== id) })),
+    hasProduct: (id) => get().productIds.includes(id),
+}));
 
 export const useUIStore = create<UIStore>((set) => ({
     isCartOpen: false,
     openCart: () => set({ isCartOpen: true }),
     closeCart: () => set({ isCartOpen: false }),
     isAuthModalOpen: false,
-    openAuthModal: () => set({ isAuthModalOpen: true }),
-    closeAuthModal: () => set({ isAuthModalOpen: false }),
+    authRedirect: null,
+    openAuthModal: (redirect) => set({ isAuthModalOpen: true, authRedirect: redirect ?? null }),
+    closeAuthModal: () => set({ isAuthModalOpen: false, authRedirect: null }),
+    setAuthRedirect: (url) => set({ authRedirect: url }),
     isMobileMenuOpen: false,
     openMobileMenu: () => set({ isMobileMenuOpen: true }),
     closeMobileMenu: () => set({ isMobileMenuOpen: false }),

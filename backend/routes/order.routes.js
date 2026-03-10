@@ -4,7 +4,7 @@ const { Op } = require('sequelize');
 const ExcelJS = require('exceljs');
 const authenticate = require('../middleware/auth');
 const adminAuth = require('../middleware/adminAuth');
-const { Order, OrderItem, Product, User, Shipment, Payment } = require('../models');
+const { Order, OrderItem, Product, User, Shipment, Payment, ReturnRequest } = require('../models');
 const paymentService = require('../services/payment.service');
 const emailService = require('../services/email.service');
 const logger = require('../utils/logger');
@@ -72,13 +72,33 @@ router.get('/', authenticate, async (req, res) => {
 router.get('/:id', authenticate, async (req, res) => {
     const order = await Order.findOne({
         where: { id: req.params.id, user_id: req.user.id },
-        include: [{ association: 'items' }, { association: 'shipment' }, { association: 'payments' }],
+        include: [
+            { association: 'items' },
+            { association: 'shipment' },
+            { association: 'payments' },
+            { model: ReturnRequest, as: 'return_requests', required: false },
+        ],
     });
     if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
     res.json({ success: true, order });
 });
 
-// POST /api/orders/:id/cancel - User cancel (only before processing)
+// POST /api/orders/:id/return - Customer request return/refund
+router.post('/:id/return', authenticate, async (req, res) => {
+    const { reason } = req.body;
+    if (!reason || !reason.trim()) return res.status(400).json({ success: false, message: 'Reason required' });
+    const order = await Order.findOne({ where: { id: req.params.id, user_id: req.user.id } });
+    if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
+    if (!['shipped', 'delivered'].includes(order.status)) {
+        return res.status(400).json({ success: false, message: 'Returns only for shipped or delivered orders' });
+    }
+    const existing = await ReturnRequest.findOne({ where: { order_id: order.id, user_id: req.user.id } });
+    if (existing) return res.status(400).json({ success: false, message: 'Return request already submitted' });
+    const ret = await ReturnRequest.create({ order_id: order.id, user_id: req.user.id, reason: reason.trim() });
+    res.status(201).json({ success: true, return_request: ret });
+});
+
+// POST /api/orders/:id/cancel - User cancel (only within 24h of order, and before processing/shipped)
 router.post('/:id/cancel', authenticate, async (req, res) => {
     const order = await Order.findOne({
         where: { id: req.params.id, user_id: req.user.id },
@@ -88,6 +108,10 @@ router.post('/:id/cancel', authenticate, async (req, res) => {
     const allowedStatuses = ['pending_payment', 'confirmed'];
     if (!allowedStatuses.includes(order.status)) {
         return res.status(400).json({ success: false, message: 'Order cannot be cancelled at this stage' });
+    }
+    const orderAgeHours = (Date.now() - new Date(order.created_at).getTime()) / (1000 * 60 * 60);
+    if (orderAgeHours > 24) {
+        return res.status(400).json({ success: false, message: 'Cancellation window (24 hours) has passed. Please contact support.' });
     }
     await order.update({ status: 'cancelled', cancelled_reason: req.body.reason || 'Cancelled by customer' });
     const orderData = { ...order.toJSON(), user: order.user };

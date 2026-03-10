@@ -32,12 +32,14 @@ export default function OrderDetailPage() {
             .finally(() => setLoading(false));
     }, [id, router]);
 
-    const handleStatusUpdate = async () => {
-        if (!status) return;
+    const handleStatusUpdate = async (overrideStatus?: string) => {
+        const s = overrideStatus ?? status;
+        if (!s) return;
         setUpdating(true);
         try {
-            await adminApi.put(`/orders/admin/${id}/status`, { status });
-            setOrder((o: any) => o ? { ...o, status } : null);
+            await adminApi.put(`/orders/admin/${id}/status`, { status: s });
+            setOrder((o: any) => o ? { ...o, status: s } : null);
+            setStatus(s);
         } finally {
             setUpdating(false);
         }
@@ -119,6 +121,19 @@ export default function OrderDetailPage() {
                         <input type="text" placeholder="Tracking ID" value={trackingId} onChange={e => setTrackingId(e.target.value)} className="px-4 py-2 bg-[#0a0a0a] border border-gray-700 text-white w-full" />
                         <input type="text" placeholder="Courier Name" value={courierName} onChange={e => setCourierName(e.target.value)} className="px-4 py-2 bg-[#0a0a0a] border border-gray-700 text-white w-full" />
                         <button onClick={handleShipmentUpdate} disabled={updating} className="px-4 py-2 bg-primary text-white uppercase text-sm font-bold">Mark Shipped</button>
+                    </div>
+                )}
+
+                {order.status === 'shipped' && (
+                    <div className="border border-gray-800 bg-[#111] p-6">
+                        <h3 className="text-lg font-bold mb-2">Delivery</h3>
+                        <button
+                            onClick={() => handleStatusUpdate('delivered')}
+                            disabled={updating}
+                            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white uppercase text-sm font-bold"
+                        >
+                            Mark as Delivered
+                        </button>
                     </div>
                 )}
             </main>
