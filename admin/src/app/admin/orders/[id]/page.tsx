@@ -112,7 +112,7 @@ export default function OrderDetailPage() {
                         <option value="cancelled">Cancelled</option>
                         <option value="refunded">Refunded</option>
                     </select>
-                    <button onClick={handleStatusUpdate} disabled={updating} className="ml-4 px-4 py-2 bg-primary text-white uppercase text-sm font-bold">Update</button>
+                    <button onClick={() => handleStatusUpdate()} disabled={updating} className="ml-4 px-4 py-2 bg-primary text-white uppercase text-sm font-bold">Update</button>
                 </div>
 
                 {(order.status === 'confirmed' || order.status === 'processing') && (

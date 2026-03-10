@@ -53,7 +53,9 @@ api.interceptors.response.use(
         if (err.response?.status === 401 && typeof window !== 'undefined') {
             localStorage.removeItem('ch_token');
             localStorage.removeItem('ch_user');
-            window.location.href = '/login';
+            const path = window.location.pathname;
+            const redirect = path && path !== '/login' ? `?redirect=${encodeURIComponent(path)}` : '';
+            window.location.href = `/login${redirect}`;
         }
         return Promise.reject(err);
     }

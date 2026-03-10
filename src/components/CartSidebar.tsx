@@ -1,11 +1,22 @@
 'use client';
-import { useCartStore, useUIStore } from '@/store';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useCartStore, useAuthStore, useUIStore } from '@/store';
 import { X, ShoppingBag, ArrowRight } from 'lucide-react';
 
 export default function CartSidebar() {
+    const router = useRouter();
     const { items, total, removeItem, updateQty } = useCartStore();
-    const { isCartOpen, closeCart } = useUIStore();
+    const user = useAuthStore((s) => s.user);
+    const { isCartOpen, closeCart, openAuthModal } = useUIStore();
+
+    const handleCheckout = () => {
+        closeCart();
+        if (user) {
+            router.push('/checkout');
+        } else {
+            openAuthModal('/checkout');
+        }
+    };
     
     const subtotal = total();
     const FREE_SHIPPING_THRESHOLD = 999;
@@ -127,14 +138,13 @@ export default function CartSidebar() {
                         <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-4">
                             Taxes calculated at checkout.
                         </p>
-                        <Link
-                            href="/checkout"
-                            onClick={closeCart}
+                        <button
+                            onClick={handleCheckout}
                             className="w-full bg-black text-white border-2 border-black py-5 font-black uppercase text-xl tracking-widest hover:bg-primary hover:text-white transition-all flex items-center justify-between px-6 brutalist-shadow hover:brutalist-shadow-hover hover:translate-x-[-2px] hover:translate-y-[-2px]"
                         >
                             <span>Checkout</span>
                             <ArrowRight className="w-6 h-6" />
-                        </Link>
+                        </button>
                     </div>
                 )}
             </div>

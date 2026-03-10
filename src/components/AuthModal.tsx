@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useUIStore, useAuthStore } from '@/store';
 import api from '@/lib/api';
 import { X, Phone } from 'lucide-react';
@@ -7,7 +8,8 @@ import { auth, isFirebaseEnabled } from '@/lib/firebase';
 import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 export default function AuthModal() {
-    const { isAuthModalOpen, closeAuthModal } = useUIStore();
+    const router = useRouter();
+    const { isAuthModalOpen, closeAuthModal, authRedirect } = useUIStore();
     const setUser = useAuthStore((s) => s.setUser);
 
     const [authMethod, setAuthMethod] = useState<'email' | 'phone'>(isFirebaseEnabled ? 'phone' : 'email');
@@ -74,8 +76,10 @@ export default function AuthModal() {
                 });
                 localStorage.setItem('ch_token', data.token);
                 setUser({ id: data._id, name: data.name, email: data.email });
+                const redirect = authRedirect;
                 closeAuthModal();
                 resetForm();
+                if (redirect) router.push(redirect);
             }
         } catch (err: any) {
             setError(err.message || 'Phone authentication failed');
@@ -98,12 +102,16 @@ export default function AuthModal() {
                 const { data } = await api.post('/auth/login', { email, password });
                 localStorage.setItem('ch_token', data.token);
                 setUser({ id: data._id, name: data.name, email: data.email });
+                const redirect = authRedirect;
                 closeAuthModal();
+                if (redirect) router.push(redirect);
             } else {
                 const { data } = await api.post('/auth/register', { name, email, password });
                 localStorage.setItem('ch_token', data.token);
                 setUser({ id: data._id, name: data.name, email: data.email });
+                const redirect = authRedirect;
                 closeAuthModal();
+                if (redirect) router.push(redirect);
             }
         } catch (err: any) {
             setError(err.response?.data?.message || 'Authentication failed');
@@ -132,6 +140,7 @@ export default function AuthModal() {
             setUser({ id: data._id, name: data.name, email: data.email });
             closeAuthModal();
             resetForm();
+            if (authRedirect) router.push(authRedirect);
         } catch (err: any) {
             setError(err.message || 'Google sign-in failed');
         } finally {

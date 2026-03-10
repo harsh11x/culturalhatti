@@ -85,7 +85,7 @@ const sendOrderConfirmation = async (order) => {
       <h2>Items Ordered</h2>
       ${buildItemsTable(items)}
       <div class="total-row"><span>Total Paid</span><span>₹${parseFloat(order.total_amount).toFixed(2)}</span></div>
-      <p style="color:#666;font-size:13px;">We'll notify you once your order is shipped with a tracking ID.</p>
+      <p style="color:#666;font-size:13px;margin-top:16px;">Thank you for your order! Your tracking ID will be shared via email soon once your order is dispatched.</p>
     </div>
     ${buildFooter()}
   </div></body></html>`;
@@ -95,14 +95,15 @@ const sendOrderConfirmation = async (order) => {
 const sendOrderShipped = async (order) => {
     const html = `<!DOCTYPE html><html><head><style>${baseStyle}</style></head><body>
   <div class="wrapper">
-    ${buildHeader('YOUR ORDER IS ON THE WAY')}
+    ${buildHeader('TRACKING ID SHARED')}
     <div class="body">
       <h2>Your order has been shipped! 🚚</h2>
+      <p style="color:#0A0A0A;margin-bottom:20px;">Your tracking ID has been shared. You can now track your package.</p>
       <div class="info-row"><span class="label">Order Number</span><span class="value">#${order.order_number}</span></div>
       <div class="info-row"><span class="label">Courier</span><span class="value">${order.courier_name || 'N/A'}</span></div>
-      <div class="info-row"><span class="label">Tracking ID</span><span class="value">${order.tracking_id || 'N/A'}</span></div>
+      <div class="info-row"><span class="label">Tracking ID</span><span class="value"><strong>${order.tracking_id || 'N/A'}</strong></span></div>
       <div class="info-row"><span class="label">Status</span><span class="value"><span class="status-badge">Shipped</span></span></div>
-      <p style="color:#0A0A0A;margin-top:24px;">Use your tracking ID on the courier website to track your package.</p>
+      <p style="color:#666;font-size:13px;margin-top:24px;">Use your tracking ID on the courier website to track your package.</p>
     </div>
     ${buildFooter()}
   </div></body></html>`;
