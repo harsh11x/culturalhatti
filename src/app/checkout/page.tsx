@@ -17,6 +17,24 @@ interface Address {
 
 const INITIAL_ADDR: Address = { name: '', phone: '', line1: '', line2: '', city: '', state: '', pincode: '' };
 
+function AddressField({ label, value, onChange, type = 'text', placeholder = '' }: {
+    label: string; value: string; onChange: (v: string) => void;
+    type?: string; placeholder?: string;
+}) {
+    return (
+        <div className="flex flex-col gap-2">
+            <label className="text-xs font-bold uppercase tracking-widest text-slate-500">{label}</label>
+            <input
+                className="bg-transparent border-2 border-slate-900 px-4 py-3 font-bold uppercase placeholder:text-slate-400 focus:ring-0 focus:border-primary transition-colors text-slate-900 rounded-none w-full"
+                type={type}
+                placeholder={placeholder}
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+            />
+        </div>
+    );
+}
+
 export default function CheckoutPage() {
     const [address, setAddress] = useState<Address>(INITIAL_ADDR);
     const [savedAddresses, setSavedAddresses] = useState<Address[]>([]);
@@ -112,19 +130,6 @@ export default function CheckoutPage() {
         }
     };
 
-    const F = ({ label, field, type = 'text', placeholder = '' }: { label: string; field: keyof Address; type?: string; placeholder?: string }) => (
-        <div className="flex flex-col gap-2">
-            <label className="text-xs font-bold uppercase tracking-widest text-slate-500">{label}</label>
-            <input
-                className="bg-transparent border-2 border-slate-900 px-4 py-3 font-bold uppercase placeholder:text-slate-400 focus:ring-0 focus:border-primary transition-colors text-slate-900 rounded-none w-full"
-                type={type}
-                placeholder={placeholder}
-                value={address[field]}
-                onChange={(e) => setAddress({ ...address, [field]: e.target.value })}
-            />
-        </div>
-    );
-
     return (
         <main className="flex-grow w-full p-6 md:p-10 flex flex-col lg:flex-row gap-10 bg-background-light">
             {/* Left Column: Form */}
@@ -167,12 +172,12 @@ export default function CheckoutPage() {
                     )}
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <F label="Full Name *" field="name" />
-                        <F label="Phone *" field="phone" type="tel" placeholder="10-digit mobile number" />
+                        <AddressField label="Full Name *" value={address.name} onChange={(v) => setAddress({ ...address, name: v })} />
+                        <AddressField label="Phone *" value={address.phone} onChange={(v) => setAddress({ ...address, phone: v })} type="tel" placeholder="10-digit mobile number" />
                     </div>
 
-                    <F label="Address Line 1 *" field="line1" placeholder="House/Flat No., Street" />
-                    <F label="Address Line 2" field="line2" placeholder="Area, Landmark (optional)" />
+                    <AddressField label="Address Line 1 *" value={address.line1} onChange={(v) => setAddress({ ...address, line1: v })} placeholder="House/Flat No., Street" />
+                    <AddressField label="Address Line 2" value={address.line2} onChange={(v) => setAddress({ ...address, line2: v })} placeholder="Area, Landmark (optional)" />
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="flex flex-col gap-2">
@@ -201,7 +206,7 @@ export default function CheckoutPage() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <F label="Pincode *" field="pincode" placeholder="6-digit pincode" />
+                        <AddressField label="Pincode *" value={address.pincode} onChange={(v) => setAddress({ ...address, pincode: v })} placeholder="6-digit pincode" />
                     </div>
                 </div>
             </div>
