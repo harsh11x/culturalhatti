@@ -24,22 +24,31 @@ export default function AuthModal() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
+    // Create reCAPTCHA container outside React tree so React won't clear it on re-render (prevents input focus loss when typing)
     useEffect(() => {
-        if (isAuthModalOpen && authMethod === 'phone' && !showOtpInput && isFirebaseEnabled && auth) {
-            const recaptchaContainer = document.getElementById('recaptcha-container');
-            if (recaptchaContainer && !window.recaptchaVerifier) {
-                try {
-                    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-                        size: 'normal',
-                        callback: () => {},
-                        'expired-callback': () => {
-                            setError('reCAPTCHA expired. Please try again.');
-                        }
-                    });
-                } catch (err) {
-                    console.error('reCAPTCHA error:', err);
-                }
+        if (isAuthModalOpen && authMethod === 'phone' && !showOtpInput && isFirebaseEnabled && auth && !window.recaptchaVerifier) {
+            const container = document.createElement('div');
+            container.id = 'recaptcha-container';
+            container.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;';
+            document.body.appendChild(container);
+            try {
+                window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+                    size: 'invisible',
+                    callback: () => {},
+                    'expired-callback': () => {
+                        setError('reCAPTCHA expired. Please try again.');
+                    }
+                });
+            } catch (err) {
+                console.error('reCAPTCHA error:', err);
             }
+            return () => {
+                if (window.recaptchaVerifier) {
+                    try { window.recaptchaVerifier.clear(); } catch (_) {}
+                    window.recaptchaVerifier = null;
+                }
+                container.remove();
+            };
         }
     }, [isAuthModalOpen, authMethod, showOtpInput]);
 
@@ -246,8 +255,6 @@ export default function AuthModal() {
                                             />
                                         </div>
                                     </div>
-                                    
-                                    <div id="recaptcha-container"></div>
                                     
                                     <button
                                         type="submit"
