@@ -17,9 +17,9 @@ interface Address {
 
 const INITIAL_ADDR: Address = { name: '', phone: '', line1: '', line2: '', city: '', state: '', pincode: '' };
 
-function AddressField({ label, value, onChange, type = 'text', placeholder = '' }: {
+function AddressField({ label, value, onChange, type = 'text', placeholder = '', maxLength }: {
     label: string; value: string; onChange: (v: string) => void;
-    type?: string; placeholder?: string;
+    type?: string; placeholder?: string; maxLength?: number;
 }) {
     return (
         <div className="flex flex-col gap-2">
@@ -30,6 +30,7 @@ function AddressField({ label, value, onChange, type = 'text', placeholder = '' 
                 placeholder={placeholder}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
+                maxLength={maxLength}
             />
         </div>
     );
@@ -173,7 +174,7 @@ export default function CheckoutPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <AddressField label="Full Name *" value={address.name} onChange={(v) => setAddress({ ...address, name: v })} />
-                        <AddressField label="Phone *" value={address.phone} onChange={(v) => setAddress({ ...address, phone: v })} type="tel" placeholder="10-digit mobile number" />
+                        <AddressField label="Phone *" value={address.phone} onChange={(v) => setAddress({ ...address, phone: v.replace(/\D/g, '').slice(0, 10) })} type="tel" placeholder="10-digit mobile number" maxLength={10} />
                     </div>
 
                     <AddressField label="Address Line 1 *" value={address.line1} onChange={(v) => setAddress({ ...address, line1: v })} placeholder="House/Flat No., Street" />
