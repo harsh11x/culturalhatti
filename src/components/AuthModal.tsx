@@ -1,5 +1,6 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { useUIStore, useAuthStore } from '@/store';
 import api from '@/lib/api';
@@ -24,35 +25,23 @@ export default function AuthModal() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // Create reCAPTCHA container outside React tree so React won't clear it on re-render (prevents input focus loss when typing)
-    useEffect(() => {
-        if (isAuthModalOpen && authMethod === 'phone' && !showOtpInput && isFirebaseEnabled && auth && !window.recaptchaVerifier) {
-            const container = document.createElement('div');
-            container.id = 'recaptcha-container';
-            container.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;';
-            document.body.appendChild(container);
-            try {
-                window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-                    size: 'invisible',
-                    callback: () => {},
-                    'expired-callback': () => {
-                        setError('reCAPTCHA expired. Please try again.');
-                    }
-                });
-            } catch (err) {
-                console.error('reCAPTCHA error:', err);
-            }
-            return () => {
-                if (window.recaptchaVerifier) {
-                    try { window.recaptchaVerifier.clear(); } catch (_) {}
-                    window.recaptchaVerifier = null;
-                }
-                container.remove();
-            };
-        }
-    }, [isAuthModalOpen, authMethod, showOtpInput]);
+    // Create reCAPTCHA only on Submit - not while typing - to avoid any DOM changes that steal focus
+    const ensureRecaptcha = () => {
+        if (window.recaptchaVerifier) return window.recaptchaVerifier;
+        if (!auth) throw new Error('Auth not initialized');
+        const container = document.createElement('div');
+        container.id = 'recaptcha-container';
+        container.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;';
+        document.body.appendChild(container);
+        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+            size: 'invisible',
+            callback: () => {},
+            'expired-callback': () => setError('reCAPTCHA expired. Please try again.'),
+        });
+        return window.recaptchaVerifier;
+    };
 
-    if (!isAuthModalOpen) return null;
+    if (!isAuthModalOpen || typeof document === 'undefined') return null;
 
     const handlePhoneSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -65,10 +54,7 @@ export default function AuthModal() {
                     throw new Error('Phone authentication is not configured. Please contact support.');
                 }
                 const formattedPhone = phone.startsWith('+') ? phone : `+91${phone}`;
-                const appVerifier = window.recaptchaVerifier;
-                if (!appVerifier) {
-                    throw new Error('reCAPTCHA not initialized. Please refresh and try again.');
-                }
+                const appVerifier = ensureRecaptcha();
                 const result = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
                 setConfirmationResult(result);
                 setShowOtpInput(true);
@@ -171,7 +157,7 @@ export default function AuthModal() {
         }
     };
 
-    return (
+    const modalContent = (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
             <div className="bg-background-light border-3 border-black w-full max-w-md brutalist-shadow relative max-h-[90vh] overflow-y-auto">
                 {/* Close Button */}
@@ -377,4 +363,6 @@ export default function AuthModal() {
             </div>
         </div>
     );
+
+    return createPortal(modalContent, document.body);
 }
