@@ -19,10 +19,7 @@ export default function CartSidebar() {
     };
     
     const subtotal = total();
-    const FREE_SHIPPING_THRESHOLD = 999;
-    const shippingCost = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 50;
-    const finalTotal = subtotal + shippingCost;
-    const amountToFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
+    const finalTotal = subtotal;
 
     return (
         <>
@@ -91,28 +88,12 @@ export default function CartSidebar() {
 
                 {items.length > 0 && (
                     <div className="p-6 border-t-3 border-black bg-white">
-                        {/* Free Shipping Progress Bar */}
-                        {amountToFreeShipping > 0 && (
-                            <div className="mb-6 p-4 bg-primary/10 border-2 border-primary">
-                                <p className="text-xs font-bold uppercase tracking-widest text-primary mb-2">
-                                    Add ₹{amountToFreeShipping} more for FREE SHIPPING!
-                                </p>
-                                <div className="w-full h-2 bg-gray-200 border border-black">
-                                    <div 
-                                        className="h-full bg-primary transition-all duration-500"
-                                        style={{ width: `${Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100)}%` }}
-                                    ></div>
-                                </div>
-                            </div>
-                        )}
-                        
-                        {amountToFreeShipping === 0 && (
-                            <div className="mb-6 p-4 bg-green-50 border-2 border-green-500">
-                                <p className="text-xs font-bold uppercase tracking-widest text-green-700">
-                                    🎉 You've unlocked FREE SHIPPING!
-                                </p>
-                            </div>
-                        )}
+                        {/* Free Shipping Banner */}
+                        <div className="mb-6 p-4 bg-green-50 border-2 border-green-500">
+                            <p className="text-xs font-bold uppercase tracking-widest text-green-700">
+                                🎉 Free Shipping — PAN India!
+                            </p>
+                        </div>
                         
                         <div className="space-y-3 mb-6">
                             <div className="flex justify-between items-center">
@@ -121,13 +102,7 @@ export default function CartSidebar() {
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-sm font-bold uppercase tracking-widest text-gray-500">Shipping</span>
-                                <span className="text-xl font-black">
-                                    {shippingCost === 0 ? (
-                                        <span className="text-green-600">FREE</span>
-                                    ) : (
-                                        `₹${shippingCost}`
-                                    )}
-                                </span>
+                                <span className="text-xl font-black text-green-600">FREE</span>
                             </div>
                             <div className="border-t-2 border-black pt-3 flex justify-between items-end">
                                 <span className="text-sm font-bold uppercase tracking-widest">Total</span>

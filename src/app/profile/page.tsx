@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useAuthStore } from '@/store';
 import api from '@/lib/api';
 import { State, City } from 'country-state-city';
+import { LogOut, Package, MapPin, Plus, Pencil, Trash2, Truck, ChevronRight, X, Check } from 'lucide-react';
 
 interface Order {
     id: string; order_number: string; status: string; total_amount: number;
@@ -15,16 +16,102 @@ interface Order {
 const CANCELLABLE_HOURS = 24;
 
 interface SavedAddress {
-    id: string;
-    label?: string;
-    name: string;
-    phone: string;
-    line1: string;
-    line2?: string;
-    city: string;
-    state: string;
-    pincode: string;
-    is_default?: boolean;
+    id: string; label?: string; name: string; phone: string;
+    line1: string; line2?: string; city: string; state: string;
+    pincode: string; is_default?: boolean;
+}
+
+const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
+    pending_payment: { label: 'Pending Payment', color: 'text-yellow-700', bg: 'bg-yellow-100 border-yellow-400' },
+    confirmed:       { label: 'Confirmed',        color: 'text-blue-700',   bg: 'bg-blue-100 border-blue-400' },
+    processing:      { label: 'Processing',       color: 'text-indigo-700', bg: 'bg-indigo-100 border-indigo-400' },
+    shipped:         { label: 'Shipped',          color: 'text-purple-700', bg: 'bg-purple-100 border-purple-400' },
+    delivered:       { label: 'Delivered',        color: 'text-green-700',  bg: 'bg-green-100 border-green-400' },
+    cancelled:       { label: 'Cancelled',        color: 'text-red-700',    bg: 'bg-red-100 border-red-400' },
+    refunded:        { label: 'Refunded',         color: 'text-slate-700',  bg: 'bg-slate-100 border-slate-400' },
+};
+
+function StatusBadge({ status }: { status: string }) {
+    const cfg = STATUS_CONFIG[status] || { label: status, color: 'text-slate-700', bg: 'bg-slate-100 border-slate-400' };
+    return (
+        <span className={`inline-flex items-center px-3 py-1 text-[10px] font-black uppercase tracking-widest border ${cfg.bg} ${cfg.color}`}>
+            {cfg.label}
+        </span>
+    );
+}
+
+function AddressForm({
+    data, setData, onSave, onCancel, loading, indianStates, cities
+}: {
+    data: Partial<SavedAddress>;
+    setData: (v: Partial<SavedAddress>) => void;
+    onSave: () => void;
+    onCancel: () => void;
+    loading: boolean;
+    indianStates: { isoCode: string; name: string }[];
+    cities: { name: string }[];
+}) {
+    const f = (field: keyof SavedAddress) => ({
+        value: (data[field] as string) ?? '',
+        onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+            setData({ ...data, [field]: e.target.value }),
+    });
+    return (
+        <div className="border-2 border-slate-900 bg-white p-6 flex flex-col gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Full Name *</label>
+                    <input {...f('name')} type="text" className="border-2 border-slate-900 px-3 py-2.5 font-bold uppercase text-sm focus:border-primary outline-none" />
+                </div>
+                <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Phone *</label>
+                    <input {...f('phone')} type="tel" className="border-2 border-slate-900 px-3 py-2.5 font-bold uppercase text-sm focus:border-primary outline-none" />
+                </div>
+            </div>
+            <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Address Line 1 *</label>
+                <input {...f('line1')} type="text" placeholder="House/Flat No., Street" className="border-2 border-slate-900 px-3 py-2.5 font-bold uppercase text-sm focus:border-primary outline-none" />
+            </div>
+            <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Address Line 2</label>
+                <input {...f('line2')} type="text" placeholder="Area, Landmark (optional)" className="border-2 border-slate-900 px-3 py-2.5 font-bold uppercase text-sm focus:border-primary outline-none" />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">State *</label>
+                    <select {...f('state')} onChange={e => setData({ ...data, state: e.target.value, city: '' })} className="border-2 border-slate-900 px-3 py-2.5 font-bold uppercase text-sm focus:border-primary outline-none bg-white appearance-none">
+                        <option value="">Select</option>
+                        {indianStates.map(s => <option key={s.isoCode} value={s.isoCode}>{s.name}</option>)}
+                    </select>
+                </div>
+                <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">City *</label>
+                    <select {...f('city')} disabled={!data.state} className="border-2 border-slate-900 px-3 py-2.5 font-bold uppercase text-sm focus:border-primary outline-none bg-white appearance-none disabled:opacity-50">
+                        <option value="">Select</option>
+                        {cities.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
+                    </select>
+                </div>
+                <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Pincode *</label>
+                    <input {...f('pincode')} type="text" maxLength={6} className="border-2 border-slate-900 px-3 py-2.5 font-bold uppercase text-sm focus:border-primary outline-none" />
+                </div>
+            </div>
+            <label className="flex items-center gap-3 cursor-pointer select-none">
+                <input type="checkbox" checked={!!data.is_default} onChange={e => setData({ ...data, is_default: e.target.checked })} className="w-4 h-4 accent-primary" />
+                <span className="text-xs font-bold uppercase tracking-widest text-slate-600">Set as default address</span>
+            </label>
+            <div className="flex gap-3 pt-2">
+                <button onClick={onSave} disabled={loading} className="flex items-center gap-2 bg-primary text-white px-6 py-3 font-black uppercase tracking-widest text-sm hover:bg-[#c2190f] transition-colors disabled:opacity-50">
+                    <Check className="w-4 h-4" />
+                    {loading ? 'Saving…' : 'Save Address'}
+                </button>
+                <button onClick={onCancel} className="flex items-center gap-2 border-2 border-slate-900 px-6 py-3 font-black uppercase tracking-widest text-sm hover:bg-slate-100 transition-colors">
+                    <X className="w-4 h-4" />
+                    Cancel
+                </button>
+            </div>
+        </div>
+    );
 }
 
 function ProfileContent() {
@@ -38,6 +125,7 @@ function ProfileContent() {
     const [loading, setLoading] = useState(true);
     const [addrLoading, setAddrLoading] = useState(false);
     const [editingAddr, setEditingAddr] = useState<SavedAddress | null>(null);
+    const [showNewForm, setShowNewForm] = useState(false);
     const [newAddr, setNewAddr] = useState<Partial<SavedAddress>>({});
 
     const fetchOrders = () => api.get('/orders').then(r => setOrders(r.data.orders || []));
@@ -54,8 +142,7 @@ function ProfileContent() {
 
     const canCancelOrder = (order: Order) => {
         if (!['pending_payment', 'confirmed'].includes(order.status)) return false;
-        const orderAgeHours = (Date.now() - new Date(order.created_at).getTime()) / (1000 * 60 * 60);
-        return orderAgeHours <= CANCELLABLE_HOURS;
+        return (Date.now() - new Date(order.created_at).getTime()) / (1000 * 60 * 60) <= CANCELLABLE_HOURS;
     };
 
     const handleCancel = async (orderId: string) => {
@@ -76,6 +163,7 @@ function ProfileContent() {
             }
             await fetchAddresses();
             setEditingAddr(null);
+            setShowNewForm(false);
             setNewAddr({});
         } finally { setAddrLoading(false); }
     };
@@ -87,135 +175,249 @@ function ProfileContent() {
     };
 
     const indianStates = State.getStatesOfCountry('IN');
-    const cities = (editingAddr?.state || newAddr.state) ? City.getCitiesOfState('IN', editingAddr?.state || newAddr.state || '') : [];
+    const editCities = editingAddr?.state ? City.getCitiesOfState('IN', editingAddr.state) : [];
+    const newCities = newAddr.state ? City.getCitiesOfState('IN', newAddr.state) : [];
 
     if (!user) return null;
 
-    return (
-        <div className="container" style={{ paddingTop: 48, paddingBottom: 64 }}>
-            <h1 className="section-title">My Account</h1>
+    const initials = user.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase();
 
-            {/* Profile Info */}
-            <div className="card" style={{ marginBottom: 40 }}>
-                <div style={{ display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
-                    <div style={{ width: 72, height: 72, background: 'var(--saffron)', border: 'var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, fontWeight: 900 }}>
-                        {user.name.charAt(0).toUpperCase()}
+    return (
+        <main className="flex-grow bg-[#FDFBF7] w-full">
+            {/* Profile Hero Header */}
+            <div className="w-full bg-background-dark text-white px-6 md:px-16 py-12 md:py-16 relative overflow-hidden">
+                <div className="absolute inset-0 opacity-5"
+                    style={{ backgroundImage: 'repeating-linear-gradient(45deg, white 0, white 1px, transparent 0, transparent 50%)', backgroundSize: '24px 24px' }}
+                />
+                <div className="max-w-5xl mx-auto relative z-10 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                    {/* Avatar */}
+                    <div className="w-20 h-20 md:w-24 md:h-24 bg-primary flex items-center justify-center text-white text-3xl md:text-4xl font-black border-4 border-white/20 shrink-0">
+                        {initials}
                     </div>
-                    <div style={{ flex: 1 }}>
-                        <h2 style={{ fontFamily: 'Bebas Neue', fontSize: 36, marginBottom: 4 }}>{user.name}</h2>
-                        <p style={{ color: 'var(--grey)', fontSize: 14 }}>{user.email}</p>
+                    {/* Info */}
+                    <div className="flex-1">
+                        <p className="text-primary text-xs font-bold uppercase tracking-[0.3em] mb-1">My Account</p>
+                        <h1 className="text-3xl md:text-5xl font-black uppercase leading-tight tracking-tight text-white">{user.name}</h1>
+                        <p className="text-white/50 text-sm font-medium mt-1">{user.email}</p>
                     </div>
+                    {/* Logout */}
                     <button
-                        className="btn btn-danger btn-sm"
                         onClick={() => { logout(); router.push('/'); }}
+                        className="flex items-center gap-2 px-5 py-3 border-2 border-white/20 text-white/70 hover:border-primary hover:text-primary transition-colors text-xs font-black uppercase tracking-widest"
                     >
+                        <LogOut className="w-4 h-4" />
                         Logout
                     </button>
                 </div>
             </div>
 
             {/* Tabs */}
-            <div style={{ display: 'flex', gap: 16, marginBottom: 24, borderBottom: 'var(--border)' }}>
-                <Link href="/profile" className={tab !== 'addresses' ? 'font-bold border-b-2 border-black -mb-[2px] pb-2' : 'text-gray-500 hover:text-black'}>
-                    Orders
-                </Link>
-                <Link href="/profile?tab=addresses" className={tab === 'addresses' ? 'font-bold border-b-2 border-black -mb-[2px] pb-2' : 'text-gray-500 hover:text-black'}>
-                    Addresses
-                </Link>
+            <div className="w-full border-b-2 border-slate-900 bg-white">
+                <div className="max-w-5xl mx-auto px-6 md:px-16 flex gap-0">
+                    <Link
+                        href="/profile"
+                        className={`flex items-center gap-2 px-6 py-4 text-xs font-black uppercase tracking-widest border-b-4 transition-colors ${tab !== 'addresses' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-900'}`}
+                    >
+                        <Package className="w-4 h-4" />
+                        Orders
+                        {orders.length > 0 && (
+                            <span className="ml-1 bg-primary text-white text-[10px] font-black px-1.5 py-0.5 min-w-[20px] text-center">
+                                {orders.length}
+                            </span>
+                        )}
+                    </Link>
+                    <Link
+                        href="/profile?tab=addresses"
+                        className={`flex items-center gap-2 px-6 py-4 text-xs font-black uppercase tracking-widest border-b-4 transition-colors ${tab === 'addresses' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-900'}`}
+                    >
+                        <MapPin className="w-4 h-4" />
+                        Addresses
+                    </Link>
+                </div>
             </div>
 
-            {tab === 'addresses' ? (
-                <div>
-                    <h2 style={{ fontFamily: 'Bebas Neue', fontSize: 36, marginBottom: 20 }}>Saved Addresses</h2>
-                    {addresses.map((a) => (
-                        <div key={a.id} className="card" style={{ marginBottom: 16 }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
+            {/* Content */}
+            <div className="max-w-5xl mx-auto px-6 md:px-16 py-10">
+
+                {/* ── ORDERS TAB ── */}
+                {tab !== 'addresses' && (
+                    <>
+                        <div className="flex items-end justify-between mb-8">
+                            <div>
+                                <h2 className="text-4xl md:text-5xl font-black uppercase leading-tight tracking-tight text-slate-900">Order<br /><span className="text-primary">History</span></h2>
+                                <div className="h-1 w-16 bg-primary mt-2" />
+                            </div>
+                        </div>
+
+                        {loading ? (
+                            <div className="flex items-center justify-center py-24">
+                                <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                            </div>
+                        ) : orders.length === 0 ? (
+                            <div className="flex flex-col items-center justify-center py-24 gap-6 text-center">
+                                <div className="w-20 h-20 border-4 border-slate-200 flex items-center justify-center">
+                                    <Package className="w-10 h-10 text-slate-300" />
+                                </div>
                                 <div>
-                                    <p style={{ fontWeight: 900, marginBottom: 4 }}>{a.name}{a.is_default && <span className="status-badge status-confirmed" style={{ marginLeft: 8 }}>Default</span>}</p>
-                                    <p style={{ color: 'var(--grey)', fontSize: 14 }}>{a.line1}{a.line2 ? `, ${a.line2}` : ''}, {a.city}, {a.state} {a.pincode}</p>
-                                    <p style={{ fontSize: 13, marginTop: 4 }}>{a.phone}</p>
+                                    <p className="text-xl font-black uppercase tracking-tight text-slate-900 mb-1">No Orders Yet</p>
+                                    <p className="text-sm text-slate-500">Start shopping to see your orders here.</p>
                                 </div>
-                                <div style={{ display: 'flex', gap: 8 }}>
-                                    <button className="btn btn-sm" onClick={() => setEditingAddr(a)}>Edit</button>
-                                    <button className="btn btn-danger btn-sm" onClick={() => deleteAddress(a.id)}>Delete</button>
-                                </div>
+                                <Link href="/collections" className="px-8 py-4 bg-primary text-white font-black uppercase tracking-widest text-sm hover:bg-[#c2190f] transition-colors">
+                                    Start Shopping
+                                </Link>
                             </div>
-                        </div>
-                    ))}
-                    {(editingAddr || Object.keys(newAddr).length > 0) ? (
-                        <div className="card" style={{ padding: 24 }}>
-                            <h3 style={{ marginBottom: 16 }}>{editingAddr ? 'Edit Address' : 'Add Address'}</h3>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
-                                <div><label className="block text-xs font-bold uppercase mb-1">Name</label><input type="text" className="w-full border px-3 py-2" value={editingAddr?.name ?? newAddr.name ?? ''} onChange={e => editingAddr ? setEditingAddr({ ...editingAddr, name: e.target.value }) : setNewAddr({ ...newAddr, name: e.target.value })} /></div>
-                                <div><label className="block text-xs font-bold uppercase mb-1">Phone</label><input type="tel" className="w-full border px-3 py-2" value={editingAddr?.phone ?? newAddr.phone ?? ''} onChange={e => editingAddr ? setEditingAddr({ ...editingAddr, phone: e.target.value }) : setNewAddr({ ...newAddr, phone: e.target.value })} /></div>
+                        ) : (
+                            <div className="flex flex-col gap-4">
+                                {orders.map((order) => (
+                                    <div key={order.id} className="bg-white border-2 border-slate-900 hover:border-primary transition-colors group">
+                                        <Link href={`/profile/order/${order.id}`} className="block p-5 md:p-6">
+                                            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                                                <div className="flex-1">
+                                                    <div className="flex flex-wrap items-center gap-3 mb-2">
+                                                        <p className="text-xs font-black uppercase tracking-widest text-slate-500">#{order.order_number}</p>
+                                                        <StatusBadge status={order.status} />
+                                                    </div>
+                                                    <p className="text-slate-500 text-xs font-medium mb-3">
+                                                        {new Date(order.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
+                                                    </p>
+                                                    <p className="text-sm text-slate-600 line-clamp-1">
+                                                        {order.items?.map((i, idx) => (
+                                                            <span key={idx}>{i.product_name} × {i.quantity}{idx < order.items.length - 1 ? ', ' : ''}</span>
+                                                        ))}
+                                                    </p>
+                                                    {order.tracking_id && (
+                                                        <div className="mt-3 flex items-center gap-2 text-xs font-bold text-purple-700 bg-purple-50 border border-purple-200 px-3 py-2 w-fit">
+                                                            <Truck className="w-3.5 h-3.5" />
+                                                            {order.courier_name} · {order.tracking_id}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="flex items-center gap-4 shrink-0">
+                                                    <p className="text-2xl font-black tracking-tight text-slate-900">₹{Number(order.total_amount).toFixed(0)}</p>
+                                                    <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors" />
+                                                </div>
+                                            </div>
+                                        </Link>
+                                        {canCancelOrder(order) && (
+                                            <div className="px-5 md:px-6 pb-5 pt-0">
+                                                <button
+                                                    onClick={() => handleCancel(order.id)}
+                                                    className="text-xs font-black uppercase tracking-widest text-red-600 border-2 border-red-200 px-4 py-2 hover:bg-red-50 transition-colors"
+                                                >
+                                                    Cancel Order (24h window)
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
                             </div>
-                            <div style={{ marginBottom: 16 }}><label className="block text-xs font-bold uppercase mb-1">Address Line 1</label><input type="text" className="w-full border px-3 py-2" value={editingAddr?.line1 ?? newAddr.line1 ?? ''} onChange={e => editingAddr ? setEditingAddr({ ...editingAddr, line1: e.target.value }) : setNewAddr({ ...newAddr, line1: e.target.value })} /></div>
-                            <div style={{ marginBottom: 16 }}><label className="block text-xs font-bold uppercase mb-1">Address Line 2</label><input type="text" className="w-full border px-3 py-2" value={editingAddr?.line2 ?? newAddr.line2 ?? ''} onChange={e => editingAddr ? setEditingAddr({ ...editingAddr, line2: e.target.value }) : setNewAddr({ ...newAddr, line2: e.target.value })} /></div>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
-                                <div><label className="block text-xs font-bold uppercase mb-1">State</label><select className="w-full border px-3 py-2" value={editingAddr?.state ?? newAddr.state ?? ''} onChange={e => { const v = e.target.value; editingAddr ? setEditingAddr({ ...editingAddr, state: v, city: '' }) : setNewAddr({ ...newAddr, state: v, city: '' }); }}><option value="">Select</option>{indianStates.map(s => <option key={s.isoCode} value={s.isoCode}>{s.name}</option>)}</select></div>
-                                <div><label className="block text-xs font-bold uppercase mb-1">City</label><select className="w-full border px-3 py-2" value={editingAddr?.city ?? newAddr.city ?? ''} onChange={e => editingAddr ? setEditingAddr({ ...editingAddr, city: e.target.value }) : setNewAddr({ ...newAddr, city: e.target.value })} disabled={!editingAddr?.state && !newAddr.state}><option value="">Select</option>{cities.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}</select></div>
+                        )}
+                    </>
+                )}
+
+                {/* ── ADDRESSES TAB ── */}
+                {tab === 'addresses' && (
+                    <>
+                        <div className="flex items-end justify-between mb-8">
+                            <div>
+                                <h2 className="text-4xl md:text-5xl font-black uppercase leading-tight tracking-tight text-slate-900">Saved<br /><span className="text-primary">Addresses</span></h2>
+                                <div className="h-1 w-16 bg-primary mt-2" />
                             </div>
-                            <div style={{ marginBottom: 16 }}><label className="block text-xs font-bold uppercase mb-1">Pincode</label><input type="text" className="w-full border px-3 py-2" value={editingAddr?.pincode ?? newAddr.pincode ?? ''} onChange={e => editingAddr ? setEditingAddr({ ...editingAddr, pincode: e.target.value }) : setNewAddr({ ...newAddr, pincode: e.target.value })} /></div>
-                            <div style={{ marginBottom: 16 }}><label><input type="checkbox" checked={!!(editingAddr?.is_default ?? newAddr.is_default)} onChange={e => editingAddr ? setEditingAddr({ ...editingAddr, is_default: e.target.checked }) : setNewAddr({ ...newAddr, is_default: e.target.checked })} /> Set as default</label></div>
-                            <div style={{ display: 'flex', gap: 8 }}><button className="btn btn-primary" onClick={saveAddress} disabled={addrLoading}>{addrLoading ? 'Saving…' : 'Save'}</button><button className="btn" onClick={() => { setEditingAddr(null); setNewAddr({}); }}>Cancel</button></div>
-                        </div>
-                    ) : (
-                        <button className="btn btn-primary" onClick={() => setNewAddr({ name: '', phone: '', line1: '', line2: '', city: '', state: '', pincode: '' })}>Add New Address</button>
-                    )}
-                </div>
-            ) : (
-                <>
-            {/* Order History */}
-            <h2 style={{ fontFamily: 'Bebas Neue', fontSize: 36, marginBottom: 20, borderBottom: 'var(--border)', paddingBottom: 10 }}>Order History</h2>
-            {loading ? (
-                <div className="loading-overlay">Loading orders…</div>
-            ) : orders.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '64px 0', color: 'var(--grey)' }}>
-                    <p style={{ fontSize: 20, marginBottom: 16 }}>No orders yet.</p>
-                    <a href="/collections" className="btn btn-primary">Start Shopping</a>
-                </div>
-            ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                    {orders.map((order) => (
-                        <div key={order.id} className="card" style={{ padding: 24 }}>
-                            <Link href={`/profile/order/${order.id}`} className="block hover:opacity-90">
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12, marginBottom: 16 }}>
-                                    <div>
-                                        <p style={{ fontWeight: 900, fontSize: 18, marginBottom: 4 }}>#{order.order_number} → View invoice</p>
-                                        <p style={{ color: 'var(--grey)', fontSize: 13 }}>{new Date(order.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-                                    </div>
-                                    <div style={{ textAlign: 'right' }}>
-                                        <span className={`status-badge status-${order.status}`}>{order.status.replace('_', ' ')}</span>
-                                        <p style={{ fontWeight: 900, fontSize: 22, marginTop: 8 }}>₹{Number(order.total_amount).toFixed(2)}</p>
-                                    </div>
-                                </div>
-                                <div style={{ fontSize: 13, color: 'var(--grey)', marginBottom: order.tracking_id ? 16 : 0 }}>
-                                    {order.items?.map((i, idx) => <span key={idx}>{i.product_name} × {i.quantity}{idx < order.items.length - 1 ? ', ' : ''}</span>)}
-                                </div>
-                                {order.tracking_id && (
-                                    <div style={{ background: 'var(--light-grey)', padding: '12px 16px', border: 'var(--border)', fontSize: 14 }}>
-                                        🚚 <strong>{order.courier_name}</strong> · Tracking: <strong>{order.tracking_id}</strong>
-                                    </div>
-                                )}
-                            </Link>
-                            {canCancelOrder(order) && (
-                                <button className="btn btn-danger btn-sm mt-4" onClick={() => handleCancel(order.id)}>
-                                    Cancel Order (24h window)
+                            {!showNewForm && !editingAddr && (
+                                <button
+                                    onClick={() => { setShowNewForm(true); setNewAddr({}); }}
+                                    className="flex items-center gap-2 bg-primary text-white px-5 py-3 font-black uppercase tracking-widest text-xs hover:bg-[#c2190f] transition-colors"
+                                >
+                                    <Plus className="w-4 h-4" /> Add Address
                                 </button>
                             )}
                         </div>
-                    ))}
-                </div>
-            )}
-                </>
-            )}
-        </div>
+
+                        {showNewForm && !editingAddr && (
+                            <div className="mb-6">
+                                <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">New Address</p>
+                                <AddressForm
+                                    data={newAddr} setData={setNewAddr}
+                                    onSave={saveAddress} onCancel={() => { setShowNewForm(false); setNewAddr({}); }}
+                                    loading={addrLoading} indianStates={indianStates} cities={newCities}
+                                />
+                            </div>
+                        )}
+
+                        {addresses.length === 0 && !showNewForm ? (
+                            <div className="flex flex-col items-center justify-center py-24 gap-6 text-center">
+                                <div className="w-20 h-20 border-4 border-slate-200 flex items-center justify-center">
+                                    <MapPin className="w-10 h-10 text-slate-300" />
+                                </div>
+                                <div>
+                                    <p className="text-xl font-black uppercase tracking-tight text-slate-900 mb-1">No Addresses Saved</p>
+                                    <p className="text-sm text-slate-500">Add an address to speed up checkout.</p>
+                                </div>
+                                <button onClick={() => setShowNewForm(true)} className="px-8 py-4 bg-primary text-white font-black uppercase tracking-widest text-sm hover:bg-[#c2190f] transition-colors flex items-center gap-2">
+                                    <Plus className="w-4 h-4" /> Add Address
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="flex flex-col gap-4">
+                                {addresses.map((a) => (
+                                    <div key={a.id}>
+                                        {editingAddr?.id === a.id ? (
+                                            <div className="mb-2">
+                                                <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">Edit Address</p>
+                                                <AddressForm
+                                                    data={editingAddr} setData={(v) => setEditingAddr(v as SavedAddress)}
+                                                    onSave={saveAddress} onCancel={() => setEditingAddr(null)}
+                                                    loading={addrLoading} indianStates={indianStates} cities={editCities}
+                                                />
+                                            </div>
+                                        ) : (
+                                            <div className="bg-white border-2 border-slate-900 p-5 md:p-6 flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                                                <div className="flex items-start gap-4">
+                                                    <div className="w-10 h-10 bg-primary/10 border-2 border-primary/30 flex items-center justify-center shrink-0 mt-0.5">
+                                                        <MapPin className="w-5 h-5 text-primary" />
+                                                    </div>
+                                                    <div>
+                                                        <div className="flex flex-wrap items-center gap-2 mb-1">
+                                                            <p className="font-black uppercase text-sm text-slate-900">{a.name}</p>
+                                                            {a.is_default && (
+                                                                <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 bg-primary text-white border border-primary">Default</span>
+                                                            )}
+                                                        </div>
+                                                        <p className="text-sm text-slate-600">{a.line1}{a.line2 ? `, ${a.line2}` : ''}</p>
+                                                        <p className="text-sm text-slate-600">{a.city}, {a.state} – {a.pincode}</p>
+                                                        <p className="text-xs text-slate-500 mt-1 font-medium">{a.phone}</p>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center gap-2 shrink-0">
+                                                    <button onClick={() => { setEditingAddr(a); setShowNewForm(false); }}
+                                                        className="flex items-center gap-1.5 border-2 border-slate-300 px-4 py-2 text-xs font-black uppercase tracking-widest hover:border-slate-900 transition-colors">
+                                                        <Pencil className="w-3.5 h-3.5" /> Edit
+                                                    </button>
+                                                    <button onClick={() => deleteAddress(a.id)}
+                                                        className="flex items-center gap-1.5 border-2 border-red-200 text-red-600 px-4 py-2 text-xs font-black uppercase tracking-widest hover:bg-red-50 transition-colors">
+                                                        <Trash2 className="w-3.5 h-3.5" /> Delete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </>
+                )}
+            </div>
+        </main>
     );
 }
 
 export default function ProfilePage() {
     return (
-        <Suspense fallback={<div className="container py-16 text-center font-bold uppercase">Loading…</div>}>
+        <Suspense fallback={
+            <div className="flex-grow flex items-center justify-center">
+                <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+            </div>
+        }>
             <ProfileContent />
         </Suspense>
     );
