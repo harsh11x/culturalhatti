@@ -47,9 +47,7 @@ export default function CheckoutPage() {
     const user = useAuthStore((s) => s.user);
     const router = useRouter();
     
-    const FREE_SHIPPING_THRESHOLD = 999;
-    const shippingCost = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 50;
-    const total = subtotal + shippingCost;
+    const total = subtotal;
 
     useEffect(() => {
         if (!user) router.replace('/login?redirect=/checkout');
@@ -240,15 +238,8 @@ export default function CheckoutPage() {
                             </div>
                             <div className="flex justify-between text-slate-600">
                                 <span>Shipping</span>
-                                <span className={shippingCost === 0 ? "text-green-600" : "text-slate-900"}>
-                                    {shippingCost === 0 ? 'FREE' : `₹ ${shippingCost}`}
-                                </span>
+                                <span className="text-green-600">FREE</span>
                             </div>
-                            {subtotal < FREE_SHIPPING_THRESHOLD && (
-                                <div className="text-xs text-primary bg-primary/10 p-2 border border-primary">
-                                    Add ₹{(FREE_SHIPPING_THRESHOLD - subtotal).toFixed(0)} more for FREE shipping!
-                                </div>
-                            )}
                         </div>
 
                         <div className="h-px bg-slate-900 w-full"></div>
