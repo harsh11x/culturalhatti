@@ -58,6 +58,21 @@ export default function OrderDetailPage() {
         }
     };
 
+    const handleReturnStatusUpdate = async (requestId: string, newStatus: string) => {
+        setUpdating(true);
+        try {
+            await adminApi.put(`/orders/admin/${id}/return-status`, { status: newStatus });
+            setOrder((o: any) => o ? {
+                ...o,
+                return_requests: o.return_requests.map((r: any) => r.id === requestId ? { ...r, status: newStatus } : r)
+            } : null);
+        } catch (e) {
+            console.error('Failed to update return status');
+        } finally {
+            setUpdating(false);
+        }
+    };
+
     if (loading || !order) {
         return (
             <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
@@ -145,7 +160,20 @@ export default function OrderDetailPage() {
                                 <li key={req.id} className="border-t border-red-900 pt-4 first:border-0 first:pt-0">
                                     <p className="text-sm text-gray-400">Date: {new Date(req.created_at || req.createdAt).toLocaleString()}</p>
                                     <p className="mt-2 text-white"><span className="text-red-400 font-bold">Reason:</span> {req.reason}</p>
-                                    <p className="text-sm text-gray-400 mt-1">Status: {req.status || 'Pending'}</p>
+                                    <div className="mt-2 flex items-center gap-2">
+                                        <span className="text-sm text-gray-400">Status:</span>
+                                        <select 
+                                            value={req.status || 'pending'} 
+                                            onChange={(e) => handleReturnStatusUpdate(req.id, e.target.value)}
+                                            disabled={updating}
+                                            className="px-2 py-1 bg-[#0a0a0a] border border-gray-700 text-white text-xs uppercase"
+                                        >
+                                            <option value="pending">Pending</option>
+                                            <option value="approved">Approved</option>
+                                            <option value="rejected">Rejected</option>
+                                            <option value="completed">Completed</option>
+                                        </select>
+                                    </div>
                                 </li>
                             ))}
                         </ul>

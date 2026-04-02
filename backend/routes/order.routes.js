@@ -322,4 +322,21 @@ router.post('/admin/:id/refund', adminAuth, async (req, res) => {
     res.json({ success: true, refund });
 });
 
+// PUT /api/orders/admin/:id/return-status
+router.put('/admin/:id/return-status', adminAuth, async (req, res) => {
+    const { status } = req.body;
+    const validStatuses = ['pending', 'approved', 'rejected', 'completed'];
+    if (!validStatuses.includes(status)) {
+        return res.status(400).json({ success: false, message: 'Invalid return status' });
+    }
+
+    const returnRequest = await ReturnRequest.findOne({ where: { order_id: req.params.id } });
+    if (!returnRequest) {
+        return res.status(404).json({ success: false, message: 'Return request not found for this order' });
+    }
+
+    await returnRequest.update({ status });
+    res.json({ success: true, returnRequest });
+});
+
 module.exports = router;
