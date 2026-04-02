@@ -136,6 +136,21 @@ export default function OrderDetailPage() {
                         </button>
                     </div>
                 )}
+
+                {order.return_requests && order.return_requests.length > 0 && (
+                    <div className="border border-red-800 bg-[#220000] p-6 space-y-4">
+                        <h3 className="text-lg font-bold text-red-500">Return Requests</h3>
+                        <ul className="space-y-4">
+                            {order.return_requests.map((req: any) => (
+                                <li key={req.id} className="border-t border-red-900 pt-4 first:border-0 first:pt-0">
+                                    <p className="text-sm text-gray-400">Date: {new Date(req.created_at || req.createdAt).toLocaleString()}</p>
+                                    <p className="mt-2 text-white"><span className="text-red-400 font-bold">Reason:</span> {req.reason}</p>
+                                    <p className="text-sm text-gray-400 mt-1">Status: {req.status || 'Pending'}</p>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
             </main>
         </div>
     );

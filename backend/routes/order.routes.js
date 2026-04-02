@@ -141,6 +141,7 @@ router.get('/admin/all', adminAuth, async (req, res) => {
             { model: User, as: 'user', attributes: ['id', 'name', 'email', 'phone'] },
             { association: 'items' },
             { association: 'shipment' },
+            { model: ReturnRequest, as: 'return_requests', required: false },
         ],
         limit: parseInt(limit),
         offset: (parseInt(page) - 1) * parseInt(limit),
@@ -253,6 +254,7 @@ router.get('/admin/:id', adminAuth, async (req, res) => {
             { association: 'items' },
             { association: 'shipment' },
             { association: 'payments' },
+            { model: ReturnRequest, as: 'return_requests', required: false },
         ],
     });
     if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
