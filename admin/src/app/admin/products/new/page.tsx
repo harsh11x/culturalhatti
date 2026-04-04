@@ -50,18 +50,10 @@ export default function NewProductPage() {
             if (form.sku) fd.append('sku', form.sku);
             images.forEach((file) => fd.append('images', file));
 
-            const baseURL = adminApi.defaults.baseURL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-            const token = localStorage.getItem('ch_admin_token');
-            const res = await fetch(`${baseURL}/products`, {
-                method: 'POST',
-                headers: token ? { Authorization: `Bearer ${token}` } : {},
-                body: fd,
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.message || data.error || 'Failed to create product');
-            router.push('/admin/products');
+            await adminApi.post('/products', fd);
+            window.location.href = '/admin/products';
         } catch (err: any) {
-            setError(err.message || 'Failed to create product');
+            setError(err.response?.data?.message || err.message || 'Failed to create product');
         } finally {
             setSaving(false);
         }

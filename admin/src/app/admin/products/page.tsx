@@ -73,7 +73,12 @@ export default function ProductsPage() {
                                                 <div className="w-16 h-16 bg-gray-800 flex items-center justify-center text-gray-500 text-xs">No img</div>
                                             )}
                                         </td>
-                                        <td className="px-4 py-3 font-medium">{p.name}</td>
+                                        <td className="px-4 py-3 font-medium">
+                                            {p.name}
+                                            {p.is_active === false && (
+                                                <span className="ml-2 text-[10px] bg-red-900/50 text-red-500 border border-red-500/50 px-2 py-0.5 rounded uppercase tracking-wider">Deleted</span>
+                                            )}
+                                        </td>
                                         <td className="px-4 py-3 text-gray-400">{p.category?.name || '-'}</td>
                                         <td className="px-4 py-3">₹{Number(p.price).toLocaleString()}</td>
                                         <td className="px-4 py-3">{p.stock}</td>

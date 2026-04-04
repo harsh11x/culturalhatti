@@ -70,18 +70,10 @@ export default function EditProductPage() {
             if (form.sku) fd.append('sku', form.sku);
             images.forEach((file) => fd.append('images', file));
 
-            const token = localStorage.getItem('ch_admin_token');
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-            const res = await fetch(`${apiUrl}/products/${id}`, {
-                method: 'PUT',
-                headers: { Authorization: `Bearer ${token}` },
-                body: fd,
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.message || 'Failed to update product');
-            router.push('/admin/products');
+            await adminApi.put(`/products/${id}`, fd);
+            window.location.href = '/admin/products';
         } catch (err: any) {
-            setError(err.message || 'Failed to update product');
+            setError(err.response?.data?.message || err.message || 'Failed to update product');
         } finally {
             setSaving(false);
         }
@@ -150,12 +142,11 @@ export default function EditProductPage() {
                             onClick={async () => {
                                 if (!confirm('Permanently delete this product?')) return;
                                 try {
-                                    const token = localStorage.getItem('ch_admin_token');
-                                    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-                                    const res = await fetch(`${apiUrl}/products/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
-                                    if (res.ok) router.push('/admin/products');
-                                    else throw new Error('Delete failed');
-                                } catch { setError('Could not delete product'); }
+                                    await adminApi.delete(`/products/${id}`);
+                                    window.location.href = '/admin/products';
+                                } catch (err: any) { 
+                                    setError(err.response?.data?.message || err.message || 'Could not delete product'); 
+                                }
                             }}
                             className="px-6 py-3 border border-red-500 text-red-500 hover:bg-red-500 hover:text-white uppercase tracking-widest"
                         >
