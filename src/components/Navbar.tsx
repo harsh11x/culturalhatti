@@ -14,14 +14,9 @@ export default function Navbar() {
         <nav className="w-full border-b border-background-dark/10 bg-background-light/95 backdrop-blur-md sticky top-0 z-50 luxury-shadow">
             <div className="px-4 md:px-8 py-5 flex items-center justify-between w-full gap-4">
                 {/* Logo Area */}
-                <div className="flex items-center gap-3 shrink-0">
-                    <div className="w-8 h-8 md:w-10 md:h-10 bg-primary text-background-dark flex items-center justify-center">
-                        <Diamond className="w-5 h-5 md:w-6 md:h-6" />
-                    </div>
-                    <Link href="/" className="font-body text-xl md:text-2xl font-bold tracking-tight leading-none text-background-dark hover:text-primary transition-colors whitespace-nowrap hidden sm:block uppercase">
-                        Cultural Hatti
-                    </Link>
-                </div>
+                <Link href="/" className="flex items-center gap-3 shrink-0 group">
+                    <img style={{ mixBlendMode: 'multiply' }} src="/logo.png" alt="Cultural Hatti Logo" className="h-10 md:h-14 w-auto object-contain transition-transform group-hover:scale-105" />
+                </Link>
                 {/* Desktop Links */}
                 <div className="hidden md:flex items-center gap-8 lg:gap-12 flex-1 justify-center">
                     <Link className="font-body text-sm font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase" href="/category/sarees">Sarees</Link>
