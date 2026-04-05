@@ -50,14 +50,6 @@ export default function ProductDetailPage() {
         }
     }, [user]);
 
-    useEffect(() => {
-        if (!product || !product.images || product.images.length <= 1) return;
-        const interval = setInterval(() => {
-            setActiveImageIndex((prev) => (prev + 1) % product.images.length);
-        }, 1500);
-        return () => clearInterval(interval);
-    }, [product]);
-
     const allVariationsSelected = product?.variations?.every(v => selectedVariations[v.name]) ?? true;
 
     const handleAdd = () => {
@@ -115,7 +107,7 @@ export default function ProductDetailPage() {
                                 <ProductMedia
                                     path={product.images?.[activeImageIndex] || product.images?.[0] || ''}
                                     className="absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-105"
-                                    objectFit="cover"
+                                    objectFit="contain"
                                 />
                             </div>
 
@@ -131,7 +123,7 @@ export default function ProductDetailPage() {
                                             <ProductMedia
                                                 path={img}
                                                 className="absolute inset-0 w-full h-full"
-                                                objectFit="cover"
+                                                objectFit="contain"
                                             />
                                         </button>
                                     ))}
