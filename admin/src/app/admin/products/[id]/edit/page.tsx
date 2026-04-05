@@ -88,7 +88,7 @@ export default function EditProductPage() {
             }
             images.forEach((file) => fd.append('images', file));
 
-            await adminApi.put(`/products/${id}`, fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+            await adminApi.put(`/products/${id}`, fd);
             window.location.href = '/admin/products';
         } catch (err: any) {
             setError(err.response?.data?.message || err.message || 'Failed to update product');

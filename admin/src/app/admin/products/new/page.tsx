@@ -58,7 +58,7 @@ export default function NewProductPage() {
             }
             images.forEach((file) => fd.append('images', file));
 
-            await adminApi.post('/products', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+            await adminApi.post('/products', fd);
             window.location.href = '/admin/products';
         } catch (err: any) {
             setError(err.response?.data?.message || err.message || 'Failed to create product');

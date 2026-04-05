@@ -36,7 +36,6 @@ export const getAssetUrl = (path: string) => {
 
 const api = axios.create({
     baseURL: getApiBase(),
-    headers: { 'Content-Type': 'application/json' },
 });
 
 api.interceptors.request.use((config) => {
@@ -63,7 +62,6 @@ api.interceptors.response.use(
 
 export const adminApi = axios.create({
     baseURL: getApiBase(),
-    headers: { 'Content-Type': 'application/json' },
 });
 
 adminApi.interceptors.request.use((config) => {
