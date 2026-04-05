@@ -151,7 +151,12 @@ export default function HomePage() {
                   "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=800&q=90",
                   "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=800&q=90"
                 ];
-                const imgSrc = cat.image_url ? getAssetUrl(cat.image_url) : fallbackImages[index % fallbackImages.length];
+                let imgSrc = fallbackImages[index % fallbackImages.length];
+                if (cat.image_url) {
+                  imgSrc = getAssetUrl(cat.image_url);
+                } else if (cat.slug.includes('bag') || cat.name.toLowerCase().includes('bag')) {
+                  imgSrc = "/bags.png";
+                }
 
                 return (
                   <Link key={cat.id} href={`/category/${cat.slug}`} className="relative group h-[450px] sm:h-[500px] overflow-hidden cursor-pointer block luxury-shadow hover:luxury-shadow-hover transition-all duration-500">
