@@ -23,6 +23,7 @@ export default function EditProductPage() {
         sku: '',
     });
     const [images, setImages] = useState<File[]>([]);
+    const [variations, setVariations] = useState<{name: string, options: string}[]>([]);
     const router = useRouter();
 
     useEffect(() => {
@@ -39,6 +40,14 @@ export default function EditProductPage() {
                 setProduct(pr.data.product);
                 setCategories(cat.data.categories || []);
                 const p = pr.data.product;
+                if (p.variations && Array.isArray(p.variations)) {
+                    setVariations(p.variations.map((v: any) => ({
+                        name: v.name || '',
+                        options: Array.isArray(v.options) ? v.options.join(', ') : ''
+                    })));
+                } else {
+                    setVariations([]);
+                }
                 setForm({
                     name: p.name || '',
                     description: p.description || '',
@@ -68,9 +77,18 @@ export default function EditProductPage() {
             fd.append('category_id', form.category_id);
             fd.append('featured', String(form.featured));
             if (form.sku) fd.append('sku', form.sku);
+            if (variations.length > 0) {
+                const cleanVariations = variations.map(v => ({
+                    name: v.name.trim(),
+                    options: v.options.split(',').map((o: string) => o.trim()).filter(Boolean)
+                })).filter(v => v.name && v.options.length > 0);
+                fd.append('variations', JSON.stringify(cleanVariations));
+            } else {
+                fd.append('variations', '[]');
+            }
             images.forEach((file) => fd.append('images', file));
 
-            await adminApi.put(`/products/${id}`, fd);
+            await adminApi.put(`/products/${id}`, fd, { headers: { 'Content-Type': 'multipart/form-data' } });
             window.location.href = '/admin/products';
         } catch (err: any) {
             setError(err.response?.data?.message || err.message || 'Failed to update product');
@@ -123,6 +141,34 @@ export default function EditProductPage() {
                                 {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                             </select>
                         </div>
+                    </div>
+
+                    {/* Variations Section */}
+                    <div className="border border-gray-700 p-4 bg-[#111]">
+                        <div className="flex justify-between items-center mb-4">
+                            <label className="block text-sm font-medium text-gray-400">Variations (Optional)</label>
+                            <button type="button" onClick={() => setVariations([...variations, { name: '', options: '' }])} className="text-xs bg-gray-800 text-white px-3 py-1 hover:bg-gray-700">
+                                + Add Variation
+                            </button>
+                        </div>
+                        {variations.length === 0 && <p className="text-xs text-gray-500 italic">No variations added. (e.g. Size, Color)</p>}
+                        {variations.map((v, i) => (
+                            <div key={i} className="flex gap-4 mb-3 items-start">
+                                <div className="flex-1">
+                                    <input type="text" placeholder="Name (e.g. Color)" value={v.name} onChange={e => {
+                                        const newV = [...variations]; newV[i].name = e.target.value; setVariations(newV);
+                                    }} className="w-full px-3 py-2 bg-black border border-gray-700 text-white text-sm" />
+                                </div>
+                                <div className="flex-2 w-1/2">
+                                    <input type="text" placeholder="Options (comma separated, e.g. Red, Blue)" value={v.options} onChange={e => {
+                                        const newV = [...variations]; newV[i].options = e.target.value; setVariations(newV);
+                                    }} className="w-full px-3 py-2 bg-black border border-gray-700 text-white text-sm" />
+                                </div>
+                                <button type="button" onClick={() => setVariations(variations.filter((_, idx) => idx !== i))} className="text-red-400 text-sm py-2 px-2 hover:text-red-300">
+                                    ✕
+                                </button>
+                            </div>
+                        ))}
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-400 mb-2">New Images (optional, replaces existing)</label>

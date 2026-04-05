@@ -23,6 +23,10 @@ const OrderItem = sequelize.define('OrderItem', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    variation_selected: {
+        type: DataTypes.JSONB,
+        allowNull: true,
+    },
     quantity: {
         type: DataTypes.INTEGER,
         allowNull: false,

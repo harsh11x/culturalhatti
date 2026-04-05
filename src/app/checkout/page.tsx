@@ -82,7 +82,7 @@ export default function CheckoutPage() {
 
         try {
             const orderRes = await api.post('/orders', {
-                items: items.map((i) => ({ product_id: i.product_id, quantity: i.quantity })),
+                items: items.map((i) => ({ product_id: i.product_id, quantity: i.quantity, variations: i.variations })),
                 shipping_address: address,
             });
 
@@ -222,8 +222,13 @@ export default function CheckoutPage() {
 
                         <div className="flex flex-col gap-4 text-sm font-bold uppercase tracking-wide text-slate-600 mb-2">
                             {items.map((i) => (
-                                <div key={i.product_id} className="flex justify-between items-start gap-4">
-                                    <span className="truncate">{i.name} × {i.quantity}</span>
+                                <div key={i.cart_item_id || i.product_id} className="flex justify-between items-start gap-4">
+                                    <div className="flex flex-col">
+                                        <span className="truncate">{i.name} × {i.quantity}</span>
+                                        {i.variations && Object.keys(i.variations).length > 0 && (
+                                            <span className="text-xs text-slate-400 capitalize">{Object.entries(i.variations).map(([k,v]) => `${k}: ${v}`).join(' | ')}</span>
+                                        )}
+                                    </div>
                                     <span className="text-slate-900 shrink-0">₹ {(i.price * i.quantity).toFixed(0)}</span>
                                 </div>
                             ))}

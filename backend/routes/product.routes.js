@@ -110,14 +110,18 @@ router.post('/:slug/review', authenticate, async (req, res) => {
 
 // POST /api/products - Admin only
 router.post('/', adminAuth, upload.array('images', 5), async (req, res) => {
-    const { name, description, price, compare_price, stock, category_id, tags, featured, weight_grams, sku } = req.body;
+    const { name, description, price, compare_price, stock, category_id, tags, featured, weight_grams, sku, variations } = req.body;
     const slug = slugify(name, { lower: true, strict: true });
     const images = req.files?.map((f) => `/uploads/${f.filename}`) || [];
+    let parsedVariations = [];
+    if (variations) {
+        try { parsedVariations = typeof variations === 'string' ? JSON.parse(variations) : variations; } catch (e) {}
+    }
     const product = await Product.create({
         name, slug, description, price, compare_price, stock: stock || 0,
         category_id, images, featured: featured === 'true',
         tags: tags ? (Array.isArray(tags) ? tags : [tags]) : [],
-        weight_grams, sku,
+        weight_grams, sku, variations: parsedVariations,
     });
     res.status(201).json({ success: true, product });
 });
@@ -127,6 +131,9 @@ router.put('/:id', adminAuth, upload.array('images', 5), async (req, res) => {
     const product = await Product.findByPk(req.params.id);
     if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
     const updates = { ...req.body };
+    if (updates.variations && typeof updates.variations === 'string') {
+        try { updates.variations = JSON.parse(updates.variations); } catch (e) {}
+    }
     if (req.files?.length) updates.images = req.files.map((f) => `/uploads/${f.filename}`);
     if (updates.name) updates.slug = slugify(updates.name, { lower: true, strict: true });
     await product.update(updates);

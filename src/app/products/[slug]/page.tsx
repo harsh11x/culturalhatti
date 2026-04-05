@@ -12,12 +12,14 @@ interface Product {
     id: string; name: string; slug: string; price: number; compare_price?: number;
     description?: string; images: string[]; stock: number; category?: { name: string };
     avg_rating?: string; reviews?: Review[];
+    variations?: { name: string, options: string[] }[];
 }
 
 export default function ProductDetailPage() {
     const params = useParams();
     const [product, setProduct] = useState<Product | null>(null);
     const [related, setRelated] = useState<any[]>([]);
+    const [selectedVariations, setSelectedVariations] = useState<Record<string, string>>({});
     const [qty, setQty] = useState(1);
     const [loading, setLoading] = useState(true);
     const [added, setAdded] = useState(false);
@@ -47,9 +49,11 @@ export default function ProductDetailPage() {
         }
     }, [user]);
 
+    const allVariationsSelected = product?.variations?.every(v => selectedVariations[v.name]) ?? true;
+
     const handleAdd = () => {
-        if (!product) return;
-        addItem({ product_id: product.id, name: product.name, price: Number(product.price), image: product.images?.[0] || '', quantity: qty, stock: product.stock });
+        if (!product || !allVariationsSelected) return;
+        addItem({ product_id: product.id, name: product.name, price: Number(product.price), image: product.images?.[0] || '', quantity: qty, stock: product.stock, variations: selectedVariations });
         setAdded(true);
         setTimeout(() => setAdded(false), 2000);
     };
@@ -169,6 +173,28 @@ export default function ProductDetailPage() {
                                 )}
                             </div>
 
+                            {/* Variations */}
+                            {product.variations && product.variations.length > 0 && (
+                                <div className="border-t border-[#4a3a39] pt-6 pb-2 space-y-4">
+                                    {product.variations.map(variation => (
+                                        <div key={variation.name}>
+                                            <label className="block text-sm uppercase tracking-widest text-slate-300 mb-2">{variation.name}</label>
+                                            <div className="flex flex-wrap gap-2">
+                                                {variation.options.map(opt => (
+                                                    <button
+                                                        key={opt}
+                                                        onClick={() => setSelectedVariations(prev => ({ ...prev, [variation.name]: opt }))}
+                                                        className={`px-4 py-2 border text-sm transition-colors ${selectedVariations[variation.name] === opt ? 'bg-primary border-primary text-white' : 'border-[#4a3a39] text-slate-300 hover:border-slate-400'}`}
+                                                    >
+                                                        {opt}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
                             {/* Quantity Selector */}
                             <div className="border-t border-b border-[#4a3a39] py-6">
                                 <div className="flex justify-between items-center mb-4">
@@ -185,9 +211,9 @@ export default function ProductDetailPage() {
                             <div className="lg:mt-0">
                                 <button
                                     onClick={handleAdd}
-                                    disabled={product.stock === 0}
+                                    disabled={product.stock === 0 || !allVariationsSelected}
                                     className="w-full h-14 bg-primary hover:bg-[#b0120a] text-white transition-all uppercase font-bold tracking-widest text-lg flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed border-2 border-transparent">
-                                    {added ? 'ADDED ✓' : product.stock === 0 ? 'OUT OF STOCK' : 'ADD TO CART'}
+                                    {product.stock === 0 ? 'OUT OF STOCK' : !allVariationsSelected ? 'SELECT OPTIONS' : added ? 'ADDED ✓' : 'ADD TO CART'}
                                 </button>
                             </div>
 

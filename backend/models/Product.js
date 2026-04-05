@@ -49,6 +49,10 @@ const Product = sequelize.define('Product', {
         type: DataTypes.ARRAY(DataTypes.STRING),
         defaultValue: [],
     },
+    variations: {
+        type: DataTypes.JSONB,
+        defaultValue: [],
+    },
     is_active: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
