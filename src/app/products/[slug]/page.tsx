@@ -18,6 +18,7 @@ interface Product {
 export default function ProductDetailPage() {
     const params = useParams();
     const [product, setProduct] = useState<Product | null>(null);
+    const [activeImageIndex, setActiveImageIndex] = useState(0);
     const [related, setRelated] = useState<any[]>([]);
     const [selectedVariations, setSelectedVariations] = useState<Record<string, string>>({});
     const [qty, setQty] = useState(1);
@@ -48,6 +49,14 @@ export default function ProductDetailPage() {
             api.get('/wishlist/ids').then(r => setProductIds(r.data.product_ids || [])).catch(() => {});
         }
     }, [user]);
+
+    useEffect(() => {
+        if (!product || !product.images || product.images.length <= 1) return;
+        const interval = setInterval(() => {
+            setActiveImageIndex((prev) => (prev + 1) % product.images.length);
+        }, 1500);
+        return () => clearInterval(interval);
+    }, [product]);
 
     const allVariationsSelected = product?.variations?.every(v => selectedVariations[v.name]) ?? true;
 
@@ -99,31 +108,35 @@ export default function ProductDetailPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[calc(100vh-80px)]">
 
                     {/* Left: Gallery (Sticky on Desktop) */}
-                    <div className="lg:col-span-7 relative bg-[#100a0a]">
-                        <div className="lg:sticky lg:top-[80px] h-full lg:h-[calc(100vh-80px)] overflow-y-auto no-scrollbar">
-                            <div className="grid grid-cols-1 gap-[1px] bg-[#4a3a39]">
-                                {/* Main Image/Video */}
-                                <div className="aspect-[4/5] w-full relative bg-[#2a1e1d] group overflow-hidden">
-                                    <ProductMedia
-                                        path={product.images?.[0] || ''}
-                                        className="absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-105"
-                                    />
-                                </div>
-
-                                {/* Additional Media Grid */}
-                                {product.images?.length > 1 && (
-                                    <div className={`grid ${product.images.length === 2 ? 'grid-cols-1' : 'grid-cols-2'} gap-[1px]`}>
-                                        {product.images.slice(1).map((img, i) => (
-                                            <div key={i} className="aspect-[3/4] w-full relative bg-[#2a1e1d] group overflow-hidden">
-                                                <ProductMedia
-                                                    path={img}
-                                                    className="absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-105"
-                                                />
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
+                    <div className="lg:col-span-7 relative bg-[#100a0a] flex flex-col items-center justify-start pt-8 lg:pt-16 pb-8 px-4 border-b lg:border-b-0 lg:border-r border-[#4a3a39]">
+                        <div className="lg:sticky lg:top-[120px] w-full max-w-[500px] flex flex-col gap-6">
+                            {/* Main Image/Video */}
+                            <div className="aspect-[4/5] w-full relative bg-[#2a1e1d] group overflow-hidden shadow-2xl mx-auto">
+                                <ProductMedia
+                                    path={product.images?.[activeImageIndex] || product.images?.[0] || ''}
+                                    className="absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-105"
+                                    objectFit="cover"
+                                />
                             </div>
+
+                            {/* Additional Media Timeline / Thumbnails */}
+                            {product.images?.length > 1 && (
+                                <div className="flex gap-3 overflow-x-auto no-scrollbar w-full py-2 justify-start sm:justify-center">
+                                    {product.images.map((img, i) => (
+                                        <button
+                                            key={i}
+                                            onClick={() => setActiveImageIndex(i)}
+                                            className={`aspect-[4/5] h-20 sm:h-24 shrink-0 relative bg-[#2a1e1d] overflow-hidden transition-all duration-300 ${activeImageIndex === i ? 'ring-2 ring-primary scale-105' : 'opacity-60 hover:opacity-100'}`}
+                                        >
+                                            <ProductMedia
+                                                path={img}
+                                                className="absolute inset-0 w-full h-full"
+                                                objectFit="cover"
+                                            />
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
 
