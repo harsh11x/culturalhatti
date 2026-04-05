@@ -1,6 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useCartStore, useAuthStore, useUIStore } from '@/store';
+import { getAssetUrl } from '@/lib/api';
 import { X, ShoppingBag, ArrowRight } from 'lucide-react';
 
 export default function CartSidebar() {
@@ -53,7 +54,7 @@ export default function CartSidebar() {
                     ) : (
                         items.map((item) => (
                             <div key={item.cart_item_id || item.product_id} className="flex gap-4 border-2 border-black p-3 bg-white brutalist-shadow">
-                                <img src={item.image} alt={item.name} className="w-24 h-24 object-cover border border-black" />
+                                <img src={getAssetUrl(item.image)} alt={item.name} className="w-24 h-24 object-cover border border-black" />
                                 <div className="flex-1 flex flex-col justify-between ml-2">
                                     <div>
                                         <h3 className="font-bold uppercase text-sm leading-tight leading-snug">{item.name}</h3>
