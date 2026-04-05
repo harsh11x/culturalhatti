@@ -98,7 +98,23 @@ export default function OrderDetailPage() {
                     {order.shipping_address && (
                         <div className="mt-4 pt-4 border-t border-gray-800">
                             <p className="text-sm text-gray-400">Shipping Address</p>
-                            <p>{typeof order.shipping_address === 'string' ? order.shipping_address : JSON.stringify(order.shipping_address)}</p>
+                            {(() => {
+                                let sa = order.shipping_address;
+                                if (typeof sa === 'string') {
+                                    try { sa = JSON.parse(sa); } catch (e) {}
+                                }
+                                if (typeof sa === 'object' && sa !== null) {
+                                    return (
+                                        <div className="space-y-1 mt-2 text-white text-sm">
+                                            <p><span className="text-gray-500 w-20 inline-block font-medium">Name:</span> {sa.name || '-'}</p>
+                                            <p><span className="text-gray-500 w-20 inline-block font-medium">Phone:</span> {sa.phone || '-'}</p>
+                                            <p><span className="text-gray-500 w-20 inline-block font-medium">Address:</span> {[sa.line1, sa.line2].filter(Boolean).join(', ')}</p>
+                                            <p><span className="text-gray-500 w-20 inline-block font-medium">Location:</span> {sa.city}, {sa.state} - {sa.pincode}</p>
+                                        </div>
+                                    );
+                                }
+                                return <p className="mt-2">{String(sa)}</p>;
+                            })()}
                         </div>
                     )}
                 </div>
