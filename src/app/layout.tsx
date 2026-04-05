@@ -7,6 +7,9 @@ import CartSidebar from '@/components/CartSidebar';
 export const metadata: Metadata = {
   title: 'Cultural Hatti – Authentic Indian Crafts & Culture',
   description: 'Discover authentic Indian crafts, textiles, and cultural artifacts. Mobile-first brutalist Indian e-commerce.',
+  icons: {
+    icon: '/logo.png',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

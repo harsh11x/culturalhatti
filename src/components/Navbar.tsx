@@ -15,7 +15,7 @@ export default function Navbar() {
             <div className="px-4 md:px-8 py-5 flex items-center justify-between w-full gap-4">
                 {/* Logo Area */}
                 <Link href="/" className="flex items-center gap-3 shrink-0 group">
-                    <img style={{ mixBlendMode: 'multiply' }} src="/logo.png" alt="Cultural Hatti Logo" className="h-10 md:h-14 w-auto object-contain origin-left transition-transform duration-300 scale-[1.75] md:scale-[2.2] group-hover:scale-[1.85] md:group-hover:scale-[2.3]" />
+                    <img style={{ mixBlendMode: 'multiply' }} src="/logo.png" alt="Cultural Hatti Logo" className="h-16 md:h-20 w-auto object-contain origin-left transition-transform duration-300 group-hover:scale-105" />
                 </Link>
                 {/* Desktop Links */}
                 <div className="hidden md:flex items-center gap-8 lg:gap-12 flex-1 justify-center">
