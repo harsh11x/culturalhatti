@@ -34,7 +34,7 @@ export default function AdminDashboard() {
     }
 
     const revenue = analytics?.total_revenue || '0';
-    const revenueLakhs = (Number(revenue) / 100000).toFixed(1);
+    const formattedRevenue = Number(revenue).toLocaleString('en-IN');
 
     return (
         <div className="min-h-screen text-white overflow-x-hidden">
@@ -48,7 +48,7 @@ export default function AdminDashboard() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div className="border border-gray-800 bg-[#111] p-6">
                         <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Total Revenue</p>
-                        <h3 className="text-3xl font-bold text-primary">₹{revenueLakhs}L</h3>
+                        <h3 className="text-3xl font-bold text-primary">₹{formattedRevenue}</h3>
                     </div>
                     
                     <div className="border border-gray-800 bg-[#111] p-6">
