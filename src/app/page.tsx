@@ -144,8 +144,8 @@ export default function HomePage() {
           ) : categories.length === 0 ? (
             <div className="p-12 text-center font-body uppercase tracking-widest text-sm">No Collections Found</div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-              {categories.slice(0, 3).map((cat, index) => {
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+              {categories.slice(0, 4).map((cat, index) => {
                 const fallbackImages = [
                   "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&q=90",
                   "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=800&q=90",

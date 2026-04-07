@@ -11,11 +11,11 @@ export default function Navbar() {
     const { openCart, openAuthModal, isMobileMenuOpen, openMobileMenu, closeMobileMenu } = useUIStore();
 
     return (
-        <nav className="w-full border-b border-background-dark/10 bg-background-light/95 backdrop-blur-md sticky top-0 z-50 luxury-shadow">
-            <div className="px-4 md:px-8 py-5 flex items-center justify-between w-full gap-4">
+        <nav className="w-full border-b border-background-dark/10 bg-background-light/95 backdrop-blur-md sticky top-0 z-50 luxury-shadow transition-all duration-300">
+            <div className="px-4 md:px-8 py-3 flex items-center justify-between w-full gap-4 transition-all duration-300">
                 {/* Logo Area */}
-                <Link href="/" className="flex items-center gap-3 shrink-0 group">
-                    <img style={{ mixBlendMode: 'multiply' }} src="/logo.png" alt="Cultural Hatti Logo" className="h-16 md:h-20 w-auto object-contain origin-left transition-transform duration-300 group-hover:scale-105" />
+                <Link href="/" className="flex items-center gap-3 shrink-0 group py-1">
+                    <img style={{ mixBlendMode: 'multiply' }} src="/logo.png" alt="Cultural Hatti Logo" className="h-10 md:h-12 w-auto object-contain origin-left transition-transform duration-300 group-hover:scale-105" />
                 </Link>
                 {/* Desktop Links */}
                 <div className="hidden md:flex items-center gap-8 lg:gap-12 flex-1 justify-center">
@@ -23,6 +23,7 @@ export default function Navbar() {
                     <Link className="font-body text-sm font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase" href="/category/suits">Suits</Link>
                     <Link className="font-body text-sm font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase" href="/category/bags">Bags</Link>
                     <Link className="font-body text-sm font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase" href="/category/accessories">Accessories</Link>
+                    <Link className="font-body text-sm font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b-2 border-transparent hover:border-primary pb-0.5" href="/category/kids">Kids</Link>
                 </div>
                 {/* Actions */}
                 <div className="flex items-center gap-2 md:gap-3 shrink-0">
@@ -93,6 +94,7 @@ export default function Navbar() {
                                 <Link onClick={closeMobileMenu} className="font-body text-base font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 pb-3" href="/category/suits">Suits</Link>
                                 <Link onClick={closeMobileMenu} className="font-body text-base font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 pb-3" href="/category/bags">Bags</Link>
                                 <Link onClick={closeMobileMenu} className="font-body text-base font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 pb-3" href="/category/accessories">Accessories</Link>
+                                <Link onClick={closeMobileMenu} className="font-body text-base font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 pb-3" href="/category/kids">Kids</Link>
                                 
                                 {user && (
                                     <>
