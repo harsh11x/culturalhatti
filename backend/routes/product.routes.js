@@ -109,27 +109,26 @@ router.post('/:slug/review', authenticate, async (req, res) => {
 });
 
 // POST /api/products - Admin only
-router.post('/', adminAuth, upload.array('images', 20), async (req, res) => {
+router.post('/', adminAuth, upload.fields([{ name: 'images', maxCount: 20 }, { name: 'var_images', maxCount: 100 }]), async (req, res) => {
     const { name, description, price, compare_price, stock, category_id, tags, featured, weight_grams, sku, variations } = req.body;
     const slug = slugify(name, { lower: true, strict: true });
-    const images = req.files?.map((f) => `/uploads/${f.filename}`) || [];
+    
+    const mainImages = req.files['images']?.map((f) => `/uploads/${f.filename}`) || [];
+    const varImages = req.files['var_images']?.map((f) => `/uploads/${f.filename}`) || [];
+
     let parsedVariations = [];
     if (variations) {
         try { 
             parsedVariations = typeof variations === 'string' ? JSON.parse(variations) : variations;
-            // Map image indices to actual uploaded URLs
+            // Map image indices from 'var_images' array to actual uploaded URLs
             parsedVariations = parsedVariations.map(v => ({
                 ...v,
                 options: v.options.map(opt => {
                     const o = typeof opt === 'string' ? { value: opt } : { ...opt };
                     if (!o.images) o.images = [];
-                    if (o.imageIndex !== undefined && images[o.imageIndex]) {
-                        o.images.push(images[o.imageIndex]);
-                        delete o.imageIndex;
-                    }
                     if (Array.isArray(o.imageIndices)) {
                         o.imageIndices.forEach(idx => {
-                            if (images[idx]) o.images.push(images[idx]);
+                            if (varImages[idx]) o.images.push(varImages[idx]);
                         });
                         delete o.imageIndices;
                     }
@@ -140,37 +139,33 @@ router.post('/', adminAuth, upload.array('images', 20), async (req, res) => {
     }
     const product = await Product.create({
         name, slug, description, price, compare_price, stock: stock || 0,
-        category_id, images, featured: featured === 'true',
+        category_id, images: mainImages, featured: featured === 'true',
         tags: tags ? (Array.isArray(tags) ? tags : [tags]) : [],
         weight_grams, sku, variations: parsedVariations,
     });
     res.status(201).json({ success: true, product });
 });
 
-// PUT /api/products/:id - Admin only
-router.put('/:id', adminAuth, upload.array('images', 20), async (req, res) => {
+router.put('/:id', adminAuth, upload.fields([{ name: 'images', maxCount: 20 }, { name: 'var_images', maxCount: 100 }]), async (req, res) => {
     const product = await Product.findByPk(req.params.id);
     if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
     
     const updates = { ...req.body };
-    const newImages = req.files?.map((f) => `/uploads/${f.filename}`) || [];
+    const newMainImages = req.files['images']?.map((f) => `/uploads/${f.filename}`) || [];
+    const newVarImages = req.files['var_images']?.map((f) => `/uploads/${f.filename}`) || [];
     
     if (updates.variations && typeof updates.variations === 'string') {
         try { 
             updates.variations = JSON.parse(updates.variations);
-            // Map image indices to actual uploaded URLs for variations
+            // Map image indices from 'var_images' array to actual uploaded URLs for variations
             updates.variations = updates.variations.map(v => ({
                 ...v,
                 options: v.options.map(opt => {
                     const o = typeof opt === 'string' ? { value: opt } : { ...opt };
                     if (!o.images) o.images = [];
-                    if (o.imageIndex !== undefined && newImages[o.imageIndex]) {
-                        o.images.push(newImages[o.imageIndex]);
-                        delete o.imageIndex;
-                    }
                     if (Array.isArray(o.imageIndices)) {
                         o.imageIndices.forEach(idx => {
-                            if (newImages[idx]) o.images.push(newImages[idx]);
+                            if (newVarImages[idx]) o.images.push(newVarImages[idx]);
                         });
                         delete o.imageIndices;
                     }
@@ -180,10 +175,8 @@ router.put('/:id', adminAuth, upload.array('images', 20), async (req, res) => {
         } catch (e) {}
     }
 
-    if (newImages.length) {
-        // If images were uploaded, they either replace the main images or are just for variations
-        // For now, keep it simple: if new images are uploaded, they are the new product images.
-        updates.images = newImages;
+    if (newMainImages.length) {
+        updates.images = newMainImages;
     }
     
     if (updates.name) updates.slug = slugify(updates.name, { lower: true, strict: true });

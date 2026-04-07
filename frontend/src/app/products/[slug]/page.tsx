@@ -118,63 +118,83 @@ export default function ProductDetailPage() {
                 {/* Main Content Area: Split Layout */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[calc(100vh-80px)]">
 
-                    <div className="lg:col-span-8 relative bg-[#100a0a] flex flex-col md:flex-row border-r border-[#4a3a39]">
-                        {/* Main Interaction Area */}
-                        <div className="flex-grow relative aspect-[4/5] lg:h-[calc(100vh-80px)] bg-[#2a1e1d]">
-                            {mainImage ? (
-                                <div className="absolute inset-0 bg-contain bg-no-repeat bg-center transition-all duration-500"
-                                    style={{ backgroundImage: `url(${formatImageUrl(mainImage)})` }}>
-                                </div>
-                            ) : (
-                                <div className="w-full h-full flex flex-col items-center justify-center">
-                                    <ImageIcon className="w-16 h-16 text-slate-600" />
-                                    <span className="text-slate-500 font-bold uppercase tracking-widest mt-4">No Image</span>
-                                </div>
-                            )}
+                    <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-[1fr_112px] bg-[#100a0a] border-r border-[#4a3a39]">
+                        {/* Center: Main Gallery Area */}
+                        <div className="relative flex flex-col h-[60vh] md:h-[calc(100vh-80px)] overflow-hidden">
+                            {/* Main Large Image */}
+                            <div className="flex-grow flex items-center justify-center p-4 sm:p-8 bg-black/20">
+                                {mainImage ? (
+                                    <img 
+                                        src={formatImageUrl(mainImage)} 
+                                        alt={product.name}
+                                        className="max-w-full max-h-full object-contain transition-all duration-500 animate-in fade-in zoom-in-95"
+                                    />
+                                ) : (
+                                    <div className="flex flex-col items-center justify-center opacity-20">
+                                        <ImageIcon className="w-20 h-20" />
+                                        <span className="mt-4 uppercase tracking-[0.3em] text-sm">No Image Available</span>
+                                    </div>
+                                )}
+                            </div>
                             
-                            {/* Gallery Thumbnails (Overlayed or Bottom) */}
+                            {/* Bottom Gallery Strip (Images only for the selected variation) */}
                             {currentGallery.length > 1 && (
-                                <div className="absolute bottom-6 left-6 right-6 flex gap-2 overflow-x-auto no-scrollbar py-2 z-20">
+                                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 p-3 bg-black/60 backdrop-blur-md rounded-xl border border-white/10 z-20">
                                     {currentGallery.map((img, i) => (
                                         <button 
                                             key={i} 
                                             onClick={() => setCurrentImageIndex(i)}
-                                            className={`w-14 h-18 sm:w-16 sm:h-20 flex-shrink-0 border-2 transition-all shadow-lg ${currentImageIndex === i ? 'border-primary' : 'border-white/20 hover:border-white/60'}`}
+                                            className={`relative w-12 h-16 sm:w-16 sm:h-20 flex-shrink-0 transition-all duration-300 ${
+                                                currentImageIndex === i 
+                                                ? 'ring-2 ring-primary ring-offset-2 ring-offset-black scale-110' 
+                                                : 'opacity-50 hover:opacity-100 hover:scale-105'
+                                            }`}
                                         >
-                                            <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(${formatImageUrl(img)})` }}></div>
+                                            <img src={formatImageUrl(img)} className="w-full h-full object-cover rounded-sm shadow-2xl" />
                                         </button>
                                     ))}
                                 </div>
                             )}
                         </div>
 
-                        {/* Right Strip: Variation Selectors (Only for visual variations) */}
-                        {product.variations?.filter(v => v.options.some(o => o.images?.length || o.image)).map((v) => (
-                            <div key={v.name} className="w-full md:w-28 bg-[#15100f] border-t md:border-t-0 md:border-l border-[#4a3a39] flex flex-row md:flex-col items-center py-6 gap-3 overflow-x-auto md:overflow-y-auto no-scrollbar z-30">
-                                <span className="hidden md:block text-[9px] uppercase tracking-[0.2em] text-slate-500 font-bold rotate-180 [writing-mode:vertical-lr] mb-2">{v.name}</span>
-                                {v.options.map((opt) => {
-                                    const isSelected = selectedVariations[v.name] === opt.value;
-                                    const thumb = opt.images?.[0] || opt.image || product.images[0];
-                                    return (
-                                        <button
-                                            key={opt.value}
-                                            onClick={() => {
-                                                setSelectedVariations(prev => ({ ...prev, [v.name]: opt.value }));
-                                                setCurrentImageIndex(0);
-                                            }}
-                                            className={`group relative w-16 h-20 md:w-20 md:h-24 flex-shrink-0 border-2 transition-all duration-300 ${
-                                                isSelected ? 'border-primary scale-105' : 'border-[#2a1e1d] hover:border-slate-500'
-                                            }`}
-                                        >
-                                            <div className="w-full h-full bg-cover bg-center opacity-80 group-hover:opacity-100 transition-opacity" style={{ backgroundImage: `url(${formatImageUrl(thumb)})` }}></div>
-                                            <div className={`absolute bottom-0 left-0 right-0 bg-black/80 text-[8px] py-1 text-center uppercase tracking-tighter truncate px-1 transition-colors ${isSelected ? 'text-primary' : 'text-slate-100'}`}>
-                                                {opt.value}
-                                            </div>
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        ))}
+                        {/* Right: Variation Selector Strip */}
+                        <div className="w-full md:w-28 bg-[#15100f] border-t md:border-t-0 md:border-l border-[#4a3a39] flex flex-row md:flex-col items-center py-6 gap-4 overflow-x-auto md:overflow-y-auto no-scrollbar z-30">
+                            <span className="hidden md:block text-[9px] uppercase tracking-[0.3em] text-slate-500 font-bold rotate-180 [writing-mode:vertical-lr] mb-2 opacity-50">Select Variant</span>
+                            
+                            {product.variations?.map((v) => (
+                                <div key={v.name} className="flex flex-row md:flex-col items-center gap-4 px-4 md:px-0">
+                                    {v.options.map((opt) => {
+                                        const isSelected = selectedVariations[v.name] === opt.value;
+                                        const thumb = opt.images?.[0] || opt.image || product.images[0];
+                                        return (
+                                            <button
+                                                key={opt.value}
+                                                onClick={() => {
+                                                    setSelectedVariations(prev => ({ ...prev, [v.name]: opt.value }));
+                                                    setCurrentImageIndex(0);
+                                                }}
+                                                className={`group relative w-16 h-20 md:w-20 md:h-24 flex-shrink-0 border-2 transition-all duration-300 rounded-lg overflow-hidden ${
+                                                    isSelected ? 'border-primary scale-110 shadow-[0_0_20px_rgba(235,59,48,0.3)]' : 'border-white/5 hover:border-white/30'
+                                                }`}
+                                            >
+                                                <img src={formatImageUrl(thumb)} className={`w-full h-full object-cover transition-all duration-500 ${isSelected ? 'opacity-100' : 'opacity-40 group-hover:opacity-80'}`} />
+                                                <div className={`absolute bottom-0 left-0 right-0 py-1 text-[8px] font-bold text-center uppercase tracking-tighter truncate px-1 transition-all ${
+                                                    isSelected ? 'bg-primary text-white' : 'bg-black/80 text-slate-300 group-hover:text-white'
+                                                }`}>
+                                                    {opt.value}
+                                                </div>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            ))}
+                            {(!product.variations || product.variations.length === 0) && (
+                                <div className="hidden md:flex flex-col items-center gap-2 opacity-20">
+                                    <div className="w-1 h-24 bg-gradient-to-b from-transparent via-slate-500 to-transparent"></div>
+                                    <span className="text-[10px] uppercase tracking-widest rotate-90 [writing-mode:vertical-lr] whitespace-nowrap">Standard Edition</span>
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     {/* Right: Product Details (Scrollable) */}
@@ -209,10 +229,10 @@ export default function ProductDetailPage() {
                                 </p>
                             </div>
 
-                            {/* Variations Section (Only for non-visual variations) */}
-                            {product.variations && product.variations.some(v => !v.options.some(o => o.images?.length || o.image)) && (
+                            {/* Variations Section (Only for non-visual variations that aren't already in the side strip) */}
+                            {product.variations && product.variations.some(v => v.options.every(o => !o.images?.length && !o.image)) && (
                                 <div className="p-8 bg-black/30 border-y border-[#4a3a39] space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                                    {product.variations.filter(v => !v.options.some(o => o.images?.length || o.image)).map((v) => (
+                                    {product.variations.filter(v => v.options.every(o => !o.images?.length && !o.image)).map((v) => (
                                         <div key={v.name} className="space-y-4">
                                             <div className="flex justify-between items-center text-[10px] uppercase tracking-[0.2em] text-slate-400 font-bold">
                                                 <span>Select {v.name}</span>

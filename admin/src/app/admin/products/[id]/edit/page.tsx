@@ -124,8 +124,8 @@ export default function EditProductPage() {
             
             images.forEach((file) => fd.append('images', file));
             
-            // Collect all variation images and map them
-            let currentImageIndex = images.length;
+            // Collect all variation images and map them separately
+            let currentVarImageIndex = 0;
             const updatedVariations = variations.map(v => ({
                 name: v.name.trim(),
                 options: v.options.map(o => {
@@ -134,8 +134,8 @@ export default function EditProductPage() {
                     
                     if (o.newFiles) {
                         o.newFiles.forEach(file => {
-                            fd.append('images', file);
-                            imageIndices.push(currentImageIndex++);
+                            fd.append('var_images', file);
+                            imageIndices.push(currentVarImageIndex++);
                         });
                     }
                     
