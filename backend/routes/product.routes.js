@@ -121,10 +121,17 @@ router.post('/', adminAuth, upload.array('images', 20), async (req, res) => {
             parsedVariations = parsedVariations.map(v => ({
                 ...v,
                 options: v.options.map(opt => {
-                    const o = typeof opt === 'string' ? { value: opt } : opt;
+                    const o = typeof opt === 'string' ? { value: opt } : { ...opt };
+                    if (!o.images) o.images = [];
                     if (o.imageIndex !== undefined && images[o.imageIndex]) {
-                        o.image = images[o.imageIndex];
+                        o.images.push(images[o.imageIndex]);
                         delete o.imageIndex;
+                    }
+                    if (Array.isArray(o.imageIndices)) {
+                        o.imageIndices.forEach(idx => {
+                            if (images[idx]) o.images.push(images[idx]);
+                        });
+                        delete o.imageIndices;
                     }
                     return o;
                 })
@@ -155,10 +162,17 @@ router.put('/:id', adminAuth, upload.array('images', 20), async (req, res) => {
             updates.variations = updates.variations.map(v => ({
                 ...v,
                 options: v.options.map(opt => {
-                    const o = typeof opt === 'string' ? { value: opt } : opt;
+                    const o = typeof opt === 'string' ? { value: opt } : { ...opt };
+                    if (!o.images) o.images = [];
                     if (o.imageIndex !== undefined && newImages[o.imageIndex]) {
-                        o.image = newImages[o.imageIndex];
+                        o.images.push(newImages[o.imageIndex]);
                         delete o.imageIndex;
+                    }
+                    if (Array.isArray(o.imageIndices)) {
+                        o.imageIndices.forEach(idx => {
+                            if (newImages[idx]) o.images.push(newImages[idx]);
+                        });
+                        delete o.imageIndices;
                     }
                     return o;
                 })

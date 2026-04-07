@@ -20,7 +20,7 @@ export default function NewProductPage() {
         sku: '',
     });
     const [images, setImages] = useState<File[]>([]);
-    const [variations, setVariations] = useState<{name: string, options: {value: string, imageIndex?: number}[]}[]>([]);
+    const [variations, setVariations] = useState<{name: string, options: {value: string, newFiles?: File[]}[]}[]>([]);
     const router = useRouter();
 
     const addVariation = () => setVariations([...variations, { name: '', options: [] }]);
@@ -40,9 +40,15 @@ export default function NewProductPage() {
         newV[vIndex].options[oIndex].value = value;
         setVariations(newV);
     };
-    const updateOptionImage = (vIndex: number, oIndex: number, imgIndex: string) => {
+    const updateOptionImage = (vIndex: number, oIndex: number, files: FileList | null) => {
         const newV = [...variations];
-        newV[vIndex].options[oIndex].imageIndex = imgIndex === '' ? undefined : parseInt(imgIndex);
+        const newFiles = files ? Array.from(files) : [];
+        newV[vIndex].options[oIndex].newFiles = [...(newV[vIndex].options[oIndex].newFiles || []), ...newFiles];
+        setVariations(newV);
+    };
+    const removeOptionImage = (vIndex: number, oIndex: number, imgIdx: number) => {
+        const newV = [...variations];
+        newV[vIndex].options[oIndex].newFiles = newV[vIndex].options[oIndex].newFiles?.filter((_, i) => i !== imgIdx);
         setVariations(newV);
     };
     const removeOption = (vIndex: number, oIndex: number) => {
@@ -78,19 +84,28 @@ export default function NewProductPage() {
             fd.append('featured', String(form.featured));
             if (form.sku) fd.append('sku', form.sku);
             
-            if (variations.length > 0) {
-                const cleanVariations = variations
-                    .map(v => ({
-                        name: v.name.trim(),
-                        options: v.options.map(o => ({
-                            value: o.value.trim(),
-                            imageIndex: o.imageIndex
-                        })).filter(o => o.value)
-                    }))
-                    .filter(v => v.name && v.options.length > 0);
-                fd.append('variations', JSON.stringify(cleanVariations));
-            }
             images.forEach((file) => fd.append('images', file));
+            
+            // Collect all variation images and map them
+            let currentImageIndex = images.length;
+            const updatedVariations = variations.map(v => ({
+                name: v.name.trim(),
+                options: v.options.map(o => {
+                    const imageIndices: number[] = [];
+                    if (o.newFiles) {
+                        o.newFiles.forEach(file => {
+                            fd.append('images', file);
+                            imageIndices.push(currentImageIndex++);
+                        });
+                    }
+                    return {
+                        value: o.value.trim(),
+                        imageIndices: imageIndices.length > 0 ? imageIndices : undefined
+                    };
+                }).filter(o => o.value)
+            })).filter(v => v.name && v.options.length > 0);
+
+            fd.append('variations', JSON.stringify(updatedVariations));
 
             await adminApi.post('/products', fd);
             window.location.href = '/admin/products';
@@ -170,25 +185,36 @@ export default function NewProductPage() {
                                 </div>
                                 <div className="ml-4 space-y-3">
                                     {v.options.map((opt, oi) => (
-                                        <div key={oi} className="flex gap-4 items-center">
-                                            <input 
-                                                type="text" 
-                                                placeholder="Option (e.g. Red)" 
-                                                value={opt.value} 
-                                                onChange={e => updateOption(i, oi, e.target.value)} 
-                                                className="flex-1 px-3 py-2 bg-black border border-gray-700 text-white text-sm" 
-                                            />
-                                            <select 
-                                                value={opt.imageIndex ?? ''} 
-                                                onChange={e => updateOptionImage(i, oi, e.target.value)}
-                                                className="flex-1 px-3 py-2 bg-black border border-gray-700 text-white text-sm"
-                                            >
-                                                <option value="">No Image</option>
-                                                {images.map((img, imgI) => (
-                                                    <option key={imgI} value={imgI}>Image {imgI + 1} ({img.name})</option>
-                                                ))}
-                                            </select>
-                                            <button type="button" onClick={() => removeOption(i, oi)} className="text-gray-500 hover:text-red-400 text-xs">✕</button>
+                                        <div key={oi} className="p-4 bg-black/40 border border-gray-800 rounded-lg space-y-4">
+                                            <div className="flex gap-4 items-center">
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="Option Name (e.g. Red, Pattern A)" 
+                                                    value={opt.value} 
+                                                    onChange={e => updateOption(i, oi, e.target.value)} 
+                                                    className="flex-1 px-3 py-2 bg-black border border-gray-700 text-white text-sm" 
+                                                />
+                                                <button type="button" onClick={() => removeOption(i, oi)} className="text-gray-500 hover:text-red-400">✕</button>
+                                            </div>
+                                            
+                                            <div className="space-y-2">
+                                                <label className="block text-[10px] uppercase tracking-widest text-gray-500 font-bold">Variation Images</label>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {opt.newFiles?.map((file, imgI) => (
+                                                        <div key={imgI} className="relative w-16 h-16 border border-primary/50 bg-gray-900 group">
+                                                            <div className="w-full h-full flex items-center justify-center text-[8px] text-primary break-all p-1 text-center leading-tight">
+                                                                {file.name.substring(0, 10)}...
+                                                            </div>
+                                                            <button type="button" onClick={() => removeOptionImage(i, oi, imgI)} className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">✕</button>
+                                                        </div>
+                                                    ))}
+                                                    <label className="w-16 h-16 border-2 border-dashed border-gray-700 hover:border-primary flex flex-col items-center justify-center cursor-pointer transition-colors group">
+                                                        <span className="text-lg text-gray-500 group-hover:text-primary">+</span>
+                                                        <span className="text-[8px] text-gray-600 uppercase">Upload</span>
+                                                        <input type="file" multiple accept="image/*" onChange={e => updateOptionImage(i, oi, e.target.files)} className="hidden" />
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
                                     ))}
                                     <button type="button" onClick={() => addOption(i)} className="text-[10px] uppercase tracking-wider text-primary hover:underline">+ Add Option</button>

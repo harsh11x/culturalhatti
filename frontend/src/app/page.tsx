@@ -175,6 +175,8 @@ export default function HomePage() {
                 imgSrc = `http://localhost:3001${cat.image_url}`;
               } else if (cat.slug.includes('bag') || cat.name.toLowerCase().includes('bag')) {
                 imgSrc = "/bags.png";
+              } else if (cat.slug.includes('kids') || cat.name.toLowerCase().includes('kids')) {
+                imgSrc = "/kids.png";
               }
 
               return (
