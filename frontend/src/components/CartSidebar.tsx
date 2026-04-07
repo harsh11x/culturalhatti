@@ -37,8 +37,10 @@ export default function CartSidebar() {
                             </button>
                         </div>
                     ) : (
-                        items.map((item) => (
-                            <div key={item.cart_item_id} className="flex gap-4 border-2 border-black p-3 bg-white brutalist-shadow">
+                        items.map((item) => {
+                            const cartItemId = item.cart_item_id || `${item.product_id}-${JSON.stringify(item.variations || {})}`;
+                            return (
+                            <div key={cartItemId} className="flex gap-4 border-2 border-black p-3 bg-white brutalist-shadow">
                                 <img src={item.image} alt={item.name} className="w-24 h-24 object-cover border border-black" />
                                 <div className="flex-1 flex flex-col justify-between ml-2">
                                     <div>
@@ -48,19 +50,19 @@ export default function CartSidebar() {
                                     <div className="flex items-center justify-between mt-4">
                                         <div className="flex items-center border border-black">
                                             <button
-                                                onClick={() => updateQty(item.cart_item_id, item.quantity - 1)}
+                                                onClick={() => updateQty(cartItemId, item.quantity - 1)}
                                                 className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 font-bold"
                                             >-</button>
                                             <span className="w-8 h-8 flex items-center justify-center font-bold text-sm border-x border-black bg-gray-50">
                                                 {item.quantity}
                                             </span>
                                             <button
-                                                onClick={() => updateQty(item.cart_item_id, item.quantity + 1)}
+                                                onClick={() => updateQty(cartItemId, item.quantity + 1)}
                                                 className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 font-bold"
                                             >+</button>
                                         </div>
                                         <button
-                                            onClick={() => removeItem(item.cart_item_id)}
+                                            onClick={() => removeItem(cartItemId)}
                                             className="text-black hover:text-primary transition-colors text-xs font-bold uppercase tracking-widest underline"
                                         >
                                             Remove
@@ -68,7 +70,7 @@ export default function CartSidebar() {
                                     </div>
                                 </div>
                             </div>
-                        ))
+                        )})
                     )}
                 </div>
 
