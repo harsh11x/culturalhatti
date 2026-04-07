@@ -98,8 +98,8 @@ export default function ProductDetailPage() {
         if (selectedVariationOption) {
             const varImages = selectedVariationOption.images || (selectedVariationOption.image ? [selectedVariationOption.image] : []);
             if (varImages.length > 0) {
-                // Prepend variation images to the gallery
-                currentGallery = [...varImages, ...product.images.filter(img => !varImages.includes(img))];
+                // ONLY show variation images if they exist
+                currentGallery = varImages;
             }
         }
     }
@@ -133,46 +133,48 @@ export default function ProductDetailPage() {
                             )}
                             
                             {/* Gallery Thumbnails (Overlayed or Bottom) */}
-                            <div className="absolute bottom-6 left-6 right-6 flex gap-2 overflow-x-auto no-scrollbar py-2">
-                                {currentGallery.map((img, i) => (
-                                    <button 
-                                        key={i} 
-                                        onClick={() => setCurrentImageIndex(i)}
-                                        className={`w-16 h-20 flex-shrink-0 border-2 transition-all ${currentImageIndex === i ? 'border-primary' : 'border-black/40 hover:border-white/60'}`}
-                                    >
-                                        <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(${formatImageUrl(img)})` }}></div>
-                                    </button>
-                                ))}
-                            </div>
+                            {currentGallery.length > 1 && (
+                                <div className="absolute bottom-6 left-6 right-6 flex gap-2 overflow-x-auto no-scrollbar py-2 z-20">
+                                    {currentGallery.map((img, i) => (
+                                        <button 
+                                            key={i} 
+                                            onClick={() => setCurrentImageIndex(i)}
+                                            className={`w-14 h-18 sm:w-16 sm:h-20 flex-shrink-0 border-2 transition-all shadow-lg ${currentImageIndex === i ? 'border-primary' : 'border-white/20 hover:border-white/60'}`}
+                                        >
+                                            <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(${formatImageUrl(img)})` }}></div>
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
-                        {/* Right Strip: Variation Selectors */}
-                        {product.variations?.[0] && (
-                            <div className="w-full md:w-32 bg-[#15100f] border-t md:border-t-0 md:border-l border-[#4a3a39] flex flex-row md:flex-col items-center py-6 gap-4 overflow-x-auto md:overflow-y-auto no-scrollbar">
-                                <span className="hidden md:block text-[8px] uppercase tracking-[0.2em] text-slate-500 font-bold rotate-180 [writing-mode:vertical-lr]">Variations</span>
-                                {product.variations[0].options.map((opt) => {
-                                    const isSelected = selectedVariations[product.variations![0].name] === opt.value;
+                        {/* Right Strip: Variation Selectors (Only for visual variations) */}
+                        {product.variations?.filter(v => v.options.some(o => o.images?.length || o.image)).map((v) => (
+                            <div key={v.name} className="w-full md:w-28 bg-[#15100f] border-t md:border-t-0 md:border-l border-[#4a3a39] flex flex-row md:flex-col items-center py-6 gap-3 overflow-x-auto md:overflow-y-auto no-scrollbar z-30">
+                                <span className="hidden md:block text-[9px] uppercase tracking-[0.2em] text-slate-500 font-bold rotate-180 [writing-mode:vertical-lr] mb-2">{v.name}</span>
+                                {v.options.map((opt) => {
+                                    const isSelected = selectedVariations[v.name] === opt.value;
                                     const thumb = opt.images?.[0] || opt.image || product.images[0];
                                     return (
                                         <button
                                             key={opt.value}
                                             onClick={() => {
-                                                setSelectedVariations(prev => ({ ...prev, [product.variations![0].name]: opt.value }));
+                                                setSelectedVariations(prev => ({ ...prev, [v.name]: opt.value }));
                                                 setCurrentImageIndex(0);
                                             }}
                                             className={`group relative w-16 h-20 md:w-20 md:h-24 flex-shrink-0 border-2 transition-all duration-300 ${
-                                                isSelected ? 'border-primary scale-105' : 'border-transparent hover:border-slate-500'
+                                                isSelected ? 'border-primary scale-105' : 'border-[#2a1e1d] hover:border-slate-500'
                                             }`}
                                         >
-                                            <div className="w-full h-full bg-cover bg-center opacity-70 group-hover:opacity-100 transition-opacity" style={{ backgroundImage: `url(${formatImageUrl(thumb)})` }}></div>
-                                            <div className={`absolute bottom-0 left-0 right-0 bg-black/60 text-[8px] py-1 text-center uppercase tracking-tighter truncate px-1 transition-colors ${isSelected ? 'text-primary' : 'text-slate-300'}`}>
+                                            <div className="w-full h-full bg-cover bg-center opacity-80 group-hover:opacity-100 transition-opacity" style={{ backgroundImage: `url(${formatImageUrl(thumb)})` }}></div>
+                                            <div className={`absolute bottom-0 left-0 right-0 bg-black/80 text-[8px] py-1 text-center uppercase tracking-tighter truncate px-1 transition-colors ${isSelected ? 'text-primary' : 'text-slate-100'}`}>
                                                 {opt.value}
                                             </div>
                                         </button>
                                     );
                                 })}
                             </div>
-                        )}
+                        ))}
                     </div>
 
                     {/* Right: Product Details (Scrollable) */}
@@ -207,10 +209,10 @@ export default function ProductDetailPage() {
                                 </p>
                             </div>
 
-                            {/* Variations Section */}
-                            {product.variations && product.variations.length > 1 && (
+                            {/* Variations Section (Only for non-visual variations) */}
+                            {product.variations && product.variations.some(v => !v.options.some(o => o.images?.length || o.image)) && (
                                 <div className="p-8 bg-black/30 border-y border-[#4a3a39] space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                                    {product.variations.slice(1).map((v) => (
+                                    {product.variations.filter(v => !v.options.some(o => o.images?.length || o.image)).map((v) => (
                                         <div key={v.name} className="space-y-4">
                                             <div className="flex justify-between items-center text-[10px] uppercase tracking-[0.2em] text-slate-400 font-bold">
                                                 <span>Select {v.name}</span>
