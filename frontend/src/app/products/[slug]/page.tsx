@@ -43,7 +43,9 @@ export default function ProductDetailPage() {
                             const value = typeof o?.value === 'string' ? o.value.trim() : '';
                             const images = Array.isArray(o?.images) ? o.images.filter((img: any) => typeof img === 'string') : [];
                             const image = typeof o?.image === 'string' ? o.image : undefined;
-                            return value ? { value, images, image } : null;
+                            if (value) return { value, images, image };
+                            if (images.length || image) return { value: 'Default', images, image };
+                            return null;
                         })
                         .filter(Boolean)
                     : [],
@@ -110,13 +112,16 @@ export default function ProductDetailPage() {
     if (loading) return <div className="min-h-screen bg-[#1a1211] flex items-center justify-center text-white text-2xl font-bold uppercase tracking-widest">Loading...</div>;
     if (!product) return <div className="min-h-screen bg-[#1a1211] flex items-center justify-center text-white text-2xl font-bold uppercase tracking-widest">Product not found.</div>;
 
+    const primaryVisualVariation = (product.variations || []).find((v) =>
+        v.options.some((o) => (o.images && o.images.length > 0) || o.image)
+    ) || null;
+
     // Determine the main image and gallery images to show
     let currentGallery = product.images || [];
     let selectedVariationOption: VariationOption | null = null;
     
-    // For now, handle the first variation as the primary variant switcher (e.g. Color or Pattern)
-    if (product.variations && product.variations.length > 0) {
-        const v = product.variations[0];
+    if (primaryVisualVariation) {
+        const v = primaryVisualVariation;
         const selectedVal = selectedVariations[v.name];
         selectedVariationOption = v.options.find(o => o.value === selectedVal) || null;
         
@@ -188,16 +193,16 @@ export default function ProductDetailPage() {
                         <div className="w-full md:w-28 bg-[#15100f] border-t md:border-t-0 md:border-l border-[#4a3a39] flex flex-row md:flex-col items-center py-6 gap-4 overflow-x-auto md:overflow-y-auto no-scrollbar z-30">
                             <span className="hidden md:block text-[9px] uppercase tracking-[0.3em] text-slate-500 font-bold rotate-180 [writing-mode:vertical-lr] mb-2 opacity-50">Select Variant</span>
                             
-                            {product.variations?.map((v) => (
-                                <div key={v.name} className="flex flex-row md:flex-col items-center gap-4 px-4 md:px-0">
-                                    {v.options.map((opt) => {
-                                        const isSelected = selectedVariations[v.name] === opt.value;
+                            {primaryVisualVariation && (
+                                <div key={primaryVisualVariation.name} className="flex flex-row md:flex-col items-center gap-4 px-4 md:px-0">
+                                    {primaryVisualVariation.options.map((opt) => {
+                                        const isSelected = selectedVariations[primaryVisualVariation.name] === opt.value;
                                         const thumb = opt.images?.[0] || opt.image || product.images[0];
                                         return (
                                             <button
                                                 key={opt.value}
                                                 onClick={() => {
-                                                    setSelectedVariations(prev => ({ ...prev, [v.name]: opt.value }));
+                                                    setSelectedVariations(prev => ({ ...prev, [primaryVisualVariation.name]: opt.value }));
                                                     setCurrentImageIndex(0);
                                                 }}
                                                 className={`group relative w-16 h-20 md:w-20 md:h-24 flex-shrink-0 border-2 transition-all duration-300 rounded-lg overflow-hidden ${
@@ -214,8 +219,8 @@ export default function ProductDetailPage() {
                                         );
                                     })}
                                 </div>
-                            ))}
-                            {(!product.variations || product.variations.length === 0) && (
+                            )}
+                            {!primaryVisualVariation && (
                                 <div className="hidden md:flex flex-col items-center gap-2 opacity-20">
                                     <div className="w-1 h-24 bg-gradient-to-b from-transparent via-slate-500 to-transparent"></div>
                                     <span className="text-[10px] uppercase tracking-widest rotate-90 [writing-mode:vertical-lr] whitespace-nowrap">Standard Edition</span>
@@ -256,10 +261,10 @@ export default function ProductDetailPage() {
                                 </p>
                             </div>
 
-                            {/* Variations Section (Only for non-visual variations that aren't already in the side strip) */}
-                            {product.variations && product.variations.some(v => v.options.every(o => !o.images?.length && !o.image)) && (
+                            {/* Variations Section (Always show all variation groups clearly) */}
+                            {product.variations && product.variations.length > 0 && (
                                 <div className="p-8 bg-black/30 border-y border-[#4a3a39] space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                                    {product.variations.filter(v => v.options.every(o => !o.images?.length && !o.image)).map((v) => (
+                                    {product.variations.map((v) => (
                                         <div key={v.name} className="space-y-4">
                                             <div className="flex justify-between items-center text-[10px] uppercase tracking-[0.2em] text-slate-400 font-bold">
                                                 <span>Select {v.name}</span>
