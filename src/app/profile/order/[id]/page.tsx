@@ -9,7 +9,7 @@ interface ReturnRequest { id: string; status: string; reason: string; created_at
 interface Order {
     id: string; order_number: string; status: string; total_amount: number; payment_id?: string;
     tracking_id?: string; courier_name?: string; created_at: string; shipping_address: any;
-    items: { product_name: string; quantity: number; price_at_purchase: number }[];
+    items: { product_name: string; quantity: number; price_at_purchase: number; variation_selected?: Record<string, string> | null }[];
     return_requests?: ReturnRequest[];
 }
 
@@ -128,8 +128,15 @@ export default function OrderDetailPage() {
                 <div className="border-t-2 border-black pt-6 mb-6">
                     <p className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4">Items</p>
                     {order.items?.map((i, idx) => (
-                        <div key={idx} className="flex justify-between py-2 border-b border-gray-200">
-                            <span>{i.product_name} × {i.quantity}</span>
+                        <div key={idx} className="flex justify-between py-2 border-b border-gray-200 gap-4">
+                            <div>
+                                <span>{i.product_name} × {i.quantity}</span>
+                                {i.variation_selected && Object.keys(i.variation_selected).length > 0 && (
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        {Object.entries(i.variation_selected).map(([k, v]) => `${k}: ${v}`).join(' | ')}
+                                    </p>
+                                )}
+                            </div>
                             <span className="font-bold">₹{(Number(i.price_at_purchase) * i.quantity).toFixed(2)}</span>
                         </div>
                     ))}

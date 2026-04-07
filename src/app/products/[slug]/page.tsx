@@ -8,11 +8,15 @@ import { useCartStore, useAuthStore, useWishlistStore } from '@/store';
 import { Truck, ShieldCheck, RotateCcw, Heart, Star } from 'lucide-react';
 
 interface Review { id: string; rating: number; comment?: string; created_at: string; User?: { name: string } }
+interface VariationOption {
+    value: string;
+    images?: string[];
+}
 interface Product {
     id: string; name: string; slug: string; price: number; compare_price?: number;
     description?: string; images: string[]; stock: number; category?: { name: string };
     avg_rating?: string; reviews?: Review[];
-    variations?: { name: string, options: string[] }[];
+    variations?: { name: string, options: VariationOption[] }[];
 }
 
 export default function ProductDetailPage() {
@@ -51,10 +55,33 @@ export default function ProductDetailPage() {
     }, [user]);
 
     const allVariationsSelected = product?.variations?.every(v => selectedVariations[v.name]) ?? true;
+    const selectedVariationImages = (() => {
+        if (!product?.variations?.length) return [];
+        for (const variation of product.variations) {
+            const selectedValue = selectedVariations[variation.name];
+            if (!selectedValue) continue;
+            const matched = variation.options.find((o) => o.value === selectedValue);
+            if (matched?.images?.length) return matched.images;
+        }
+        return [];
+    })();
+    const galleryImages = selectedVariationImages.length ? selectedVariationImages : (product?.images || []);
+
+    useEffect(() => {
+        setActiveImageIndex(0);
+    }, [selectedVariations, product?.id]);
 
     const handleAdd = () => {
         if (!product || !allVariationsSelected) return;
-        addItem({ product_id: product.id, name: product.name, price: Number(product.price), image: product.images?.[0] || '', quantity: qty, stock: product.stock, variations: selectedVariations });
+        addItem({
+            product_id: product.id,
+            name: product.name,
+            price: Number(product.price),
+            image: galleryImages[0] || product.images?.[0] || '',
+            quantity: qty,
+            stock: product.stock,
+            variations: selectedVariations,
+        });
         setAdded(true);
         setTimeout(() => setAdded(false), 2000);
     };
@@ -105,16 +132,16 @@ export default function ProductDetailPage() {
                             {/* Main Image/Video */}
                             <div className="aspect-[4/5] w-full relative bg-[#2a1e1d] group overflow-hidden shadow-2xl mx-auto">
                                 <ProductMedia
-                                    path={product.images?.[activeImageIndex] || product.images?.[0] || ''}
+                                    path={galleryImages?.[activeImageIndex] || galleryImages?.[0] || ''}
                                     className="absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-105"
                                     objectFit="contain"
                                 />
                             </div>
 
                             {/* Additional Media Timeline / Thumbnails */}
-                            {product.images?.length > 1 && (
+                            {galleryImages?.length > 1 && (
                                 <div className="flex gap-3 overflow-x-auto no-scrollbar w-full py-2 justify-start sm:justify-center">
-                                    {product.images.map((img, i) => (
+                                    {galleryImages.map((img, i) => (
                                         <button
                                             key={i}
                                             onClick={() => setActiveImageIndex(i)}
@@ -187,11 +214,11 @@ export default function ProductDetailPage() {
                                             <div className="flex flex-wrap gap-2">
                                                 {variation.options.map(opt => (
                                                     <button
-                                                        key={opt}
-                                                        onClick={() => setSelectedVariations(prev => ({ ...prev, [variation.name]: opt }))}
-                                                        className={`px-4 py-2 border text-sm transition-colors ${selectedVariations[variation.name] === opt ? 'bg-primary border-primary text-white' : 'border-[#4a3a39] text-slate-300 hover:border-slate-400'}`}
+                                                        key={`${variation.name}-${opt.value}`}
+                                                        onClick={() => setSelectedVariations(prev => ({ ...prev, [variation.name]: opt.value }))}
+                                                        className={`px-4 py-2 border text-sm transition-colors ${selectedVariations[variation.name] === opt.value ? 'bg-primary border-primary text-white' : 'border-[#4a3a39] text-slate-300 hover:border-slate-400'}`}
                                                     >
-                                                        {opt}
+                                                        {opt.value}
                                                     </button>
                                                 ))}
                                             </div>

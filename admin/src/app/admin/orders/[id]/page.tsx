@@ -123,8 +123,15 @@ export default function OrderDetailPage() {
                     <h3 className="text-lg font-bold mb-4">Items</h3>
                     <ul className="space-y-3">
                         {order.items?.map((item: any) => (
-                            <li key={item.id} className="flex justify-between">
-                                <span>{item.product_name} x {item.quantity}</span>
+                            <li key={item.id} className="flex justify-between gap-4">
+                                <div>
+                                    <span>{item.product_name} x {item.quantity}</span>
+                                    {item.variation_selected && Object.keys(item.variation_selected).length > 0 && (
+                                        <p className="text-xs text-gray-500 mt-1">
+                                            {Object.entries(item.variation_selected).map(([k, v]) => `${k}: ${String(v)}`).join(' | ')}
+                                        </p>
+                                    )}
+                                </div>
                                 <span>₹{(Number(item.price_at_purchase) * item.quantity).toLocaleString()}</span>
                             </li>
                         ))}

@@ -11,6 +11,37 @@ const logger = require('../utils/logger');
 
 const generateOrderNumber = () => `CH${Date.now().toString().slice(-8)}`;
 
+const validateSelectedVariations = (product, selectedVariations) => {
+    if (!product?.variations?.length) return { valid: true, normalized: null };
+    if (!selectedVariations || typeof selectedVariations !== 'object') {
+        return { valid: false, message: 'Please select product variations' };
+    }
+
+    const normalized = {};
+    for (const variation of product.variations) {
+        const variationName = (variation?.name || '').trim();
+        if (!variationName) continue;
+
+        const selectedValue = selectedVariations[variationName];
+        if (!selectedValue || typeof selectedValue !== 'string') {
+            return { valid: false, message: `Please select ${variationName} for ${product.name}` };
+        }
+
+        const allowedValues = (variation.options || []).map((opt) => {
+            if (typeof opt === 'string') return opt.trim();
+            return (opt?.value || '').trim();
+        }).filter(Boolean);
+
+        if (!allowedValues.includes(selectedValue.trim())) {
+            return { valid: false, message: `Invalid ${variationName} selected for ${product.name}` };
+        }
+
+        normalized[variationName] = selectedValue.trim();
+    }
+
+    return { valid: true, normalized };
+};
+
 // POST /api/orders - Create order (user authenticated)
 router.post('/', authenticate, async (req, res) => {
     const { items, shipping_address, coupon_code } = req.body;
@@ -24,6 +55,8 @@ router.post('/', authenticate, async (req, res) => {
         const product = await Product.findByPk(item.product_id);
         if (!product || !product.is_active) return res.status(400).json({ success: false, message: `Product not found: ${item.product_id}` });
         if (product.stock < item.quantity) return res.status(400).json({ success: false, message: `Insufficient stock for ${product.name}` });
+        const variationValidation = validateSelectedVariations(product, item.variations);
+        if (!variationValidation.valid) return res.status(400).json({ success: false, message: variationValidation.message });
         const lineTotal = parseFloat(product.price) * item.quantity;
         total += lineTotal;
         orderItems.push({ 
@@ -32,7 +65,7 @@ router.post('/', authenticate, async (req, res) => {
             product_image: item.image || (product.images?.[0] || null), 
             quantity: item.quantity, 
             price_at_purchase: product.price, 
-            variation_selected: item.variations || null 
+            variation_selected: variationValidation.normalized
         });
     }
 
