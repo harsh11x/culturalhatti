@@ -7,7 +7,7 @@ import api from '@/lib/api';
 interface Order {
     id: string; order_number: string; status: string; total_amount: number;
     tracking_id?: string; courier_name?: string; shipping_address: any;
-    items: { product_name: string; quantity: number; price_at_purchase: number }[];
+    items: { product_name: string; quantity: number; price_at_purchase: number; variation_selected?: Record<string, string> | null }[];
     created_at: string;
 }
 
@@ -50,8 +50,15 @@ export default function OrderSuccessPage() {
                     <span style={{ fontWeight: 900, fontSize: 18 }}>₹{Number(order.total_amount).toFixed(2)}</span>
                 </div>
                 {order.items?.map((i, idx) => (
-                    <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--light-grey)', fontSize: 13 }}>
-                        <span>{i.product_name} × {i.quantity}</span>
+                    <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--light-grey)', fontSize: 13, gap: 12 }}>
+                        <div>
+                            <span>{i.product_name} × {i.quantity}</span>
+                            {i.variation_selected && Object.keys(i.variation_selected).length > 0 && (
+                                <div style={{ color: 'var(--grey)', fontSize: 11, marginTop: 4 }}>
+                                    {Object.entries(i.variation_selected).map(([k, v]) => `${k}: ${v}`).join(' | ')}
+                                </div>
+                            )}
+                        </div>
                         <span>₹{(Number(i.price_at_purchase) * i.quantity).toFixed(0)}</span>
                     </div>
                 ))}

@@ -196,15 +196,22 @@ export default function NewProductPage() {
                                                 />
                                                 <button type="button" onClick={() => removeOption(i, oi)} className="text-gray-500 hover:text-red-400">✕</button>
                                             </div>
+                                            {opt.value.trim() && (
+                                                <p className="text-[10px] uppercase tracking-widest text-primary font-bold">
+                                                    Option: {opt.value.trim()}
+                                                </p>
+                                            )}
                                             
                                             <div className="space-y-2">
                                                 <label className="block text-[10px] uppercase tracking-widest text-gray-500 font-bold">Variation Images</label>
                                                 <div className="flex flex-wrap gap-2">
                                                     {opt.newFiles?.map((file, imgI) => (
                                                         <div key={imgI} className="relative w-16 h-16 border border-primary/50 bg-gray-900 group">
-                                                            <div className="w-full h-full flex items-center justify-center text-[8px] text-primary break-all p-1 text-center leading-tight">
-                                                                {file.name.substring(0, 10)}...
-                                                            </div>
+                                                            <img
+                                                                src={URL.createObjectURL(file)}
+                                                                alt={file.name}
+                                                                className="w-full h-full object-cover"
+                                                            />
                                                             <button type="button" onClick={() => removeOptionImage(i, oi, imgI)} className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">✕</button>
                                                         </div>
                                                     ))}

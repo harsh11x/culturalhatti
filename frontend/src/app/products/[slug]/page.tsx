@@ -28,23 +28,49 @@ export default function ProductDetailPage() {
     const [loading, setLoading] = useState(true);
     const [added, setAdded] = useState(false);
     const [selectedVariations, setSelectedVariations] = useState<Record<string, string>>({});
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const addItem = useCartStore((s) => s.addItem);
+
+    const normalizeVariations = (input: any): Variation[] => {
+        if (!Array.isArray(input)) return [];
+        return input
+            .map((v: any) => ({
+                name: typeof v?.name === 'string' ? v.name : '',
+                options: Array.isArray(v?.options)
+                    ? v.options
+                        .map((o: any) => {
+                            if (typeof o === 'string') return { value: o.trim(), images: [] };
+                            const value = typeof o?.value === 'string' ? o.value.trim() : '';
+                            const images = Array.isArray(o?.images) ? o.images.filter((img: any) => typeof img === 'string') : [];
+                            const image = typeof o?.image === 'string' ? o.image : undefined;
+                            return value ? { value, images, image } : null;
+                        })
+                        .filter(Boolean)
+                    : [],
+            }))
+            .filter((v: Variation) => v.name && v.options.length > 0);
+    };
 
     useEffect(() => {
         api.get(`/products/${params.slug}`)
             .then(r => {
                 const p = r.data.product;
-                setProduct(p);
+                const normalized = {
+                    ...p,
+                    variations: normalizeVariations(p?.variations),
+                };
+                setProduct(normalized);
                 // Initialize selected variations
-                if (p.variations && p.variations.length > 0) {
+                if (normalized.variations && normalized.variations.length > 0) {
                     const initial: Record<string, string> = {};
-                    p.variations.forEach((v: Variation) => {
+                    normalized.variations.forEach((v: Variation) => {
                         if (v.options && v.options.length > 0) {
                             initial[v.name] = v.options[0].value;
                         }
                     });
                     setSelectedVariations(initial);
                 }
+                setCurrentImageIndex(0);
             })
             .catch(() => { })
             .finally(() => setLoading(false));
@@ -84,10 +110,6 @@ export default function ProductDetailPage() {
     if (loading) return <div className="min-h-screen bg-[#1a1211] flex items-center justify-center text-white text-2xl font-bold uppercase tracking-widest">Loading...</div>;
     if (!product) return <div className="min-h-screen bg-[#1a1211] flex items-center justify-center text-white text-2xl font-bold uppercase tracking-widest">Product not found.</div>;
 
-    const discount = product.compare_price && product.compare_price > product.price
-        ? Math.round((1 - Number(product.price) / Number(product.compare_price)) * 100)
-        : null;
-
     // Determine the main image and gallery images to show
     let currentGallery = product.images || [];
     let selectedVariationOption: VariationOption | null = null;
@@ -107,13 +129,15 @@ export default function ProductDetailPage() {
         }
     }
 
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const mainImage = currentGallery[currentImageIndex] || product.images?.[0];
 
     const formatImageUrl = (url: string) => {
         if (!url) return '';
         return url.startsWith('http') ? url : `${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}/${url}`;
     };
+    const discount = product.compare_price && product.compare_price > product.price
+        ? Math.round((1 - Number(product.price) / Number(product.compare_price)) * 100)
+        : null;
 
     return (
         <div className="bg-[#1a1211] font-display text-white antialiased min-h-screen flex flex-col">
