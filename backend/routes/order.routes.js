@@ -26,7 +26,14 @@ router.post('/', authenticate, async (req, res) => {
         if (product.stock < item.quantity) return res.status(400).json({ success: false, message: `Insufficient stock for ${product.name}` });
         const lineTotal = parseFloat(product.price) * item.quantity;
         total += lineTotal;
-        orderItems.push({ product_id: product.id, product_name: product.name, product_image: product.images?.[0] || null, quantity: item.quantity, price_at_purchase: product.price, variation_selected: item.variations || null });
+        orderItems.push({ 
+            product_id: product.id, 
+            product_name: item.name || product.name, 
+            product_image: item.image || (product.images?.[0] || null), 
+            quantity: item.quantity, 
+            price_at_purchase: product.price, 
+            variation_selected: item.variations || null 
+        });
     }
 
     const order = await Order.create({

@@ -54,25 +54,28 @@ export default function ProductDetailPage() {
         if (!product) return;
         const variationLabel = Object.entries(selectedVariations).map(([k, v]) => `${k}: ${v}`).join(', ');
         const finalName = variationLabel ? `${product.name} (${variationLabel})` : product.name;
+        const cartItemId = `${product.id}-${variationLabel || 'default'}`;
         
         // Find if selected variation has a specific image
         let selectedImage = product.images?.[0] || '';
         for (const v of product.variations || []) {
             const selectedVal = selectedVariations[v.name];
             const opt = v.options.find(o => o.value === selectedVal);
-            if (opt?.image) {
-                selectedImage = opt.image;
+            if (opt?.images?.[0] || opt?.image) {
+                selectedImage = opt.images?.[0] || opt.image || '';
                 break;
             }
         }
 
         addItem({ 
             product_id: product.id, 
+            cart_item_id: cartItemId,
             name: finalName, 
             price: Number(product.price), 
             image: selectedImage,
             quantity: qty, 
-            stock: product.stock 
+            stock: product.stock,
+            variations: selectedVariations
         });
         setAdded(true);
         setTimeout(() => setAdded(false), 2000);

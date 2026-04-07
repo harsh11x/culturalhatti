@@ -2,18 +2,20 @@ import { create } from 'zustand';
 
 interface CartItem {
     product_id: string;
+    cart_item_id: string;
     name: string;
     price: number;
     image: string;
     quantity: number;
     stock: number;
+    variations?: Record<string, string>;
 }
 
 interface CartStore {
     items: CartItem[];
     addItem: (item: CartItem) => void;
-    removeItem: (product_id: string) => void;
-    updateQty: (product_id: string, qty: number) => void;
+    removeItem: (cart_item_id: string) => void;
+    updateQty: (cart_item_id: string, qty: number) => void;
     clearCart: () => void;
     total: () => number;
     count: () => number;
@@ -25,11 +27,11 @@ export const useCartStore = create<CartStore>((set, get) => ({
         : [],
 
     addItem: (item) => {
-        const existing = get().items.find((i) => i.product_id === item.product_id);
+        const existing = get().items.find((i) => i.cart_item_id === item.cart_item_id);
         let items;
         if (existing) {
             items = get().items.map((i) =>
-                i.product_id === item.product_id
+                i.cart_item_id === item.cart_item_id
                     ? { ...i, quantity: Math.min(i.quantity + item.quantity, i.stock) }
                     : i
             );
@@ -40,15 +42,15 @@ export const useCartStore = create<CartStore>((set, get) => ({
         if (typeof window !== 'undefined') localStorage.setItem('ch_cart', JSON.stringify(items));
     },
 
-    removeItem: (product_id) => {
-        const items = get().items.filter((i) => i.product_id !== product_id);
+    removeItem: (cart_item_id) => {
+        const items = get().items.filter((i) => i.cart_item_id !== cart_item_id);
         set({ items });
         if (typeof window !== 'undefined') localStorage.setItem('ch_cart', JSON.stringify(items));
     },
 
-    updateQty: (product_id, qty) => {
+    updateQty: (cart_item_id, qty) => {
         const items = get().items.map((i) =>
-            i.product_id === product_id ? { ...i, quantity: Math.max(1, Math.min(qty, i.stock)) } : i
+            i.cart_item_id === cart_item_id ? { ...i, quantity: Math.max(1, Math.min(qty, i.stock)) } : i
         );
         set({ items });
         if (typeof window !== 'undefined') localStorage.setItem('ch_cart', JSON.stringify(items));
