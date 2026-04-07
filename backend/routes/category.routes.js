@@ -6,7 +6,7 @@ const { Category } = require('../models');
 const adminAuth = require('../middleware/adminAuth');
 const upload = require('../middleware/upload');
 
-const ALLOWED_SLUGS = ['sarees', 'suits', 'bags', 'accessories'];
+const ALLOWED_SLUGS = ['sarees', 'suits', 'bags', 'accessories', 'kids'];
 
 router.get('/', async (req, res) => {
     const categories = await Category.findAll({

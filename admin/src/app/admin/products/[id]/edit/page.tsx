@@ -23,8 +23,36 @@ export default function EditProductPage() {
         sku: '',
     });
     const [images, setImages] = useState<File[]>([]);
-    const [variations, setVariations] = useState<{name: string, options: string}[]>([]);
+    const [variations, setVariations] = useState<{name: string, options: {value: string, image?: string, imageIndex?: number}[]}[]>([]);
     const router = useRouter();
+
+    const addVariation = () => setVariations([...variations, { name: '', options: [] }]);
+    const removeVariation = (index: number) => setVariations(variations.filter((_, i) => i !== index));
+    const updateVariationName = (index: number, name: string) => {
+        const newV = [...variations];
+        newV[index].name = name;
+        setVariations(newV);
+    };
+    const addOption = (vIndex: number) => {
+        const newV = [...variations];
+        newV[vIndex].options.push({ value: '' });
+        setVariations(newV);
+    };
+    const updateOption = (vIndex: number, oIndex: number, value: string) => {
+        const newV = [...variations];
+        newV[vIndex].options[oIndex].value = value;
+        setVariations(newV);
+    };
+    const updateOptionImage = (vIndex: number, oIndex: number, imgIndex: string) => {
+        const newV = [...variations];
+        newV[vIndex].options[oIndex].imageIndex = imgIndex === '' ? undefined : parseInt(imgIndex);
+        setVariations(newV);
+    };
+    const removeOption = (vIndex: number, oIndex: number) => {
+        const newV = [...variations];
+        newV[vIndex].options = newV[vIndex].options.filter((_, i) => i !== oIndex);
+        setVariations(newV);
+    };
 
     useEffect(() => {
         const token = localStorage.getItem('ch_admin_token');
@@ -43,7 +71,10 @@ export default function EditProductPage() {
                 if (p.variations && Array.isArray(p.variations)) {
                     setVariations(p.variations.map((v: any) => ({
                         name: v.name || '',
-                        options: Array.isArray(v.options) ? v.options.join(', ') : ''
+                        options: Array.isArray(v.options) ? v.options.map((o: any) => {
+                            if (typeof o === 'string') return { value: o };
+                            return { value: o.value, image: o.image };
+                        }) : []
                     })));
                 } else {
                     setVariations([]);
@@ -77,11 +108,18 @@ export default function EditProductPage() {
             fd.append('category_id', form.category_id);
             fd.append('featured', String(form.featured));
             if (form.sku) fd.append('sku', form.sku);
+            
             if (variations.length > 0) {
-                const cleanVariations = variations.map(v => ({
-                    name: v.name.trim(),
-                    options: v.options.split(',').map((o: string) => o.trim()).filter(Boolean)
-                })).filter(v => v.name && v.options.length > 0);
+                const cleanVariations = variations
+                    .map(v => ({
+                        name: v.name.trim(),
+                        options: v.options.map(o => ({
+                            value: o.value.trim(),
+                            image: o.image,
+                            imageIndex: o.imageIndex
+                        })).filter(o => o.value)
+                    }))
+                    .filter(v => v.name && v.options.length > 0);
                 fd.append('variations', JSON.stringify(cleanVariations));
             } else {
                 fd.append('variations', '[]');
@@ -147,26 +185,51 @@ export default function EditProductPage() {
                     <div className="border border-gray-700 p-4 bg-[#111]">
                         <div className="flex justify-between items-center mb-4">
                             <label className="block text-sm font-medium text-gray-400">Variations (Optional)</label>
-                            <button type="button" onClick={() => setVariations([...variations, { name: '', options: '' }])} className="text-xs bg-gray-800 text-white px-3 py-1 hover:bg-gray-700">
+                            <button type="button" onClick={addVariation} className="text-xs bg-gray-800 text-white px-3 py-1 hover:bg-gray-700">
                                 + Add Variation
                             </button>
                         </div>
                         {variations.length === 0 && <p className="text-xs text-gray-500 italic">No variations added. (e.g. Size, Color)</p>}
                         {variations.map((v, i) => (
-                            <div key={i} className="flex gap-4 mb-3 items-start">
-                                <div className="flex-1">
-                                    <input type="text" placeholder="Name (e.g. Color)" value={v.name} onChange={e => {
-                                        const newV = [...variations]; newV[i].name = e.target.value; setVariations(newV);
-                                    }} className="w-full px-3 py-2 bg-black border border-gray-700 text-white text-sm" />
+                            <div key={i} className="mb-6 pb-6 border-b border-gray-800 last:border-0 last:pb-0">
+                                <div className="flex gap-4 mb-4 items-center">
+                                    <input 
+                                        type="text" 
+                                        placeholder="Variation Name (e.g. Color)" 
+                                        value={v.name} 
+                                        onChange={e => updateVariationName(i, e.target.value)} 
+                                        className="flex-1 px-3 py-2 bg-black border border-gray-700 text-white text-sm" 
+                                    />
+                                    <button type="button" onClick={() => removeVariation(i)} className="text-red-400 text-sm hover:text-red-300">✕</button>
                                 </div>
-                                <div className="flex-2 w-1/2">
-                                    <input type="text" placeholder="Options (comma separated, e.g. Red, Blue)" value={v.options} onChange={e => {
-                                        const newV = [...variations]; newV[i].options = e.target.value; setVariations(newV);
-                                    }} className="w-full px-3 py-2 bg-black border border-gray-700 text-white text-sm" />
+                                <div className="ml-4 space-y-3">
+                                    {v.options.map((opt, oi) => (
+                                        <div key={oi} className="flex gap-4 items-center">
+                                            <div className="flex-1 flex flex-col gap-1">
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="Option (e.g. Red)" 
+                                                    value={opt.value} 
+                                                    onChange={e => updateOption(i, oi, e.target.value)} 
+                                                    className="w-full px-3 py-2 bg-black border border-gray-700 text-white text-sm" 
+                                                />
+                                                {opt.image && <p className="text-[10px] text-gray-500 truncate">Current: {opt.image}</p>}
+                                            </div>
+                                            <select 
+                                                value={opt.imageIndex ?? ''} 
+                                                onChange={e => updateOptionImage(i, oi, e.target.value)}
+                                                className="flex-1 px-3 py-2 bg-black border border-gray-700 text-white text-sm"
+                                            >
+                                                <option value="">{opt.image ? 'Keep Existing Image' : 'No Image'}</option>
+                                                {images.map((img, imgI) => (
+                                                    <option key={imgI} value={imgI}>New Image {imgI + 1} ({img.name})</option>
+                                                ))}
+                                            </select>
+                                            <button type="button" onClick={() => removeOption(i, oi)} className="text-gray-500 hover:text-red-400 text-xs">✕</button>
+                                        </div>
+                                    ))}
+                                    <button type="button" onClick={() => addOption(i)} className="text-[10px] uppercase tracking-wider text-primary hover:underline">+ Add Option</button>
                                 </div>
-                                <button type="button" onClick={() => setVariations(variations.filter((_, idx) => idx !== i))} className="text-red-400 text-sm py-2 px-2 hover:text-red-300">
-                                    ✕
-                                </button>
                             </div>
                         ))}
                     </div>
