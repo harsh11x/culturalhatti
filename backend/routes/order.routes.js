@@ -47,12 +47,14 @@ router.post('/', authenticate, async (req, res) => {
     const { items, shipping_address, coupon_code } = req.body;
     if (!items || !items.length) return res.status(400).json({ success: false, message: 'No items in order' });
     if (!shipping_address) return res.status(400).json({ success: false, message: 'Shipping address required' });
-    if (!shipping_address.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(shipping_address.email))) {
-        return res.status(400).json({ success: false, message: 'Valid shipping email is required' });
-    }
     if (!shipping_address.phone || !/^\d{10}$/.test(String(shipping_address.phone))) {
         return res.status(400).json({ success: false, message: 'Valid 10-digit shipping phone is required' });
     }
+
+    const effectiveShippingAddress = {
+        ...shipping_address,
+        email: req.user.email,
+    };
 
     // Validate products and prices
     let total = 0;
@@ -80,7 +82,7 @@ router.post('/', authenticate, async (req, res) => {
         user_id: req.user.id,
         status: 'pending_payment',
         total_amount: total.toFixed(2),
-        shipping_address,
+        shipping_address: effectiveShippingAddress,
         coupon_code: coupon_code || null,
     });
     await OrderItem.bulkCreate(orderItems.map((oi) => ({ ...oi, order_id: order.id })));
