@@ -30,9 +30,17 @@ const formatAddressMultiline = (address = {}) => {
 const calculateLineTotal = (item = {}) =>
     (parseFloat(item.price_at_purchase || item.price || 0) * parseInt(item.quantity || 0, 10));
 
+const getCustomerEmail = (order = {}) =>
+    order.shipping_address?.email || order.user?.email || order.email || null;
+
+const getCustomerPhone = (order = {}) =>
+    order.shipping_address?.phone || order.user?.phone || null;
+
 module.exports = {
     escapeHtml,
     formatCurrency,
     formatAddressMultiline,
     calculateLineTotal,
+    getCustomerEmail,
+    getCustomerPhone,
 };

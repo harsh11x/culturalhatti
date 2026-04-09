@@ -3,6 +3,7 @@ const {
     formatCurrency,
     formatAddressMultiline,
     calculateLineTotal,
+    getCustomerPhone,
 } = require('./template.utils');
 
 const baseStyles = `
@@ -110,7 +111,8 @@ const buildCustomerOrderConfirmationTemplate = (order) => {
 
 const buildAdminNewOrderTemplate = (order) => {
     const user = order.user || {};
-    const phone = user.phone || order.shipping_address?.phone || 'N/A';
+    const phone = getCustomerPhone(order) || 'N/A';
+    const customerEmail = order.shipping_address?.email || user.email || 'N/A';
     const bodyHtml = `
       <h2 class="section-title">A new order was placed.</h2>
       <table class="meta-grid" role="presentation">
@@ -118,7 +120,7 @@ const buildAdminNewOrderTemplate = (order) => {
         <tr><td class="meta-label">Total Amount</td><td class="meta-value">${formatCurrency(order.total_amount)}</td></tr>
         <tr><td class="meta-label">Payment ID</td><td class="meta-value">${escapeHtml(order.payment_id || 'Pending')}</td></tr>
         <tr><td class="meta-label">Customer Name</td><td class="meta-value">${escapeHtml(user.name || 'N/A')}</td></tr>
-        <tr><td class="meta-label">Customer Email</td><td class="meta-value">${escapeHtml(user.email || 'N/A')}</td></tr>
+        <tr><td class="meta-label">Customer Email</td><td class="meta-value">${escapeHtml(customerEmail)}</td></tr>
         <tr><td class="meta-label">Customer Phone</td><td class="meta-value">${escapeHtml(phone)}</td></tr>
       </table>
       <h2 class="section-title">Shipping Address</h2>

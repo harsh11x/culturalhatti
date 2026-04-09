@@ -4,7 +4,7 @@ const {
     buildCustomerOrderConfirmationTemplate,
     buildAdminNewOrderTemplate,
 } = require('./email/order-email.templates');
-const { formatCurrency } = require('./email/template.utils');
+const { formatCurrency, getCustomerEmail } = require('./email/template.utils');
 
 const FROM = process.env.EMAIL_FROM || 'Cultural Hatti <noreply@culturalhatti.in>';
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@culturalhatti.in';
@@ -58,7 +58,12 @@ const sendMail = async ({ to, subject, html }) => {
 
 const sendOrderConfirmation = async (order) => {
     const html = buildCustomerOrderConfirmationTemplate(order);
-    await sendMail({ to: order.user?.email || order.email, subject: `Order Confirmed – #${order.order_number}`, html });
+    const recipient = getCustomerEmail(order);
+    if (!recipient) {
+        logger.warn('Skipping customer order confirmation email: no recipient', { order_number: order.order_number });
+        return;
+    }
+    await sendMail({ to: recipient, subject: `Order Confirmed – #${order.order_number}`, html });
 };
 
 const sendOrderShipped = async (order) => {
@@ -76,7 +81,12 @@ const sendOrderShipped = async (order) => {
     </div>
     ${buildFooter()}
   </div></body></html>`;
-    await sendMail({ to: order.user?.email || order.email, subject: `Order Shipped – #${order.order_number} | Tracking: ${order.tracking_id}`, html });
+    const recipient = getCustomerEmail(order);
+    if (!recipient) {
+        logger.warn('Skipping customer shipped email: no recipient', { order_number: order.order_number });
+        return;
+    }
+    await sendMail({ to: recipient, subject: `Order Shipped – #${order.order_number} | Tracking: ${order.tracking_id}`, html });
 };
 
 const sendOrderCancelled = async (order) => {
@@ -91,7 +101,12 @@ const sendOrderCancelled = async (order) => {
     </div>
     ${buildFooter()}
   </div></body></html>`;
-    await sendMail({ to: order.user?.email || order.email, subject: `Order Cancelled – #${order.order_number}`, html });
+    const recipient = getCustomerEmail(order);
+    if (!recipient) {
+        logger.warn('Skipping customer cancelled email: no recipient', { order_number: order.order_number });
+        return;
+    }
+    await sendMail({ to: recipient, subject: `Order Cancelled – #${order.order_number}`, html });
 };
 
 const sendOrderRefunded = async (order) => {
@@ -107,7 +122,12 @@ const sendOrderRefunded = async (order) => {
     </div>
     ${buildFooter()}
   </div></body></html>`;
-    await sendMail({ to: order.user?.email || order.email, subject: `Refund Initiated – #${order.order_number}`, html });
+    const recipient = getCustomerEmail(order);
+    if (!recipient) {
+        logger.warn('Skipping customer refunded email: no recipient', { order_number: order.order_number });
+        return;
+    }
+    await sendMail({ to: recipient, subject: `Refund Initiated – #${order.order_number}`, html });
 };
 
 const sendAdminNewOrder = async (order) => {

@@ -1,5 +1,5 @@
 'use client';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCartStore, useAuthStore } from '@/store';
 import api from '@/lib/api';
@@ -9,11 +9,11 @@ import { AlertCircle, AlertTriangle, CreditCard, Lock } from 'lucide-react';
 declare global { interface Window { Razorpay: any; } }
 
 interface Address {
-    name: string; phone: string; line1: string; line2: string;
+    name: string; email: string; phone: string; line1: string; line2: string;
     city: string; state: string; pincode: string;
 }
 
-const INITIAL_ADDR: Address = { name: '', phone: '', line1: '', line2: '', city: '', state: '', pincode: '' };
+const INITIAL_ADDR: Address = { name: '', email: '', phone: '', line1: '', line2: '', city: '', state: '', pincode: '' };
 
 export default function CheckoutPage() {
     const [address, setAddress] = useState<Address>(INITIAL_ADDR);
@@ -25,6 +25,16 @@ export default function CheckoutPage() {
     const user = useAuthStore((s) => s.user);
     const router = useRouter();
 
+    useEffect(() => {
+        if (!user) return;
+        setAddress((prev) => ({
+            ...prev,
+            name: prev.name || user.name || '',
+            email: prev.email || user.email || '',
+            phone: prev.phone || user.phone || '',
+        }));
+    }, [user]);
+
     const indianStates = useMemo(() => State.getStatesOfCountry('IN'), []);
     const availableCities = useMemo(() => {
         if (!address.state) return [];
@@ -32,10 +42,11 @@ export default function CheckoutPage() {
     }, [address.state]);
 
     const validate = () => {
-        const required: (keyof Address)[] = ['name', 'phone', 'line1', 'city', 'state', 'pincode'];
+        const required: (keyof Address)[] = ['name', 'email', 'phone', 'line1', 'city', 'state', 'pincode'];
         for (const f of required) {
             if (!address[f]) { setError(`${(f as string).replace('_', ' ')} is required`); return false; }
         }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address.email)) { setError('Enter a valid email address'); return false; }
         if (!/^\d{10}$/.test(address.phone)) { setError('Phone must be 10 digits'); return false; }
         if (!/^\d{6}$/.test(address.pincode)) { setError('Pincode must be 6 digits'); return false; }
         return true;
@@ -140,9 +151,14 @@ export default function CheckoutPage() {
 
                 <div className="flex flex-col border-t-2 border-slate-900 pt-8 gap-6">
                     <h3 className="text-2xl font-black uppercase text-slate-900 tracking-tight">Shipping Address</h3>
+                    <p className="text-xs font-bold uppercase tracking-widest text-slate-500">Email and mobile are mandatory for invoice and shipping updates.</p>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <F label="Full Name *" field="name" />
+                        <F label="Email *" field="email" type="email" placeholder="you@example.com" />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <F label="Phone *" field="phone" type="tel" placeholder="10-digit mobile number" />
                     </div>
 

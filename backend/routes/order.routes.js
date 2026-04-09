@@ -47,6 +47,12 @@ router.post('/', authenticate, async (req, res) => {
     const { items, shipping_address, coupon_code } = req.body;
     if (!items || !items.length) return res.status(400).json({ success: false, message: 'No items in order' });
     if (!shipping_address) return res.status(400).json({ success: false, message: 'Shipping address required' });
+    if (!shipping_address.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(shipping_address.email))) {
+        return res.status(400).json({ success: false, message: 'Valid shipping email is required' });
+    }
+    if (!shipping_address.phone || !/^\d{10}$/.test(String(shipping_address.phone))) {
+        return res.status(400).json({ success: false, message: 'Valid 10-digit shipping phone is required' });
+    }
 
     // Validate products and prices
     let total = 0;
