@@ -1,5 +1,10 @@
 const { sendMail: sendBrevoEmail } = require('../config/brevo');
 const logger = require('../utils/logger');
+const {
+    buildCustomerOrderConfirmationTemplate,
+    buildAdminNewOrderTemplate,
+} = require('./email/order-email.templates');
+const { formatCurrency } = require('./email/template.utils');
 
 const FROM = process.env.EMAIL_FROM || 'Cultural Hatti <noreply@culturalhatti.in>';
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@culturalhatti.in';
@@ -39,25 +44,6 @@ const buildFooter = () => `
   </div>
 `;
 
-const formatAddress = (addr) => {
-    if (typeof addr === 'string') return addr;
-    return `${addr.name}, ${addr.line1}${addr.line2 ? ', ' + addr.line2 : ''}, ${addr.city}, ${addr.state} - ${addr.pincode}`;
-};
-
-const buildItemsTable = (items = []) =>
-    items
-        .map(
-            (item) => `
-    <div class="product-row">
-      <div>
-        <div class="product-name">${item.product_name || item.name}</div>
-        <div class="product-qty">Qty: ${item.quantity}</div>
-      </div>
-      <div>₹${(parseFloat(item.price_at_purchase || item.price) * item.quantity).toFixed(2)}</div>
-    </div>`
-        )
-        .join('');
-
 const sendMail = async ({ to, subject, html }) => {
     try {
         await sendBrevoEmail({ from: FROM, to, subject, html });
@@ -71,24 +57,7 @@ const sendMail = async ({ to, subject, html }) => {
 // ─── Templates ──────────────────────────────────────
 
 const sendOrderConfirmation = async (order) => {
-    const addr = formatAddress(order.shipping_address);
-    const items = order.items || [];
-    const html = `<!DOCTYPE html><html><head><style>${baseStyle}</style></head><body>
-  <div class="wrapper">
-    ${buildHeader('ORDER CONFIRMED')}
-    <div class="body">
-      <h2>Your order is confirmed! 🎉</h2>
-      <div class="info-row"><span class="label">Order Number</span><span class="value">#${order.order_number}</span></div>
-      <div class="info-row"><span class="label">Payment ID</span><span class="value">${order.payment_id}</span></div>
-      <div class="info-row"><span class="label">Status</span><span class="value"><span class="status-badge">Confirmed</span></span></div>
-      <div class="info-row"><span class="label">Ship To</span><span class="value">${addr}</span></div>
-      <h2>Items Ordered</h2>
-      ${buildItemsTable(items)}
-      <div class="total-row"><span>Total Paid</span><span>₹${parseFloat(order.total_amount).toFixed(2)}</span></div>
-      <p style="color:#666;font-size:13px;margin-top:16px;">Thank you for your order! Your tracking ID will be shared via email soon once your order is dispatched.</p>
-    </div>
-    ${buildFooter()}
-  </div></body></html>`;
+    const html = buildCustomerOrderConfirmationTemplate(order);
     await sendMail({ to: order.user?.email || order.email, subject: `Order Confirmed – #${order.order_number}`, html });
 };
 
@@ -142,28 +111,8 @@ const sendOrderRefunded = async (order) => {
 };
 
 const sendAdminNewOrder = async (order) => {
-    const items = order.items || [];
-    const addr = formatAddress(order.shipping_address);
-    const phone = order.user?.phone || order.shipping_address?.phone || 'N/A';
-    const html = `<!DOCTYPE html><html><head><style>${baseStyle}</style></head><body>
-  <div class="wrapper">
-    ${buildHeader('NEW ORDER RECEIVED — ADMIN ALERT')}
-    <div class="body">
-      <h2>New Order Received</h2>
-      <div class="info-row"><span class="label">Order #</span><span class="value">${order.order_number}</span></div>
-      <div class="info-row"><span class="label">Customer Name</span><span class="value">${order.user?.name || 'N/A'}</span></div>
-      <div class="info-row"><span class="label">Customer Email</span><span class="value">${order.user?.email || 'N/A'}</span></div>
-      <div class="info-row"><span class="label">Customer Phone</span><span class="value">${phone}</span></div>
-      <div class="info-row"><span class="label">Razorpay Payment ID</span><span class="value">${order.payment_id || 'Pending'}</span></div>
-      <div class="info-row"><span class="label">Total Amount</span><span class="value">₹${parseFloat(order.total_amount).toFixed(2)}</span></div>
-      <div class="info-row"><span class="label">Shipping Address</span><span class="value">${addr}</span></div>
-      <h2>Items Ordered</h2>
-      ${buildItemsTable(items)}
-      <div class="total-row"><span>Total</span><span>₹${parseFloat(order.total_amount).toFixed(2)}</span></div>
-    </div>
-    ${buildFooter()}
-  </div></body></html>`;
-    await sendMail({ to: ADMIN_EMAIL, subject: `🛍️ New Order #${order.order_number} - ₹${parseFloat(order.total_amount).toFixed(2)}`, html });
+    const html = buildAdminNewOrderTemplate(order);
+    await sendMail({ to: ADMIN_EMAIL, subject: `🛍️ New Order #${order.order_number} - ${formatCurrency(order.total_amount)}`, html });
 };
 
 const sendAdminOrderShipped = async (order) => {

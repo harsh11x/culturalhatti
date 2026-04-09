@@ -42,6 +42,14 @@ const verifySignature = (razorpay_order_id, razorpay_payment_id, razorpay_signat
     return expected === razorpay_signature;
 };
 
+const fetchOrderForEmail = (orderId) =>
+    Order.findByPk(orderId, {
+        include: [
+            { association: 'items' },
+            { association: 'user' },
+        ],
+    });
+
 /**
  * Confirm payment and transition order to 'confirmed'
  * Deducts stock atomically
@@ -62,6 +70,10 @@ const confirmPayment = async ({ razorpay_order_id, razorpay_payment_id, razorpay
 
     if (!order) throw Object.assign(new Error('Order not found'), { status: 404 });
     if (order.status !== 'pending_payment') {
+        // Idempotent success: webhook may confirm the order before frontend verify call lands.
+        if (order.status === 'confirmed' && order.payment_id === razorpay_payment_id) {
+            return order;
+        }
         throw Object.assign(new Error('Order already processed'), { status: 400 });
     }
 
@@ -104,15 +116,15 @@ const confirmPayment = async ({ razorpay_order_id, razorpay_payment_id, razorpay
 
         await t.commit();
 
-        // Send confirmation email
-        await emailService.sendOrderConfirmation(order).catch((e) =>
+        const updatedOrder = await fetchOrderForEmail(order.id);
+        await emailService.sendOrderConfirmation(updatedOrder).catch((e) =>
             logger.error('Email failed after confirmation', { error: e.message })
         );
-        await emailService.sendAdminNewOrder(order).catch((e) =>
+        await emailService.sendAdminNewOrder(updatedOrder).catch((e) =>
             logger.error('Admin email failed', { error: e.message })
         );
 
-        return order;
+        return updatedOrder;
     } catch (err) {
         await t.rollback();
         throw err;
@@ -158,9 +170,7 @@ const confirmPaymentFromWebhook = async ({ razorpay_order_id, razorpay_payment_i
         );
         await t.commit();
 
-        const updatedOrder = await Order.findByPk(order.id, {
-            include: [{ association: 'items' }, { association: 'user' }],
-        });
+        const updatedOrder = await fetchOrderForEmail(order.id);
         await emailService.sendOrderConfirmation(updatedOrder).catch((e) =>
             logger.error('Webhook: email failed', { error: e.message })
         );
