@@ -3,6 +3,8 @@ import '@/styles/globals.css';
 import Navbar from '@/components/Navbar';
 import AuthModal from '@/components/AuthModal';
 import CartSidebar from '@/components/CartSidebar';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata: Metadata = {
   title: 'Cultural Hatti – Authentic Indian Crafts & Culture',
@@ -22,6 +24,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="flex-grow flex flex-col">
           {children}
         </div>
+        <Analytics />
+        <SpeedInsights />
         <footer className="w-full mx-auto bg-background-dark text-white p-10 md:p-20 mt-auto">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 md:gap-16 mb-12">

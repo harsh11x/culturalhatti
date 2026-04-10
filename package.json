@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@types/js-cookie": "^3.0.6",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "axios": "^1.13.6",
     "country-state-city": "^3.2.1",
     "firebase": "^12.10.0",
