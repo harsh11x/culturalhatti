@@ -1,23 +1,107 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import '@/styles/globals.css';
 import Navbar from '@/components/Navbar';
 import AuthModal from '@/components/AuthModal';
 import CartSidebar from '@/components/CartSidebar';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { INSTAGRAM_URL, SITE_NAME, SITE_URL } from '@/lib/site';
+
+const defaultDescription =
+  'Shop authentic Indian fashion in Amritsar: designer sarees, women’s suits, handbags & purses, clutches, jewelry & accessories. Handcrafted tradition, PAN India delivery — Cultural Hatti.';
+
+const seoKeywords = [
+  'Indian traditional clothing',
+  'women ethnic wear India',
+  'buy sarees online India',
+  'designer sarees',
+  'Indian suits for women',
+  'salwar suits',
+  'handbags India',
+  'ladies purses online',
+  'clutch bags India',
+  'Indian jewelry accessories',
+  'handcrafted textiles',
+  'Amritsar ethnic wear store',
+  'Cultural Hatti',
+  'Indian heritage fashion',
+  'wedding sarees',
+  'party wear suits',
+  'potli bags',
+  'traditional Indian bags',
+];
 
 export const metadata: Metadata = {
-  title: 'Cultural Hatti – Authentic Indian Crafts & Culture',
-  description: 'Discover authentic Indian crafts, textiles, and cultural artifacts. Mobile-first brutalist Indian e-commerce.',
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} — Sarees, Suits, Bags & Indian Heritage Fashion | Amritsar`,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: defaultDescription,
+  keywords: seoKeywords,
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  formatDetection: { email: false, address: false, telephone: false },
+  openGraph: {
+    type: 'website',
+    locale: 'en_IN',
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} — Indian Sarees, Women’s Suits, Handbags & Tradition`,
+    description: defaultDescription,
+    images: [{ url: '/logo.png', width: 512, height: 512, alt: `${SITE_NAME} logo` }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${SITE_NAME} — Indian Ethnic Wear & Accessories`,
+    description: defaultDescription,
+    images: ['/logo.png'],
+  },
+  robots: { index: true, follow: true },
   icons: {
     icon: '/logo.png',
   },
+  category: 'shopping',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#2C2416',
+};
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: SITE_NAME,
+  url: SITE_URL,
+  logo: `${SITE_URL}/logo.png`,
+  description: defaultDescription,
+  sameAs: [INSTAGRAM_URL],
+};
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE_NAME,
+  url: SITE_URL,
+  description: defaultDescription,
+  publisher: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="light">
+    <html lang="en-IN" className="light">
       <body className="bg-background-light text-black font-display overflow-x-hidden min-h-screen flex flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
         <Navbar />
         <AuthModal />
         <CartSidebar />
@@ -51,8 +135,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   </div>
                   <div className="flex flex-col gap-3">
                     <h4 className="text-primary font-body font-semibold uppercase tracking-[0.2em] text-xs mb-2">Help</h4>
-                    <a href="#" className="font-body text-sm text-white/80 hover:text-primary transition-colors">Contact Us</a>
-                    <a href="#" className="font-body text-sm text-white/80 hover:text-primary transition-colors">Track Order</a>
+                    <a href="/contact" className="font-body text-sm text-white/80 hover:text-primary transition-colors">Contact Us</a>
+                    <a href="/track-order" className="font-body text-sm text-white/80 hover:text-primary transition-colors">Track Order</a>
                     <a href="/policies/returns" className="font-body text-sm text-white/80 hover:text-primary transition-colors">Returns</a>
                   </div>
                   <div className="flex flex-col gap-3">
@@ -67,7 +151,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
             <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
               <div className="flex gap-5">
-                <a className="w-10 h-10 border border-white/20 flex items-center justify-center hover:bg-primary hover:border-primary transition-all font-body text-xs font-semibold" href="#">IG</a>
+                <a className="w-10 h-10 border border-white/20 flex items-center justify-center hover:bg-primary hover:border-primary transition-all font-body text-xs font-semibold" href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" title="Instagram @culturalhattiamritsar">IG</a>
                 <a className="w-10 h-10 border border-white/20 flex items-center justify-center hover:bg-primary hover:border-primary transition-all font-body text-xs font-semibold" href="#">FB</a>
                 <a className="w-10 h-10 border border-white/20 flex items-center justify-center hover:bg-primary hover:border-primary transition-all font-body text-xs font-semibold" href="#">PT</a>
               </div>

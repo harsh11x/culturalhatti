@@ -1,20 +1,58 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import '@/styles/globals.css';
 import Navbar from '@/components/Navbar';
 import AuthModal from '@/components/AuthModal';
 import CartSidebar from '@/components/CartSidebar';
+import { INSTAGRAM_URL } from '@/lib/site';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') || 'https://culturalhatti.com';
+const SITE_NAME = 'Cultural Hatti';
+
+const defaultDescription =
+  'Indian ethnic wear online: sarees, women’s suits, bags, purses & accessories. Handcrafted tradition — Cultural Hatti.';
 
 export const metadata: Metadata = {
-  title: 'Cultural Hatti – Authentic Indian Crafts & Culture',
-  description: 'Discover authentic Indian crafts, textiles, and cultural artifacts. Mobile-first brutalist Indian e-commerce.',
-  icons: {
-    icon: '/logo.png',
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} — Sarees, Suits, Bags & Indian Heritage Fashion`,
+    template: `%s | ${SITE_NAME}`,
   },
+  description: defaultDescription,
+  keywords: [
+    'Indian sarees online',
+    'women ethnic wear',
+    'Indian suits',
+    'handbags purses India',
+    'traditional Indian clothing',
+    'Cultural Hatti',
+  ],
+  openGraph: {
+    type: 'website',
+    locale: 'en_IN',
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} — Indian Fashion & Accessories`,
+    description: defaultDescription,
+    images: [{ url: '/logo.png', width: 512, height: 512, alt: `${SITE_NAME} logo` }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${SITE_NAME}`,
+    description: defaultDescription,
+  },
+  robots: { index: true, follow: true },
+  icons: { icon: '/logo.png' },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#000000',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="light">
+    <html lang="en-IN" className="light">
       <body className="bg-background-light text-black font-display overflow-x-hidden min-h-screen flex flex-col">
         <Navbar />
         <AuthModal />
@@ -45,8 +83,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </div>
                 <div className="flex flex-col gap-2">
                   <h4 className="text-primary font-bold uppercase tracking-widest text-xs mb-2">Help</h4>
-                  <a href="#" className="text-sm font-bold tracking-widest hover:text-primary transition-colors uppercase">Contact Us</a>
-                  <a href="#" className="text-sm font-bold tracking-widest hover:text-primary transition-colors uppercase">Track Order</a>
+                  <a href="/contact" className="text-sm font-bold tracking-widest hover:text-primary transition-colors uppercase">Contact Us</a>
+                  <a href="/track-order" className="text-sm font-bold tracking-widest hover:text-primary transition-colors uppercase">Track Order</a>
                   <a href="/policies/returns" className="text-sm font-bold tracking-widest hover:text-primary transition-colors uppercase">Returns</a>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -58,7 +96,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </div>
               </div>
               <div className="flex gap-4 justify-start md:justify-end mt-4">
-                <a className="w-10 h-10 border border-background-light flex items-center justify-center hover:bg-background-light hover:text-black transition-colors" href="#">IG</a>
+                <a className="w-10 h-10 border border-background-light flex items-center justify-center hover:bg-background-light hover:text-black transition-colors" href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" title="Instagram @culturalhattiamritsar">IG</a>
                 <a className="w-10 h-10 border border-background-light flex items-center justify-center hover:bg-background-light hover:text-black transition-colors" href="#">FB</a>
                 <a className="w-10 h-10 border border-background-light flex items-center justify-center hover:bg-background-light hover:text-black transition-colors" href="#">PT</a>
               </div>

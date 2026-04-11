@@ -144,7 +144,7 @@ export default function HomePage() {
           ) : categories.length === 0 ? (
             <div className="p-12 text-center font-body uppercase tracking-widest text-sm">No Collections Found</div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 md:gap-8">
               {categories.slice(0, 4).map((cat, index) => {
                 const fallbackImages = [
                   "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&q=90",
@@ -159,15 +159,15 @@ export default function HomePage() {
                 }
 
                 return (
-                  <Link key={cat.id} href={`/category/${cat.slug}`} className="relative group h-[450px] sm:h-[500px] overflow-hidden cursor-pointer block luxury-shadow hover:luxury-shadow-hover transition-all duration-500">
-                    <img alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700 ease-out" src={imgSrc} />
+                  <Link key={cat.id} href={`/category/${cat.slug}`} className="relative group aspect-[3/4] min-h-[11rem] sm:min-h-[20rem] sm:aspect-auto sm:h-[400px] lg:h-[500px] overflow-hidden cursor-pointer block luxury-shadow hover:luxury-shadow-hover transition-all duration-500">
+                    <img alt={`${cat.name} — Indian ethnic collection at Cultural Hatti`} className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700 ease-out" src={imgSrc} />
                     <div className="absolute inset-0 bg-gradient-to-t from-background-dark/90 via-background-dark/30 to-transparent group-hover:from-background-dark/80 transition-all z-10"></div>
                     
-                    <div className="absolute inset-0 flex items-end p-6 sm:p-8 z-20">
+                    <div className="absolute inset-0 flex items-end p-3 sm:p-6 md:p-8 z-20">
                       <div>
-                        <div className="w-12 h-0.5 bg-primary mb-4"></div>
-                        <h3 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 group-hover:text-primary transition-colors">{cat.name}</h3>
-                        <p className="font-body text-xs uppercase tracking-[0.2em] text-white/70">Explore Collection</p>
+                        <div className="w-8 sm:w-12 h-0.5 bg-primary mb-2 sm:mb-4"></div>
+                        <h3 className="font-display text-base sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-1 sm:mb-2 group-hover:text-primary transition-colors leading-tight">{cat.name}</h3>
+                        <p className="font-body text-[10px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] text-white/80">Explore</p>
                       </div>
                     </div>
                   </Link>

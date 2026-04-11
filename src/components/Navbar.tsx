@@ -76,39 +76,49 @@ export default function Navbar() {
                 </div>
             </div>
 
-            {/* Mobile Menu Overlay */}
+            {/* Mobile menu: opaque panel + solid scrim (avoids see-through over hero) */}
             {isMobileMenuOpen && (
-                <div className="fixed inset-0 z-[100] md:hidden">
-                    <div className="absolute inset-0 bg-background-dark/60 backdrop-blur-md" onClick={closeMobileMenu}></div>
-                    <div className="absolute right-0 top-0 h-full w-[300px] bg-background-light luxury-shadow">
-                        <div className="p-8">
-                            <div className="flex justify-between items-center mb-10">
-                                <h3 className="font-display text-2xl font-bold tracking-tight">Menu</h3>
-                                <button onClick={closeMobileMenu} className="w-10 h-10 flex items-center justify-center hover:text-primary transition-all">
-                                    <X className="w-6 h-6" />
-                                </button>
-                            </div>
-                            
-                            <div className="flex flex-col gap-6">
-                                <Link onClick={closeMobileMenu} className="font-body text-base font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 pb-3" href="/category/sarees">Sarees</Link>
-                                <Link onClick={closeMobileMenu} className="font-body text-base font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 pb-3" href="/category/suits">Suits</Link>
-                                <Link onClick={closeMobileMenu} className="font-body text-base font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 pb-3" href="/category/bags">Bags</Link>
-                                <Link onClick={closeMobileMenu} className="font-body text-base font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 pb-3" href="/category/accessories">Accessories</Link>
-                                <Link onClick={closeMobileMenu} className="font-body text-base font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 pb-3" href="/category/kids">Kids</Link>
-                                
+                <div
+                    className="fixed inset-0 z-[200] isolate md:hidden"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Navigation menu"
+                >
+                    <button
+                        type="button"
+                        className="absolute inset-0 z-0 bg-black/75 cursor-default"
+                        onClick={closeMobileMenu}
+                        aria-label="Close menu"
+                    />
+                    <div className="absolute right-0 top-0 z-10 flex h-dvh min-h-0 w-[min(100%,20rem)] max-w-[min(100vw,20rem)] flex-col border-l border-background-dark/15 bg-[#FAF8F5] shadow-[0_0_40px_rgba(0,0,0,0.35)]">
+                        <div className="flex shrink-0 items-center justify-between border-b border-background-dark/10 bg-[#FAF8F5] px-6 py-5">
+                            <h3 className="font-display text-2xl font-bold tracking-tight text-background-dark">Menu</h3>
+                            <button type="button" onClick={closeMobileMenu} className="flex h-10 w-10 items-center justify-center text-background-dark hover:text-primary transition-colors" aria-label="Close menu">
+                                <X className="w-6 h-6" />
+                            </button>
+                        </div>
+                        <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain bg-[#FAF8F5] px-6 py-6">
+                            <nav className="flex flex-col gap-1" aria-label="Main">
+                                <Link onClick={closeMobileMenu} className="font-body text-base font-semibold tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 py-4" href="/category/sarees">Sarees</Link>
+                                <Link onClick={closeMobileMenu} className="font-body text-base font-semibold tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 py-4" href="/category/suits">Suits</Link>
+                                <Link onClick={closeMobileMenu} className="font-body text-base font-semibold tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 py-4" href="/category/bags">Bags</Link>
+                                <Link onClick={closeMobileMenu} className="font-body text-base font-semibold tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 py-4" href="/category/accessories">Accessories</Link>
+                                <Link onClick={closeMobileMenu} className="font-body text-base font-semibold tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 py-4" href="/category/kids">Kids</Link>
+                                <Link onClick={closeMobileMenu} className="font-body text-base font-semibold tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 py-4" href="/collections">All collections</Link>
+
                                 {user && (
                                     <>
-                                        <div className="h-px bg-background-dark/10 my-4"></div>
-                                        <Link onClick={closeMobileMenu} href="/wishlist" className="font-body text-base font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 pb-3">
+                                        <div className="my-4 h-px bg-background-dark/15" />
+                                        <Link onClick={closeMobileMenu} href="/wishlist" className="font-body text-base font-semibold tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase border-b border-background-dark/10 py-4">
                                             Wishlist
                                         </Link>
-                                        <Link onClick={closeMobileMenu} href="/profile" className="font-body text-base font-medium tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase">Profile</Link>
-                                        <button onClick={() => { logout(); closeMobileMenu(); }} className="font-body text-base font-medium tracking-[0.15em] text-gray-400 hover:text-background-dark transition-colors uppercase text-left">
+                                        <Link onClick={closeMobileMenu} href="/profile" className="font-body text-base font-semibold tracking-[0.15em] text-background-dark hover:text-primary transition-colors uppercase py-4">Profile</Link>
+                                        <button type="button" onClick={() => { logout(); closeMobileMenu(); }} className="font-body text-base font-semibold tracking-[0.15em] text-gray-500 hover:text-background-dark transition-colors uppercase text-left py-3">
                                             Logout
                                         </button>
                                     </>
                                 )}
-                            </div>
+                            </nav>
                         </div>
                     </div>
                 </div>

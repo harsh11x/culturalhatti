@@ -17,6 +17,7 @@ const orderRoutes = require('./routes/order.routes');
 const paymentRoutes = require('./routes/payment.routes');
 const userRoutes = require('./routes/user.routes');
 const wishlistRoutes = require('./routes/wishlist.routes');
+const contactRoutes = require('./routes/contact.routes');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -66,6 +67,7 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/contact', contactRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => res.json({ success: true, env: process.env.NODE_ENV, timestamp: new Date().toISOString() }));

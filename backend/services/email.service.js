@@ -8,6 +8,8 @@ const { formatCurrency, getCustomerEmail } = require('./email/template.utils');
 
 const FROM = process.env.EMAIL_FROM || 'Cultural Hatti <noreply@culturalhatti.in>';
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@culturalhatti.in';
+/** Inbox for website contact form submissions */
+const CONTACT_INBOX_EMAIL = process.env.CONTACT_INBOX_EMAIL || 'culturehatti@gmail.com';
 
 const baseStyle = `
   body { font-family: 'Arial', sans-serif; background: #F5F0E8; margin: 0; padding: 0; }
@@ -200,6 +202,33 @@ const sendAdminOrderRefunded = async (order) => {
     await sendMail({ to: ADMIN_EMAIL, subject: `💸 Refund: Order #${order.order_number} - ₹${parseFloat(order.total_amount).toFixed(2)}`, html });
 };
 
+const escapeHtml = (s) =>
+    String(s || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+
+/**
+ * Notify inbox when someone submits the public contact form.
+ */
+const sendContactFormSubmission = async ({ name, email, phone, message }) => {
+    const html = `
+<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;line-height:1.5;color:#111;">
+  <h2 style="margin:0 0 12px;">New message — Cultural Hatti website</h2>
+  <p style="margin:8px 0;"><strong>From:</strong> ${escapeHtml(name)} &lt;${escapeHtml(email)}&gt;</p>
+  ${phone ? `<p style="margin:8px 0;"><strong>Phone:</strong> ${escapeHtml(phone)}</p>` : ''}
+  <p style="margin:16px 0 8px;"><strong>Message</strong></p>
+  <div style="white-space:pre-wrap;border:1px solid #ddd;padding:16px;background:#fafafa;">${escapeHtml(message)}</div>
+  <p style="margin-top:24px;font-size:12px;color:#666;">Reply directly to this customer at ${escapeHtml(email)}</p>
+</body></html>`;
+    await sendMail({
+        to: CONTACT_INBOX_EMAIL,
+        subject: `Contact form: ${name.slice(0, 60)}`,
+        html,
+    });
+};
+
 module.exports = {
     sendOrderConfirmation,
     sendOrderShipped,
@@ -210,4 +239,5 @@ module.exports = {
     sendAdminOrderCancelled,
     sendAdminOrderRefunded,
     sendAdminPaymentFailed,
+    sendContactFormSubmission,
 };

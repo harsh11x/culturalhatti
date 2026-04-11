@@ -106,6 +106,55 @@ router.post('/', authenticate, async (req, res) => {
     });
 });
 
+const ORDER_TRACK_STATUS_LABELS = {
+    pending_payment: 'Pending payment',
+    confirmed: 'Confirmed',
+    processing: 'Processing',
+    shipped: 'Shipped',
+    delivered: 'Delivered',
+    cancelled: 'Cancelled',
+    refunded: 'Refunded',
+};
+
+// GET /api/orders/track?order_id= — public; returns only status + line items (no PII / totals)
+router.get('/track', async (req, res) => {
+    const raw = (req.query.order_id ?? req.query.order_number ?? '').toString().trim();
+    if (!raw) {
+        return res.status(400).json({ success: false, message: 'Please enter your order ID or order number.' });
+    }
+
+    const uuidLike = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(raw);
+
+    let order = await Order.findOne({
+        where: { order_number: { [Op.iLike]: raw } },
+        include: [{ association: 'items', attributes: ['product_name', 'quantity'] }],
+    });
+
+    if (!order && uuidLike) {
+        order = await Order.findOne({
+            where: { id: raw },
+            include: [{ association: 'items', attributes: ['product_name', 'quantity'] }],
+        });
+    }
+
+    if (!order) {
+        return res.status(404).json({
+            success: false,
+            message: 'No order found. Check the ID from your confirmation email and try again.',
+        });
+    }
+
+    res.json({
+        success: true,
+        status: order.status,
+        status_label: ORDER_TRACK_STATUS_LABELS[order.status] || order.status,
+        items: (order.items || []).map((i) => ({
+            product_name: i.product_name,
+            quantity: i.quantity,
+        })),
+    });
+});
+
 // GET /api/orders - User's orders
 router.get('/', authenticate, async (req, res) => {
     const orders = await Order.findAll({
