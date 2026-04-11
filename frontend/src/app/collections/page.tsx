@@ -104,43 +104,45 @@ export default function CollectionsPage() {
                     ) : products.length === 0 ? (
                         <div className="p-12 text-center text-xl font-bold uppercase tracking-widest text-black">No artifacts found.</div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-b-3 border-black">
-                            {products.map((p, idx) => (
-                                <Link key={p.id} href={`/products/${p.slug}`} className={`group ${idx < products.length - (products.length % 3 === 0 ? 3 : products.length % 3) ? 'border-b-3' : ''} md:border-r-3 border-black relative flex flex-col h-full bg-white hover:bg-gray-50 transition-colors`}>
-                                    {p.stock === 0 && (
-                                        <div className="absolute flex top-0 right-0 bg-primary text-white px-3 py-1 text-xs font-bold uppercase z-10 border-b-3 border-l-3 border-black">Sold Out</div>
-                                    )}
-                                    {p.compare_price && p.stock > 0 && (
-                                        <div className="absolute flex top-0 left-0 bg-accent text-black px-3 py-1 text-xs font-bold uppercase z-10 border-b-3 border-r-3 border-black">Sale</div>
-                                    )}
-                                    <div className="relative w-full aspect-[4/5] overflow-hidden border-b-3 border-black">
-                                        {p.images?.[0] ? (
-                                            <div className="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0" style={{ backgroundImage: `url(http://localhost:3001${p.images[0]})` }}></div>
-                                        ) : (
-                                            <div className="w-full h-full bg-slate-100 flex items-center justify-center">
-                                                <ImageIcon className="w-10 h-10 text-gray-300" />
-                                            </div>
+                        <div className="p-3 sm:p-4 md:p-6">
+                            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+                                {products.map((p) => (
+                                    <Link key={p.id} href={`/products/${p.slug}`} className="group block border-2 sm:border-3 border-black p-2 sm:p-3 md:p-4 brutalist-shadow hover:brutalist-shadow-hover bg-white transition-all h-full flex flex-col relative">
+                                        {p.stock === 0 && (
+                                            <div className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-primary text-white px-2 py-0.5 text-[10px] sm:text-xs font-bold uppercase z-10 border-2 border-black">Sold Out</div>
                                         )}
-                                    </div>
-                                    <div className="p-5 flex flex-col flex-1 justify-between">
-                                        <div>
-                                            <h3 className="font-bold uppercase text-lg leading-tight mb-2 line-clamp-2">{p.name}</h3>
-                                            <p className="text-xs font-bold text-gray-500 uppercase mb-4">{p.category?.name || 'Artifact'}</p>
+                                        {p.compare_price && p.stock > 0 && (
+                                            <div className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-accent text-black px-2 py-0.5 text-[10px] sm:text-xs font-bold uppercase z-10 border-2 border-black">Sale</div>
+                                        )}
+                                        <div className="relative w-full aspect-[3/4] overflow-hidden border-2 border-black mb-2 sm:mb-3 bg-gray-100">
+                                            {p.images?.[0] ? (
+                                                <div className="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105" style={{ backgroundImage: `url(http://localhost:3001${p.images[0]})` }} />
+                                            ) : (
+                                                <div className="w-full h-full bg-slate-100 flex items-center justify-center">
+                                                    <ImageIcon className="w-8 h-8 sm:w-10 sm:h-10 text-gray-300" />
+                                                </div>
+                                            )}
                                         </div>
-                                        <div className="flex items-center justify-between mt-auto pt-4 border-t-2 border-black border-dashed">
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-xl font-black">₹{Number(p.price).toFixed(0)}</span>
-                                                {p.compare_price && (
-                                                    <span className="text-sm font-bold text-gray-400 line-through">₹{Number(p.compare_price).toFixed(0)}</span>
-                                                )}
+                                        <div className="flex flex-col flex-1 justify-between gap-2 min-h-0">
+                                            <div>
+                                                <h3 className="font-bold uppercase text-xs sm:text-base md:text-lg leading-tight mb-1 line-clamp-2">{p.name}</h3>
+                                                <p className="text-[10px] sm:text-xs font-bold text-gray-500 uppercase">{p.category?.name || 'Artifact'}</p>
                                             </div>
-                                            <button className="bg-black text-white px-4 py-2 text-xs font-black uppercase tracking-wider hover:bg-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-2 border-black hover:border-black" disabled={p.stock === 0}>
-                                                {p.stock === 0 ? 'Out' : 'Add'}
-                                            </button>
+                                            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mt-auto pt-2 sm:pt-3 border-t-2 border-black border-dashed">
+                                                <div className="flex flex-wrap items-center gap-1 sm:gap-2">
+                                                    <span className="text-sm sm:text-lg md:text-xl font-black">₹{Number(p.price).toFixed(0)}</span>
+                                                    {p.compare_price && (
+                                                        <span className="text-xs sm:text-sm font-bold text-gray-400 line-through">₹{Number(p.compare_price).toFixed(0)}</span>
+                                                    )}
+                                                </div>
+                                                <button type="button" className="w-full sm:w-auto bg-black text-white px-2 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs font-black uppercase tracking-wider hover:bg-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-2 border-black shrink-0" disabled={p.stock === 0}>
+                                                    {p.stock === 0 ? 'Out' : 'Add'}
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                </Link>
-                            ))}
+                                    </Link>
+                                ))}
+                            </div>
                         </div>
                     )}
                 </div>
